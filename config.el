@@ -12,6 +12,7 @@
 (defun install-default-packages ()
   " install useful packages, call this method when starting emacs on a new machine "
   (interactive)
+  (package-refresh-contents)
   (mapc (lambda (package) (package-install package))
         '(rainbow-delimiters
           clojure-mode
@@ -19,6 +20,7 @@
           slime-repl
           swank-clojure
           php-mode)))
+
 
 ;; faster startup
 (modify-frame-parameters nil '((wait-for-wm . nil)))
