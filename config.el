@@ -203,8 +203,8 @@
 
 (setq gud-pdb-command-name "python -i -m pdb")
 
-(when (require 'rainbow-delimiters nil t)
-  (global-rainbow-delimiters-mode))
+;; (when (require 'rainbow-delimiters nil t)
+;;   (global-rainbow-delimiters-mode))
 
 (setq tramp-default-method "plink")
 
