@@ -16,10 +16,8 @@
   (mapc (lambda (package) (package-install package))
         '(rainbow-delimiters
           clojure-mode
-          slime
-          slime-repl
-          swank-clojure
-          php-mode)))
+          php-mode
+          lua-mode)))
 
 
 ;; faster startup
