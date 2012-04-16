@@ -41,7 +41,8 @@
         '(rainbow-delimiters
           clojure-mode
           php-mode
-          lua-mode)))
+          lua-mode
+          highlight-indentation)))
 
 
 ;; faster startup
@@ -91,7 +92,6 @@
 
 (global-hl-line-mode 1)
 (hl-line-mode 1)
-(require 'highlight-indentation)
 
 
 ;; nicer ediff
@@ -191,14 +191,17 @@
                              (pymacs-load "ropemacs" "rope-")
                              (ropemacs-mode)))
 
+(when (require 'highlight-indentation nil t)
+  (add-hook 'python-mode-hook (lambda ()
+                                (highlight-indentation))))
+
 ;; python stuff
 (add-hook 'python-mode-hook (lambda ()
                               (require 'pymacs)
                               ;; tab width is a mess, so force python to use the correct one
                               (setq tab-width 4)
                               (setq python-indent 4)
-                              (semantic-mode)
-                              (highlight-indentation)))
+                              (semantic-mode)))
 
 
 (setq gud-pdb-command-name "python -i -m pdb")
