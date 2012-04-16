@@ -1,13 +1,37 @@
+;;; -*- lexical-binding: t -*-
+
 ;; put something like
 ;; (setq home-el-path "~/.emacs.d/el")
 ;; (load (concat home-el-path "/config.el"))
 ;; in your .emacs
 
 
-(setq el-path (concat (getenv "HOME") "/.emacs.d/el"))
+;; some customize shit. doesn't seem to be possible to set default tab-width without it
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ ;;'(safe-local-variable-values (quote ((c-indentation-style . stroustrup))))
+ '(tab-width 4))
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(highlight ((t (:background "Gray12" :foreground nil)))))
+
+
+;; better package repo
+(require 'package)
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+(package-initialize)
+
+(unless (boundp 'el-path)
+  (setq el-path (concat (getenv "HOME") "/.emacs.d/el")))
 (setq external-el-path (concat el-path "/external"))
 
-(add-to-list 'load-path external-el-path)
 
 (defun install-default-packages ()
   " install useful packages, call this method when starting emacs on a new machine "
@@ -43,6 +67,10 @@
 ;; but if there is, set the default tab width (determines how a tab is displayed)
 (setq default-tab-width 4)
 
+;; fix grep stuff
+(require 'grep)
+(grep-apply-setting 'grep-find-command "grep -r -nH -e ")
+
 ;; change color theme
 (if (< emacs-major-version 24)
     (when (and window-system (load (concat external-el-path "/color-theme")))
@@ -56,21 +84,19 @@
       (global-hl-line-mode 1)
       (hl-line-mode 1)
       (set-face-background 'menu "Black"))
-  (load-theme 'tango-dark))
+  ;; emacs 24
+  (load-theme 'tango-dark)
+  ;; ugly hack to make ediff behave
+  (load "c:/local/emacs/etc/themes/tango-dark-theme.el" t))
 
-;; tag updating helpers
-;; (when (file-exists-p "/vobs/stn/dev/linux")
-;;   (when (load (concat el-path "/patchwork-tags"))
-;;     (patchwork-tags-set-keybindings)
-;;     (patchwork-tags-protected-stn-update)))
+(global-hl-line-mode 1)
+(hl-line-mode 1)
+(require 'highlight-indentation)
 
 
 ;; nicer ediff
 (setq ediff-split-window-function 'split-window-horizontally)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
-
-;; compile keybind
-(global-set-key (kbd "C-c m") 'compile)
 
 ;; use nicer indentation style for c-like languages
 (setq c-default-style "linux"
@@ -78,8 +104,6 @@
 
 ;; display column
 (column-number-mode t)
-
-(load (concat external-el-path "/php-mode.el"))
 
 ;; enable ido mode
 (ido-mode t)
@@ -91,10 +115,6 @@
     (when (x-list-fonts fontname)
       (set-face-font target fontname)))
   (set-face-font-if-it-exists 'default "-unknown-DejaVu Sans Mono-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1"))
-
-;; keybindings to go to the previous/next error in compilation/grep
-(global-set-key (kbd "C-'") 'next-error)
-(global-set-key (kbd "C-ä") 'previous-error)
 
 ;; enable improved window switching, disable if you don't want it to clobber
 ;; shift-<arrowkeys> for selection
@@ -121,16 +141,8 @@
   (global-semantic-mru-bookmark-mode 1)
   (global-semanticdb-minor-mode t)
 
-  
-  ;;(require 'semantic-ia)
-  ;;(require 'semantic-gcc)
-
   ;; use shorter symref tag listing
   (setq semantic-symref-results-summary-function 'semantic-format-tag-canonical-name)
-
-  ;; some useful keybindings for semantic
-  (global-set-key (kbd "M-ö") 'semantic-ia-fast-jump)
-  (global-set-key (kbd "C-ö") 'semantic-ia-complete-tip)
 
   ;; enable sticky function globaly
   (global-semantic-stickyfunc-mode 1)
@@ -138,15 +150,6 @@
   ;; enable goto symbol
   (add-to-list 'load-path (concat el-path "/ido-goto-buffer-tag/"))
   (when (require 'ido-goto-buffer-tag nil t) (global-set-key (kbd "C-c i") 'ido-goto-buffer-tag))
-
-;;  (when (load (concat el-path "/goto-symbol") t t)
-;;    (global-set-key (kbd "C-c i") 'ido-goto-buffer-tag))
-
-  
-  ;; (local-set-key (kbd "<C-return>") 'semantic-ia-complete-symbol)
-  ;; (local-set-key (kbd "C-c ?") 'semantic-ia-complete-symbol-menu)
-  ;; (local-set-key "\C-c>" 'semantic-complete-analyze-inline)
-  ;; (local-set-key "\C-cp" 'semantic-analyze-proto-impl-toggle))
 
   ;; set up some ede projects
   (when (file-exists-p "/vobs/stn/dev/linux")
@@ -162,21 +165,24 @@
       ))
   )
 
-;; set cygwin path for w32 emac
-(setq w32shell-cygwin-bin "C:/cygwin/bin")
+;; windows only stuff
+(when (string-equal system-type "windows-nt")
+  ;; set cygwin path for w32 emac
+  (setq w32shell-cygwin-bin "C:/cygwin/bin")
+  (setq gnuwin-path "c:\\local\\gnuwin32\\bin")
+  (setenv "PATH"
+          (concat
+           gnuwin-path
+           w32shell-cygwin-bin
+           ";c:/cygwin/usr/bin"
+           ";C:/Program Files (x86)/Git/bin"
+           ";c:/program files (x86)/putty"
+           ";"(getenv "PATH")))
 
-(setenv "PATH"
-        (concat
-         "c:/gnuwin32/bin;"
-         ";c:/cygwin/bin"
-         ";c:/cygwin/usr/bin"
-         ";C:/Program Files (x86)/Git/bin"
-         ";c:/program files (x86)/putty"
-         ";"(getenv "PATH")))
-
-(add-to-list 'exec-path "C:/Program Files (x86)/Git/bin")
-(add-to-list 'exec-path "C:/Program Files (x86)/putty")
-
+  (add-to-list 'exec-path "C:/Program Files (x86)/Git/bin")
+  (add-to-list 'exec-path "C:/Program Files (x86)/putty")
+  (set-variable 'find-program (concat gnuwin-path "\\find.exe"))
+)
 ;; TODO add smex
 
 
@@ -185,13 +191,17 @@
                              (pymacs-load "ropemacs" "rope-")
                              (ropemacs-mode)))
 
+;; python stuff
 (add-hook 'python-mode-hook (lambda ()
-                              (require 'pymacs)))
+                              (require 'pymacs)
+                              ;; tab width is a mess, so force python to use the correct one
+                              (setq tab-width 4)
+                              (setq python-indent 4)
+                              (semantic-mode)
+                              (highlight-indentation)))
+
 
 (setq gud-pdb-command-name "python -i -m pdb")
-
-(eval-after-load "package"
-  '(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/")))
 
 (when (require 'rainbow-delimiters nil t)
   (global-rainbow-delimiters-mode))
@@ -205,3 +215,27 @@
 
 (set-default-coding-systems 'utf-8)
 
+
+(require 'git nil t)
+
+;; to shut svn up
+(setenv "LC_ALL" "C")
+
+;; better eshell behaviour
+(setq eshell-cmpl-cycle-completions nil)
+
+(put 'narrow-to-region 'disabled nil)
+
+(defun c-style-hook-function ()
+  (c-set-style "linux")
+  (setq c-basic-offset 4)
+  (semantic-mode 1))
+
+(add-hook 'c-mode-hook 'c-style-hook-function)
+
+(load (concat el-path "/fulpdb.el"))
+
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+
+(server-start)
