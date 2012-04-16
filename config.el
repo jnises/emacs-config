@@ -238,4 +238,6 @@
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
 
+(load (concat el-path "/utils"))
+
 (server-start)
