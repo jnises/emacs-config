@@ -28,11 +28,6 @@
 (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 (package-initialize)
 
-(unless (boundp 'el-path)
-  (setq el-path (concat (getenv "HOME") "/.emacs.d/el")))
-(setq external-el-path (concat el-path "/external"))
-
-
 (defun install-default-packages ()
   " install useful packages, call this method when starting emacs on a new machine "
   (interactive)
@@ -44,6 +39,9 @@
           lua-mode
           highlight-indentation)))
 
+(unless (boundp 'el-path)
+  (setq el-path (concat (getenv "HOME") "/.emacs.d/el")))
+(setq external-el-path (concat el-path "/external"))
 
 ;; faster startup
 (modify-frame-parameters nil '((wait-for-wm . nil)))
@@ -67,6 +65,9 @@
 
 ;; but if there is, set the default tab width (determines how a tab is displayed)
 (setq default-tab-width 4)
+
+(add-to-list 'load-path el-path)
+(add-to-list 'load-path external-el-path)
 
 ;; fix grep stuff
 (require 'grep)
@@ -242,5 +243,8 @@
 (put 'upcase-region 'disabled nil)
 
 (load (concat el-path "/utils"))
+
+(if (equal (system-name) "OVERTOWN")
+    (require 'uniview-connection))
 
 (server-start)
