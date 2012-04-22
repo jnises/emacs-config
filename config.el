@@ -255,26 +255,6 @@ l is lab l, so the range is 0 to 100
           (b (* (sin h) s)))
       (mapcar (lambda (x) (max (min x 1) 0)) (color-lab-to-srgb l a b))))
 
-
-  (defun hsv-to-rgb (h s v)
-    (let* ((chroma (* v s))
-           (h2 (/ h (/ pi 3)))
-           (x (* chroma (- 1 (abs (- (mod h2 2) 1))))))
-      (cond
-       ((< h2 1)
-        (list chroma x 0))
-       ((< h2 2)
-        (list x chroma 0))
-       ((< h2 3)
-        (list 0 chroma x))
-       ((< h2 4)
-        (list 0 x chroma))
-       ((< h2 5)
-        (list x 0 chroma))
-       ((< h2 6)
-        (list chroma 0 x))
-       (t '(0 0 0)))))
-
   ;; better colors for rainbow delimiters
   (dotimes (n 9)
     (let ((rainbowfaces '(rainbow-delimiters-depth-1-face
