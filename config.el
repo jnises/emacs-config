@@ -243,4 +243,52 @@
 
 (load (concat el-path "/utils"))
 
+(when (require 'rainbow-delimiters nil t)
+  (require 'color)
+
+  (defun labhsl-to-rgb (h s l)
+    "
+hsl to rgb by way of lab
+l is lab l, so the range is 0 to 100
+"
+    (let ((a (* (cos h) s))
+          (b (* (sin h) s)))
+      (mapcar (lambda (x) (max (min x 1) 0)) (color-lab-to-srgb l a b))))
+
+
+  (defun hsv-to-rgb (h s v)
+    (let* ((chroma (* v s))
+           (h2 (/ h (/ pi 3)))
+           (x (* chroma (- 1 (abs (- (mod h2 2) 1))))))
+      (cond
+       ((< h2 1)
+        (list chroma x 0))
+       ((< h2 2)
+        (list x chroma 0))
+       ((< h2 3)
+        (list 0 chroma x))
+       ((< h2 4)
+        (list 0 x chroma))
+       ((< h2 5)
+        (list x 0 chroma))
+       ((< h2 6)
+        (list chroma 0 x))
+       (t '(0 0 0)))))
+
+  ;; better colors for rainbow delimiters
+  (dotimes (n 9)
+    (let ((rainbowfaces '(rainbow-delimiters-depth-1-face
+                          rainbow-delimiters-depth-2-face
+                          rainbow-delimiters-depth-3-face
+                          rainbow-delimiters-depth-4-face
+                          rainbow-delimiters-depth-5-face
+                          rainbow-delimiters-depth-6-face
+                          rainbow-delimiters-depth-7-face
+                          rainbow-delimiters-depth-8-face
+                          rainbow-delimiters-depth-9-face))
+          (shuffledn (nth n '(3 7 1 4 6 0 5 8 2))))
+      (set-face-foreground (nth n rainbowfaces)
+                           (apply 'format "#%02x%02x%02x" (mapcar (lambda (x) (floor (* x 255))) (labhsl-to-rgb (* (/ shuffledn 9.0) pi 2) 100 90))))))
+  )
+
 (server-start)
