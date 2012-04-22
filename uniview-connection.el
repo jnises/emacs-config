@@ -29,3 +29,5 @@
   (uniview-reload-uses-shaders))
 
 (global-set-key (kbd "C-c u r") 'uniview-reload-shaders)
+
+(provide 'uniview-connection)
