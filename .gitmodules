@@ -1,3 +1,4 @@
 [submodule "ido-goto-buffer-tag"]
 	path = ido-goto-buffer-tag
-	url = git@github.com:moushkka/ido-goto-buffer-tag.git
+#	url = git@github.com:moushkka/ido-goto-buffer-tag.git
+	url = https://github.com/moushkka/ido-goto-buffer-tag.git

@@ -188,9 +188,9 @@
 
 
 ;; load ropemacs when in python mode
-(eval-after-load "pymacs" '(progn
-                             (pymacs-load "ropemacs" "rope-")
-                             (ropemacs-mode)))
+;; (eval-after-load "pymacs" '(progn
+;;                              (pymacs-load "ropemacs" "rope-")
+;;                              (ropemacs-mode)))
 
 (when (require 'highlight-indentation nil t)
   (add-hook 'python-mode-hook (lambda ()
@@ -198,7 +198,7 @@
 
 ;; python stuff
 (add-hook 'python-mode-hook (lambda ()
-                              (require 'pymacs)
+                              ;;(require 'pymacs)
                               ;; tab width is a mess, so force python to use the correct one
                               (setq tab-width 4)
                               (setq python-indent 4)

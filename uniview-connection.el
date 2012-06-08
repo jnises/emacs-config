@@ -1,5 +1,5 @@
 (defun uniview-send (message)
-  (interactive "s")
+  (interactive "Mmessage: ")
   (let ((c (open-network-stream "uniview_connection" nil "localhost" 22000)))
     (unwind-protect
         (process-send-string c message)
@@ -23,11 +23,23 @@
 
 (defun uniview-reload-shaders ()
   (interactive)
-  (uniview-reload-gas-shader)
-  (uniview-reload-fbo-shader)
-  (uniview-reload-star-shader)
+  ;; (uniview-reload-gas-shader)
+  ;; (uniview-reload-fbo-shader)
+  ;; (uniview-reload-star-shader)
+  ;; (uniview-send "ISS.reload")
+  ;; (uniview-send "Magneto.reload")
+  ;; (uniview-send "BowShock.reload")
+  ;; (uniview-send "Cassini.reload")
+  ;; (uniview-send "iso50k.reload")
+  (uniview-send "iso20k.reload")
+  ;; (uniview-send "iso10k.reload")
+  ;;(uniview-send "RealSun.reload")
+  ;;(uniview-send "rainbow.reload")
+  ;; (uniview-send "hubble.reload")
+  ;; (uniview-send "earthquakes.reload")
   (uniview-reload-uses-shaders))
 
+(global-set-key (kbd "C-c u s") 'uniview-send)
 (global-set-key (kbd "C-c u r") 'uniview-reload-shaders)
 
 (provide 'uniview-connection)
