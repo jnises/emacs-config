@@ -210,12 +210,12 @@
 ;; (when (require 'rainbow-delimiters nil t)
 ;;   (global-rainbow-delimiters-mode))
 
-(setq tramp-default-method "plink")
+;; (setq tramp-default-method "plink")
 
-;; remove -ssh arg from plink command line
-(require 'tramp)
-(let ((args (assoc 'tramp-login-args (assoc "plink" tramp-methods))))
-  (setcdr args (list (remove '("-ssh") (cadr args)))))
+;; ;; remove -ssh arg from plink command line
+;; (require 'tramp)
+;; (let ((args (assoc 'tramp-login-args (assoc "plink" tramp-methods))))
+;;   (setcdr args (list (remove '("-ssh") (cadr args)))))
 
 (set-default-coding-systems 'utf-8)
 
@@ -275,5 +275,8 @@ l is lab l, so the range is 0 to 100
 (if (equal (system-name) "OVERTOWN")
     (require 'uniview-connection))
 
+;; next/prev error shortcuts
+(global-set-key (kbd "<f5>") 'previous-error)
+(global-set-key (kbd "<f6>") 'next-error)
 
 (server-start)
