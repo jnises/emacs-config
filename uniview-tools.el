@@ -32,3 +32,5 @@
           (end-of-buffer)
           (auto-revert-tail-mode t))
       (error (concat "no logfiles found in " logdir)))))
+
+(provide 'uniview-tools)

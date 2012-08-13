@@ -272,8 +272,9 @@ l is lab l, so the range is 0 to 100
                            (apply 'format "#%02x%02x%02x" (mapcar (lambda (x) (floor (* x 255))) (labhsl-to-rgb (* (/ shuffledn 9.0) pi 2) 130 80))))))
   )
 
-(if (equal (system-name) "OVERTOWN")
-    (require 'uniview-connection))
+(when (equal (system-name) "OVERTOWN")
+    (require 'uniview-connection)
+    (require 'uniview-tools))
 
 ;; next/prev error shortcuts
 (global-set-key (kbd "<f5>") 'previous-error)
