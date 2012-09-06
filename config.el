@@ -71,7 +71,8 @@
 
 ;; fix grep stuff
 (require 'grep)
-(grep-apply-setting 'grep-find-command "grep -r -nH -e ")
+;;(grep-apply-setting 'grep-find-command "grep -r -nH -e ")
+(grep-apply-setting 'grep-find-command nil)
 
 ;; change color theme
 (if (< emacs-major-version 24)
@@ -279,5 +280,11 @@ l is lab l, so the range is 0 to 100
 ;; next/prev error shortcuts
 (global-set-key (kbd "<f5>") 'previous-error)
 (global-set-key (kbd "<f6>") 'next-error)
+
+(global-set-key (kbd "C-c c c") 'comment-region)
+(global-set-key (kbd "C-c c u") 'uncomment-region)
+
+(when (require 'pyflakes nil t)
+  (set-variable 'pyflakes-command "python c:/python27/scripts/pyflakes"))
 
 (server-start)
