@@ -72,7 +72,7 @@
 ;; fix grep stuff
 (require 'grep)
 ;;(grep-apply-setting 'grep-find-command "grep -r -nH -e ")
-(grep-apply-setting 'grep-find-command nil)
+;; (grep-apply-setting 'grep-find-command nil)
 
 ;; change color theme
 (if (< emacs-major-version 24)
