@@ -5,7 +5,6 @@
 ;; (load (concat home-el-path "/config.el"))
 ;; in your .emacs
 
-
 ;; some customize shit. doesn't seem to be possible to set default tab-width without it
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -26,6 +25,7 @@
 ;; better package repo
 (require 'package)
 (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize)
 
 (defun install-default-packages ()
@@ -37,7 +37,8 @@
           clojure-mode
           php-mode
           lua-mode
-          highlight-indentation)))
+          highlight-indentation
+          yascroll)))
 
 (unless (boundp 'el-path)
   (setq el-path (concat (getenv "HOME") "/.emacs.d/el")))
@@ -286,5 +287,12 @@ l is lab l, so the range is 0 to 100
 
 (when (require 'pyflakes nil t)
   (set-variable 'pyflakes-command "python c:/python27/scripts/pyflakes"))
+  
+(when (require 'yascroll nil t)
+  (scroll-bar-mode -1)
+  (global-yascroll-bar-mode t)
+  (set-face-background 'yascroll:thumb-text-area "Gray80")
+  (set-face-background 'yascroll:thumb-fringe "Gray80")
+  (set-face-foreground 'yascroll:thumb-fringe "Gray80"))
 
 (server-start)
