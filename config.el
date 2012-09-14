@@ -185,6 +185,8 @@
   (add-to-list 'exec-path "C:/Program Files (x86)/Git/bin")
   (add-to-list 'exec-path "C:/Program Files (x86)/putty")
   (set-variable 'find-program (concat gnuwin-path "\\find.exe"))
+  (add-to-list 'exec-path "C:/Program Files (x86)/Aspell/bin/")
+  (setq ispell-program-name "aspell")
 )
 ;; TODO add smex
 
