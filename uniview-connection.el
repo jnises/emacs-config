@@ -1,10 +1,10 @@
-(defun uniview-send (message &optional host port)
+(defun uniview-send (message &optional host port terminate)
   (interactive "Mmessage: ")
   (let ((host (if host host "localhost"))
         (port (if port port 22000)))
     (let ((c (open-network-stream "uniview_connection" nil host port)))
       (unwind-protect
-          (process-send-string c message)
+          (process-send-string c (concat message "\n"))
         (delete-process c)))))
 
 (defun uniview-reload-gas-shader ()
