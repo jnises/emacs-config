@@ -307,4 +307,7 @@ l is lab l, so the range is 0 to 100
 (when (require 'undo-tree nil t)
   (global-undo-tree-mode))
 
+(defun load-overtone-stuff ()
+  (interactive)
+  (global-set-key (kbd "C-c o s") (lambda () (interactive) (nrepl-send-string "(stop)" (lambda (ignored))))))
 (server-start)
