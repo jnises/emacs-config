@@ -32,13 +32,16 @@
   " install useful packages, call this method when starting emacs on a new machine "
   (interactive)
   (package-refresh-contents)
-  (mapc (lambda (package) (package-install package))
+  (mapc (lambda (package) (if (not package-installed-p package) 
+                              (package-install package)))
         '(rainbow-delimiters
           clojure-mode
           php-mode
           lua-mode
           highlight-indentation
-          yascroll)))
+          yascroll
+          undo-tree
+          paredit-mode)))
 
 (unless (boundp 'el-path)
   (setq el-path (concat (getenv "HOME") "/.emacs.d/el")))
