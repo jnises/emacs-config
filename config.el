@@ -174,13 +174,15 @@
   (setq w32shell-cygwin-bin "C:/cygwin/bin")
   (setq gnuwin-path "c:\\local\\gnuwin32\\bin")
   (setenv "PATH"
-          (concat
-           gnuwin-path
-           w32shell-cygwin-bin
-           ";c:/cygwin/usr/bin"
-           ";C:/Program Files (x86)/Git/bin"
-           ";c:/program files (x86)/putty"
-           ";"(getenv "PATH")))
+          (mapconcat 'identity
+                     (list gnuwin-path
+                           w32shell-cygwin-bin
+                           "c:/cygwin/usr/bin"
+                           "C:/Program Files (x86)/Git/bin"
+                           "c:/program files (x86)/putty"
+                           "C:/Program Files/Java/jre6/bin"
+                           (getenv "PATH"))
+                     ";"))
 
   (add-to-list 'exec-path "C:/Program Files (x86)/Git/bin")
   (add-to-list 'exec-path "C:/Program Files (x86)/putty")
@@ -250,7 +252,9 @@
 
 (when (require 'rainbow-delimiters nil t)
   (require 'color)
-
+  (dolist (hook
+           '(clojure-mode-hook))
+    (add-hook hook (lambda () (rainbow-delimiters-mode t))))
   (defun labhsl-to-rgb (h s l)
     "
 hsl to rgb by way of lab
@@ -296,5 +300,8 @@ l is lab l, so the range is 0 to 100
   (set-face-background 'yascroll:thumb-text-area "Gray80")
   (set-face-background 'yascroll:thumb-fringe "Gray80")
   (set-face-foreground 'yascroll:thumb-fringe "Gray80"))
+
+(when (require 'undo-tree nil t)
+  (global-undo-tree-mode))
 
 (server-start)
