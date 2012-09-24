@@ -32,8 +32,9 @@
   " install useful packages, call this method when starting emacs on a new machine "
   (interactive)
   (package-refresh-contents)
-  (mapc (lambda (package) (if (not package-installed-p package) 
-                              (package-install package)))
+  (mapc (lambda (package)
+          (if (not (package-installed-p package)) 
+              (package-install package)))
         '(rainbow-delimiters
           clojure-mode
           php-mode
