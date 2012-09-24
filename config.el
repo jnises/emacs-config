@@ -310,4 +310,11 @@ l is lab l, so the range is 0 to 100
 (defun load-overtone-stuff ()
   (interactive)
   (global-set-key (kbd "C-c o s") (lambda () (interactive) (nrepl-send-string "(stop)" (lambda (ignored))))))
+  
+;; change magit diff colors
+(eval-after-load 'magit
+  '(progn
+     (set-face-foreground 'magit-diff-add "green3")
+     (set-face-foreground 'magit-diff-del "red3")))
+
 (server-start)
