@@ -204,7 +204,7 @@
 
 (when (require 'highlight-indentation nil t)
   (add-hook 'python-mode-hook (lambda ()
-                                (highlight-indentation))))
+                                (highlight-indentation-mode t))))
 
 ;; python stuff
 (add-hook 'python-mode-hook (lambda ()
@@ -283,6 +283,13 @@ l is lab l, so the range is 0 to 100
       (set-face-foreground (nth n rainbowfaces)
                            (apply 'format "#%02x%02x%02x" (mapcar (lambda (x) (floor (* x 255))) (labhsl-to-rgb (* (/ shuffledn 9.0) pi 2) 130 80))))))
   )
+
+;; use rainbow delimiters and paredit mode for some lisp files
+(dolist (hook '(clojure-mode-hook emacs-lisp-mode-hook)) (add-hook hook (lambda ()
+                                                                          (when (require 'rainbow-delimiters nil t)
+                                                                            (rainbow-delimiters-mode t))
+                                                                          (when (require 'paredit nil t)
+                                                                            (paredit-mode t)))))
 
 (when (equal (system-name) "OVERTOWN")
     (require 'uniview-connection)
