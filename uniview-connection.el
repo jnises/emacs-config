@@ -43,7 +43,8 @@
   ;;(uniview-send "testearth.reload")
   ;;(uniview-send "asteroids_hypothetical")
   ;;(uniview-send "curiosity.reload")
-  (uniview-reload-uses-shaders)
+   (uniview-send "galeCrater.reload")
+   (uniview-reload-uses-shaders)
   )
 
 (global-set-key (kbd "C-c u s") 'uniview-send)

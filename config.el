@@ -191,8 +191,12 @@
   (add-to-list 'exec-path "C:/Program Files (x86)/Git/bin")
   (add-to-list 'exec-path "C:/Program Files (x86)/putty")
   (set-variable 'find-program (concat gnuwin-path "\\find.exe"))
+  (set-variable 'grep-program (concat gnuwin-path "\\grep.exe"))
   (add-to-list 'exec-path "C:/Program Files (x86)/Aspell/bin/")
   (setq ispell-program-name "aspell")
+  (setq ange-ftp-ftp-program-name "c:/windows/system32/ftp.exe")
+  (setq tramp-default-method "ftp")
+
 )
 ;; TODO add smex
 
