@@ -25,7 +25,7 @@
 
 (defun uniview-reload-shaders ()
   (interactive)
-   (uniview-reload-gas-shader)
+  ;; (uniview-reload-gas-shader)
   ;; (uniview-reload-fbo-shader)
   ;; (uniview-reload-star-shader)
   ;; (uniview-send "ISS.reload")
@@ -43,7 +43,8 @@
   ;;(uniview-send "testearth.reload")
   ;;(uniview-send "asteroids_hypothetical")
   ;;(uniview-send "curiosity.reload")
-   (uniview-send "galeCrater.reload")
+  ;; (uniview-send "galeCrater.reload")
+   (uniview-send "curiosityPanorama.reload")
    (uniview-reload-uses-shaders)
   )
 

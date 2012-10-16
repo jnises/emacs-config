@@ -78,6 +78,7 @@
 (require 'grep)
 ;;(grep-apply-setting 'grep-find-command "grep -r -nH -e ")
 ;; (grep-apply-setting 'grep-find-command nil)
+(grep-apply-setting 'grep-find-command '("find . -type f ! -path \"*.git*\" -exec grep -nH -e  {} +" . 51))
 
 ;; change color theme
 (if (< emacs-major-version 24)
@@ -175,28 +176,30 @@
 ;; windows only stuff
 (when (string-equal system-type "windows-nt")
   ;; set cygwin path for w32 emac
-  (setq w32shell-cygwin-bin "C:/cygwin/bin")
-  (setq gnuwin-path "c:\\local\\gnuwin32\\bin")
+  ;;(setq w32shell-cygwin-bin "C:/cygwin/bin")
+  ;;(setq gnuwin-path "c:/local/gnuwin32/bin")
+  (setq cygwin-bin-path "c:/cygwin/bin")
   (setenv "PATH"
           (mapconcat 'identity
-                     (list gnuwin-path
-                           w32shell-cygwin-bin
-                           "c:/cygwin/usr/bin"
+                     (list ;;gnuwin-path
+                           ;;w32shell-cygwin-bin
+                           cygwin-bin-path
                            "C:/Program Files (x86)/Git/bin"
                            "c:/program files (x86)/putty"
                            "C:/Program Files/Java/jre6/bin"
                            (getenv "PATH"))
                      ";"))
 
+  (add-to-list 'exec-path cygwin-bin-path)
   (add-to-list 'exec-path "C:/Program Files (x86)/Git/bin")
   (add-to-list 'exec-path "C:/Program Files (x86)/putty")
-  (set-variable 'find-program (concat gnuwin-path "\\find.exe"))
-  (set-variable 'grep-program (concat gnuwin-path "\\grep.exe"))
+  ;; (set-variable 'find-program "find.exe")
+  ;; (set-variable 'grep-program "grep.exe")
   (add-to-list 'exec-path "C:/Program Files (x86)/Aspell/bin/")
   (setq ispell-program-name "aspell")
-  (setq ange-ftp-ftp-program-name "c:/windows/system32/ftp.exe")
-  (setq tramp-default-method "ftp")
-
+  ;;(setq ange-ftp-ftp-program-name "c:/windows/system32/ftp.exe")
+  ;;(setq tramp-default-method "ftp")
+  (require 'setup-cygwin)
 )
 ;; TODO add smex
 
