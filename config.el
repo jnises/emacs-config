@@ -42,7 +42,7 @@
           highlight-indentation
           yascroll
           undo-tree
-          paredit-mode)))
+          paredit)))
 
 (unless (boundp 'el-path)
   (setq el-path (concat (getenv "HOME") "/.emacs.d/el")))
