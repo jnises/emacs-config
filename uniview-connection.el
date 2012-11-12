@@ -44,7 +44,8 @@
   ;;(uniview-send "asteroids_hypothetical")
   ;;(uniview-send "curiosity.reload")
   ;; (uniview-send "galeCrater.reload")
-   (uniview-send "curiosityPanorama.reload")
+  ;;(uniview-send "curiosityPanorama.reload")
+  (uniview-send "atlas.reload")
    (uniview-reload-uses-shaders)
   )
 
