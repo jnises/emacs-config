@@ -1,3 +1,6 @@
 [submodule "ido-goto-buffer-tag"]
 	path = ido-goto-buffer-tag
 	url = https://github.com/moushkka/ido-goto-buffer-tag.git
+[submodule "external/glsl-mode"]
+	path = external/glsl-mode
+	url = https://github.com/jimhourihan/glsl-mode.git

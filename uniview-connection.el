@@ -45,7 +45,8 @@
   ;;(uniview-send "curiosity.reload")
   ;; (uniview-send "galeCrater.reload")
   ;;(uniview-send "curiosityPanorama.reload")
-  (uniview-send "atlas.reload")
+  ;;(uniview-send "atlas.reload")
+  (uniview-send "SaturnRings.reload")
    (uniview-reload-uses-shaders)
   )
 
