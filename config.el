@@ -322,5 +322,6 @@ l is lab l, so the range is 0 to 100
                                   (interactive)
                                   (multi-web-mode t))))
 
+(global-set-key (kbd "C-c m") 'compile)
 
 (server-start)
