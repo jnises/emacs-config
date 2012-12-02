@@ -107,10 +107,6 @@
 (setq ediff-split-window-function 'split-window-horizontally)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
-;; use nicer indentation style for c-like languages
-(setq c-default-style "linux"
-      c-basic-offset 4)
-
 ;; display column
 (column-number-mode t)
 
@@ -248,12 +244,17 @@
 
 (put 'narrow-to-region 'disabled nil)
 
+;; (setq c-default-style "linux"
+;;       c-basic-offset 4)
+
 (defun c-style-hook-function ()
+  (interactive)
   (c-set-style "linux")
-  (setq c-basic-offset 4)
+  (c-set-offset 'basic c-basic-offset 4)
+  (c-set-offset 'substatement-open 0)
   (semantic-mode 1))
 
-(add-hook 'c-mode-hook 'c-style-hook-function)
+(add-hook 'c-mode-common-hook 'c-style-hook-function)
 
 (load (concat el-path "/fulpdb.el"))
 
