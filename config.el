@@ -77,8 +77,6 @@
 
 ;; fix grep stuff
 (require 'grep)
-;;(grep-apply-setting 'grep-find-command "grep -r -nH -e ")
-;; (grep-apply-setting 'grep-find-command nil)
 (grep-apply-setting 'grep-find-command '("find . -type f ! -path \"*.git*\" -exec grep -nH -e  {} +" . 51))
 
 ;; change color theme
@@ -97,11 +95,12 @@
   ;; emacs 24
   (load-theme 'tango-dark)
   ;; ugly hack to make ediff behave
-  (load "c:/local/emacs/etc/themes/tango-dark-theme.el" t))
+  (when (string-equal system-type "windows-nt")
+    (load "c:/local/emacs/etc/themes/tango-dark-theme.el" t)))
 
+;; highlight line
 (global-hl-line-mode 1)
 (hl-line-mode 1)
-
 
 ;; nicer ediff
 (setq ediff-split-window-function 'split-window-horizontally)
@@ -133,12 +132,11 @@
   (global-set-key [(meta f2)]             'bc-list))
 
 ;; nicer buffer names
-(when (load "uniquify")
+(when (require 'uniquify nil t)
   (setq uniquify-buffer-name-style 'forward))
 
 ;; load cedet
-;;(when (load (concat external-el-path "/cedet/common/cedet.el") t)
-(when (load "cedet")
+(when (require 'cedet nil t)
   (global-ede-mode t)
   (require 'semantic/sb)
   (semantic-mode t)
@@ -157,18 +155,16 @@
   (when (require 'ido-goto-buffer-tag nil t) (global-set-key (kbd "C-c i") 'ido-goto-buffer-tag))
 
   ;; set up some ede projects
-  (when (file-exists-p "/vobs/stn/dev/linux")
-    (flet ((add-proj (dir &optional name)
-                     (when (not (file-exists-p dir))
-                       (make-directory dir))
-                     (when (null name)
-                       (setq name (substring dir (+ 1 (string-match "/[^/]+$" dir)))))
-                     (let ((filething (concat dir "/." (user-login-name) "_ede_anchor")))
-                       (shell-command (concat "touch " filething))
-                       (ede-cpp-root-project name :file filething))))
-      ;; nothing is done here for now
-      ))
-  )
+  (flet ((add-proj (dir &optional name)
+                   (when (not (file-exists-p dir))
+                     (make-directory dir))
+                   (when (null name)
+                     (setq name (substring dir (+ 1 (string-match "/[^/]+$" dir)))))
+                   (let ((filething (concat dir "/." (user-login-name) "_ede_anchor")))
+                     (shell-command (concat "touch " filething))
+                     (ede-cpp-root-project name :file filething))))
+    ;; nothing is done here for now
+    ))
 
 ;; windows only stuff
 (when (string-equal system-type "windows-nt")
@@ -198,41 +194,23 @@
   ;;(setq tramp-default-method "ftp")
   (require 'setup-cygwin)
 )
-;; TODO add smex
 
-
-;; load ropemacs when in python mode
-;; (eval-after-load "pymacs" '(progn
-;;                              (pymacs-load "ropemacs" "rope-")
-;;                              (ropemacs-mode)))
-
+;; enable indentation highlighting for modes that benefit from them (python)
 (when (require 'highlight-indentation nil t)
   (add-hook 'python-mode-hook (lambda ()
                                 (highlight-indentation-mode t))))
 
 ;; python stuff
 (add-hook 'python-mode-hook (lambda ()
-                              ;;(require 'pymacs)
                               ;; tab width is a mess, so force python to use the correct one
                               (setq tab-width 4)
                               (setq python-indent 4)
-                              (semantic-mode)))
+                              (semantic-mode 1)))
 
 
 (setq gud-pdb-command-name "python -i -m pdb")
 
-;; (when (require 'rainbow-delimiters nil t)
-;;   (global-rainbow-delimiters-mode))
-
-;; (setq tramp-default-method "plink")
-
-;; ;; remove -ssh arg from plink command line
-;; (require 'tramp)
-;; (let ((args (assoc 'tramp-login-args (assoc "plink" tramp-methods))))
-;;   (setcdr args (list (remove '("-ssh") (cadr args)))))
-
 (set-default-coding-systems 'utf-8)
-
 
 (require 'git nil t)
 
@@ -244,17 +222,15 @@
 
 (put 'narrow-to-region 'disabled nil)
 
-;; (setq c-default-style "linux"
-;;       c-basic-offset 4)
-
 (defun c-style-hook-function ()
   (interactive)
   (c-set-style "linux")
-  (c-set-offset 'basic c-basic-offset 4)
+  (setq c-basic-offset 4)
   (c-set-offset 'substatement-open 0)
-  (semantic-mode 1))
-
+  (c-set-offset 'inline-open 0))
 (add-hook 'c-mode-common-hook 'c-style-hook-function)
+(add-hook 'c-mode-common-hook (lambda () (semantic-mode t)))
+;;(add-hook 'c++-mode-hook 'c-style-hook-function)
 
 (load (concat el-path "/fulpdb.el"))
 
@@ -300,9 +276,10 @@ l is lab l, so the range is 0 to 100
                                                                           (when (require 'paredit nil t)
                                                                             (paredit-mode t)))))
 
+;; some uniview stuff for work
 (when (equal (system-name) "OVERTOWN")
-    (require 'uniview-connection)
-    (require 'uniview-tools))
+  (require 'uniview-connection)
+  (require 'uniview-tools))
 
 ;; next/prev error shortcuts
 (global-set-key (kbd "<f5>") 'previous-error)
@@ -311,8 +288,9 @@ l is lab l, so the range is 0 to 100
 (global-set-key (kbd "C-c c c") 'comment-region)
 (global-set-key (kbd "C-c c u") 'uncomment-region)
 
-(when (require 'pyflakes nil t)
-  (set-variable 'pyflakes-command "python c:/python27/scripts/pyflakes"))
+(when (string-equal system-type "windows-nt")
+  (when (require 'pyflakes nil t)
+    (set-variable 'pyflakes-command "python c:/python27/scripts/pyflakes")))
   
 (when (require 'yascroll nil t)
   (scroll-bar-mode -1)
