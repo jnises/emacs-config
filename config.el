@@ -324,4 +324,10 @@ l is lab l, so the range is 0 to 100
 
 (global-set-key (kbd "C-c m") 'compile)
 
+(add-to-list 'load-path (concat external-el-path "/glsl-mode"))
+(autoload 'glsl-mode "glsl-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.glsl\\'" . glsl-mode))
+
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+
 (server-start)
