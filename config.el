@@ -330,4 +330,6 @@ l is lab l, so the range is 0 to 100
 
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
+(setq ange-ftp-ftp-program-name "c:/local/bin/ftp.exe")
+
 (server-start)
