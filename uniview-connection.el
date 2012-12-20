@@ -63,4 +63,10 @@
 (global-set-key (kbd "C-c u s") 'uniview-send)
 (global-set-key (kbd "C-c u r") 'uniview-reload-shaders)
 
+(defun uniview-list-node (host)
+  (interactive "Mwhich host? ")
+  (let ((hostport (concat host "#14001")))
+    (ange-ftp-set-passwd hostport "sciss" "SCISS1234")
+    (find-file (concat "/ftp:sciss@" hostport ":/"))))
+
 (provide 'uniview-connection)
