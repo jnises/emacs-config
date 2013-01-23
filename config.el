@@ -193,7 +193,7 @@
   (setq ispell-program-name "aspell")
   ;;(setq ange-ftp-ftp-program-name "c:/windows/system32/ftp.exe")
   ;;(setq tramp-default-method "ftp")
-  (require 'setup-cygwin nil t)
+  (and (require 'cygwin-mount nil t) (require 'setup-cygwin nil t))
 )
 
 ;; enable indentation highlighting for modes that benefit from them (python)
