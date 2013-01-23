@@ -155,16 +155,17 @@
   (when (require 'ido-goto-buffer-tag nil t) (global-set-key (kbd "C-c i") 'ido-goto-buffer-tag))
 
   ;; set up some ede projects
-  (flet ((add-proj (dir &optional name)
-                   (when (not (file-exists-p dir))
-                     (make-directory dir))
-                   (when (null name)
-                     (setq name (substring dir (+ 1 (string-match "/[^/]+$" dir)))))
-                   (let ((filething (concat dir "/." (user-login-name) "_ede_anchor")))
-                     (shell-command (concat "touch " filething))
-                     (ede-cpp-root-project name :file filething))))
-    ;; nothing is done here for now
-    ))
+  ;; (flet ((add-proj (dir &optional name)
+  ;;                  (when (not (file-exists-p dir))
+  ;;                    (make-directory dir))
+  ;;                  (when (null name)
+  ;;                    (setq name (substring dir (+ 1 (string-match "/[^/]+$" dir)))))
+  ;;                  (let ((filething (concat dir "/." (user-login-name) "_ede_anchor")))
+  ;;                    (shell-command (concat "touch " filething))
+  ;;                    (ede-cpp-root-project name :file filething))))
+  ;;   ;; nothing is done here for now
+  ;;   )
+  )
 
 ;; windows only stuff
 (when (string-equal system-type "windows-nt")
