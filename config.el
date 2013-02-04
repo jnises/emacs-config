@@ -43,7 +43,8 @@
           yascroll
           undo-tree
           paredit
-          multi-web-mode)))
+          multi-web-mode
+          smex)))
 
 (unless (boundp 'el-path)
   (setq el-path (concat (getenv "HOME") "/.emacs.d/el")))
@@ -334,5 +335,12 @@ l is lab l, so the range is 0 to 100
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
 (setq ange-ftp-ftp-program-name "c:/local/bin/ftp.exe")
+
+(when (require 'smex nil t)
+  (global-set-key (kbd "M-x") (lambda ()
+                                (interactive)
+                                (or (boundp 'smex-cache) (smex-initialize))
+                                (global-set-key (kbd "M-x") 'smex)
+                                (smex))))
 
 (server-start)
