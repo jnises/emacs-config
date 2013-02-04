@@ -212,6 +212,8 @@
 (setq gud-pdb-command-name "python -i -m pdb")
 
 (set-default-coding-systems 'utf-8)
+(prefer-coding-system 'utf-8)
+
 
 (require 'git nil t)
 
