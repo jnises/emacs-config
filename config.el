@@ -343,4 +343,7 @@ l is lab l, so the range is 0 to 100
                                 (global-set-key (kbd "M-x") 'smex)
                                 (smex))))
 
+(add-to-list 'load-path (concat external-el-path "/qml-mode"))
+(require 'qml-mode nil t)
+
 (server-start)

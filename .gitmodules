@@ -4,3 +4,6 @@
 [submodule "external/glsl-mode"]
 	path = external/glsl-mode
 	url = https://github.com/jimhourihan/glsl-mode.git
+[submodule "external/qml-mode"]
+	path = external/qml-mode
+	url = https://github.com/coldnew/qml-mode.git
