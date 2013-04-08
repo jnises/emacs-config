@@ -113,6 +113,12 @@
 ;; enable ido mode
 (ido-mode t)
 (setq ido-enable-flex-matching t)
+;; disable auto searching for files unless called explicitly with C-c C-s
+(setq ido-auto-merge-delay-time 99999)
+(define-key ido-file-dir-completion-map (kbd "C-c C-s")
+  (lambda()
+    (interactive)
+    (ido-initiate-auto-merge (current-buffer))))
 
 ;; font stuff
 (when window-system 
