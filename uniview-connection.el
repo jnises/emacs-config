@@ -1,5 +1,6 @@
+(setq uniview-send-history '())
 (defun uniview-send (message &optional host port terminate)
-  (interactive "Mmessage: ")
+  (interactive (list (read-string "message: " nil 'uniview-send-history)))
   (let ((host (if host host "localhost"))
         (port (if port port 22000)))
     (let ((c (open-network-stream "uniview_connection" nil host port)))
