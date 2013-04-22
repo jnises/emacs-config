@@ -5,7 +5,7 @@
         (port (if port port 22000)))
     (let ((c (open-network-stream "uniview_connection" nil host port)))
       (unwind-protect
-          (process-send-string c (concat message "\n"))
+          (process-send-string c (concat message "\r\n"))
         (delete-process c)))))
 
 (defun uniview-reload-gas-shader ()
