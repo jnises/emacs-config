@@ -59,4 +59,12 @@ not sure if it is correctly implemented"
                       result)))
         (recur sorteda sortedb '())))))
 
-  
+(defun guid ()
+  (let ((hexmap ["0" "1" "2" "3" "4" "5" "6" "7" "8" "9" "A" "B" "C" "D" "E" "F"]))
+    (cl-labels ((random-hex () (elt hexmap (random 16)))
+              (hexstring (length) (let ((output "")) (dotimes (a length) (setq output (concat output (random-hex)))) output)))
+      (concat (hexstring 8) "-" (hexstring 4) "-" (hexstring 4) "-" (hexstring 12)))))
+
+(defun insert-guid ()
+  (interactive)
+  (insert (guid)))
