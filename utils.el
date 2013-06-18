@@ -4,7 +4,7 @@
 
 (defun sciss-get-random-person ()
   (interactive)
-  (let ((persons ["per" "danne" "jawad" "urban" "marcus"]))
+  (let ((persons ["per" "danne" "urban" "mike"]))
     (let ((person (elt persons (random (length persons)))))
       (if (called-interactively-p)
           (message person)
