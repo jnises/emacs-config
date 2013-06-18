@@ -60,6 +60,10 @@ not sure if it is correctly implemented"
         (recur sorteda sortedb '())))))
 
 (defun guid ()
+  "return a guid
+variant: standard
+algorithm: v4
+"
   (let ((hexmap ["0" "1" "2" "3" "4" "5" "6" "7" "8" "9" "A" "B" "C" "D" "E" "F"]))
     (cl-labels ((random-hex () (elt hexmap (random 16)))
                 (hexstring (length) (let ((output "")) (dotimes (a length) (setq output (concat output (random-hex)))) output)))
