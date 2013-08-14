@@ -72,4 +72,3 @@ algorithm: v4
 (defun insert-guid ()
   (interactive)
   (insert (guid)))
-

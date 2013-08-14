@@ -5,13 +5,7 @@
 	tool = kdiff3
 
 [mergetool.ediff]
-    cmd = c:/local/emacs/bin/emacs.exe --eval \" \
-(progn \
-  (setq ediff-quit-hook 'kill-emacs) \
-  (if (file-readable-p \\\"$BASE\\\") \
-      (ediff-merge-files-with-ancestor \\\"$LOCAL\\\" \\\"$REMOTE\\\" \
-                                       \\\"$BASE\\\" nil \\\"$MERGED\\\") \
-      (ediff-merge-files \\\"$LOCAL\\\" \\\"$REMOTE\\\" nil \\\"$MERGED\\\")))\"
+    cmd = ediff.sh $LOCAL $REMOTE $MERGED $BASE
 [mergetool "meld"]
 	path = c:/local/meld-1.5.3/bin/meld
 [push]
