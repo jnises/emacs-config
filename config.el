@@ -179,7 +179,8 @@
   ;; set cygwin path for w32 emac
   ;;(setq w32shell-cygwin-bin "C:/cygwin/bin")
   ;;(setq gnuwin-path "c:/local/gnuwin32/bin")
-  (setq cygwin-bin-path "c:/cygwin/bin")
+  (setq cygwin-root-directory (if (file-exists-p "c:/cygwin64") "c:/cygwin64" "c:/cygwin"))
+  (setq cygwin-bin-path (concat cygwin-root-directory "/bin"))
   (setenv "PATH"
           (mapconcat 'identity
                      (list ;;gnuwin-path
