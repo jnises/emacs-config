@@ -241,10 +241,10 @@
   (c-set-style "linux")
   (setq c-basic-offset 4)
   (c-set-offset 'substatement-open 0)
-  (c-set-offset 'inline-open 0))
+  (c-set-offset 'inline-open 0)
+  (semantic-mode t)
+  (setq show-trailing-whitespace t))
 (add-hook 'c-mode-common-hook 'c-style-hook-function)
-(add-hook 'c-mode-common-hook (lambda () (semantic-mode t)))
-;;(add-hook 'c++-mode-hook 'c-style-hook-function)
 
 (load (concat el-path "/fulpdb.el"))
 
