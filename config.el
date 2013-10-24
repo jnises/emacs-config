@@ -353,4 +353,7 @@ l is lab l, so the range is 0 to 100
 (add-to-list 'load-path (concat external-el-path "/qml-mode"))
 (require 'qml-mode nil t)
 
+(when (fboundp 'magit-find-file-ido)
+  (global-set-key (kbd "C-c f") 'magit-find-file-ido))
+
 (server-start)

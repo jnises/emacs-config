@@ -72,3 +72,14 @@ algorithm: v4
 (defun insert-guid ()
   (interactive)
   (insert (guid)))
+
+(when (fboundp 'magit-git-lines)
+  (defun magit-find-file-ido ()
+    "Uses a completing read to open a file from git ls-files"
+    (interactive)
+    (let ((default-directory (magit-get-top-dir)))
+      (if default-directory
+          (find-file
+           (ido-completing-read "File? "
+                                (magit-git-lines "ls-files" "--exclude-standard" "-co")))
+        (error "Not a git repository.")))))
