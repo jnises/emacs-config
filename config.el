@@ -44,7 +44,8 @@
           undo-tree
           paredit
           multi-web-mode
-          smex)))
+          smex
+          flx-ido)))
 
 (unless (boundp 'el-path)
   (setq el-path (concat (getenv "HOME") "/.emacs.d/el")))
@@ -119,6 +120,8 @@
   (lambda()
     (interactive)
     (ido-initiate-auto-merge (current-buffer))))
+(when (fboundp 'flx-ido-mode)
+  (flx-ido-mode t))
 
 ;; font stuff
 (when window-system 
