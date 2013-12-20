@@ -83,3 +83,9 @@ algorithm: v4
            (ido-completing-read "File? "
                                 (magit-git-lines "ls-files" "--exclude-standard" "-co")))
         (error "Not a git repository.")))))
+
+(defun get-file-coding-system (filename)
+  (interactive "f")
+  (with-current-buffer
+      (find-file-noselect filename)
+    buffer-file-coding-system))

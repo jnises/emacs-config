@@ -32,7 +32,8 @@
         (progn
           (find-file (concat logdir "/" (car logfiles)))
           (end-of-buffer)
-          (auto-revert-tail-mode t))
+          (auto-revert-tail-mode t)
+          (glog-mode))
       (error (concat "no logfiles found in " logdir)))))
 
 (global-set-key (kbd "C-c u l") 'uniview-load-latest-log)

@@ -120,8 +120,8 @@
   (lambda()
     (interactive)
     (ido-initiate-auto-merge (current-buffer))))
-(when (fboundp 'flx-ido-mode)
-  (flx-ido-mode t))
+;; (when (fboundp 'flx-ido-mode)
+;;   (flx-ido-mode t))
 
 ;; font stuff
 (when window-system 
@@ -186,13 +186,13 @@
   (setq cygwin-bin-path (concat cygwin-root-directory "/bin"))
   (setenv "PATH"
           (mapconcat 'identity
-                     (list ;;gnuwin-path
-                           ;;w32shell-cygwin-bin
-                           cygwin-bin-path
-                           "C:/Program Files (x86)/Git/bin"
-                           "c:/program files (x86)/putty"
-                           "C:/Program Files/Java/jre6/bin"
-                           (getenv "PATH"))
+                     (mapcar (lambda (path) (replace-regexp-in-string "/" "\\\\" path)) (list ;;gnuwin-path
+                                 ;;w32shell-cygwin-bin
+                                 cygwin-bin-path
+                                 "C:/Program Files (x86)/Git/bin"
+                                 "c:/program files (x86)/putty"
+                                 "C:/Program Files/Java/jre6/bin"
+                                 (getenv "PATH")))
                      ";"))
 
   (add-to-list 'exec-path cygwin-bin-path)
@@ -224,6 +224,9 @@
 
 (set-default-coding-systems 'utf-8)
 (prefer-coding-system 'utf-8)
+;(setq default-file-name-coding-system 'gb2312)
+;(setq default-file-name-coding-system 'utf-8)
+(setq default-process-coding-system '(utf-8-unix . utf-8-unix))
 
 
 (require 'git nil t)
@@ -320,11 +323,14 @@ l is lab l, so the range is 0 to 100
   (interactive)
   (global-set-key (kbd "C-c o s") (lambda () (interactive) (nrepl-send-string "(stop)" (lambda (ignored))))))
   
-;; change magit diff colors
+;; change magit settings
 (eval-after-load 'magit
   '(progn
      (set-face-foreground 'magit-diff-add "green3")
-     (set-face-foreground 'magit-diff-del "red3")))
+     (set-face-foreground 'magit-diff-del "red3")
+     (let ((gitpath "c:/Program Files (x86)/Git/bin/git.exe"))
+       (if (file-exists-p gitpath)
+           (setq magit-git-executable gitpath)))))
 
 ;; web stuff
 (when (require 'multi-web-mode nil t)
@@ -358,5 +364,14 @@ l is lab l, so the range is 0 to 100
 
 (when (fboundp 'magit-find-file-ido)
   (global-set-key (kbd "C-c f") 'magit-find-file-ido))
+
+;; try to disable modula-2 mode
+(setq auto-mode-alist (remove (rassoc 'modula-2-mode auto-mode-alist) auto-mode-alist))
+
+(define-derived-mode glog-mode fundamental-mode
+  (setq font-lock-defaults '((("^E.*$" . font-lock-warning-face)
+                              ("^W.*$" . font-lock-function-name-face)
+                              ("^I.*$" . font-lock-comment-face))))
+  (setq mode-name "glog"))
 
 (server-start)
