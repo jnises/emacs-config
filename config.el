@@ -374,4 +374,10 @@ l is lab l, so the range is 0 to 100
                               ("^I.*$" . font-lock-comment-face))))
   (setq mode-name "glog"))
 
+(when (require 'ace-jump-mode nil t)
+  (define-key global-map (kbd "C-c SPC") 'ace-jump-mode))
+
+;; remove modula mode from the auto mode list
+(delete '("\\.mod\\'" . m2-mode) auto-mode-alist)
+
 (server-start)
