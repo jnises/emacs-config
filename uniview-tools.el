@@ -15,13 +15,13 @@
 (defun uniview-get-versions ()
   (uniview-filter-file-list (directory-files uniview-sciss-profile-dir)))
 
-(defun uniview-load-latest-log (version)
+(defun uniview-load-latest-log (version severity)
   "open a buffer for the latest uniview log for version (dev, master, ...)"
-  (interactive (list (ido-completing-read "version? " (uniview-get-versions))))
+  (interactive (list (ido-completing-read "version? " (uniview-get-versions)) (ido-completing-read "serverity?" '("FATAL" "ERROR" "WARNING" "INFO"))))
   (let* ((logdir (concat uniview-sciss-profile-dir "/" version "/Log"))
          (logfiles (mapcar 'car 
                            (sort
-                            (directory-files-and-attributes logdir nil "^UniviewTheater\\.")
+                            (directory-files-and-attributes logdir nil (concat "^UniviewTheater\\.[^\\.]*\\.[^\\.]*\\.log\\." severity))
                             (lambda (a b)
                               (let ((adate (nth 5 (cdr a)))
                                     (bdate (nth 5 (cdr b))))
