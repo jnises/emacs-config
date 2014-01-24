@@ -17,7 +17,7 @@
 
 (defun uniview-load-latest-log (version severity)
   "open a buffer for the latest uniview log for version (dev, master, ...)"
-  (interactive (list (ido-completing-read "version? " (uniview-get-versions)) (ido-completing-read "serverity?" '("FATAL" "ERROR" "WARNING" "INFO"))))
+  (interactive (list (ido-completing-read "version? " (uniview-get-versions)) (ido-completing-read "serverity?" '("INFO" "WARNING" "ERROR" "FATAL"))))
   (let* ((logdir (concat uniview-sciss-profile-dir "/" version "/Log"))
          (logfiles (mapcar 'car 
                            (sort
@@ -34,7 +34,7 @@
           (end-of-buffer)
           (glog-mode)
           (auto-revert-tail-mode t))
-      (error (concat "no logfiles found in " logdir)))))
+      (error (concat "no " severity " logfiles found in " logdir)))))
 
 (global-set-key (kbd "C-c u l") 'uniview-load-latest-log)
 
