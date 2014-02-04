@@ -380,4 +380,7 @@ l is lab l, so the range is 0 to 100
 ;; remove modula mode from the auto mode list
 (delete '("\\.mod\\'" . m2-mode) auto-mode-alist)
 
+;; ignore non-safe file local variables
+(setq enable-local-variables :safe)
+
 (server-start)
