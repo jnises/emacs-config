@@ -78,7 +78,8 @@
   ;; (uniview-send "specular_test2.reload")
   ;; (uniview-send "face_left.reload")
   ;;(uniview-send "snr_0509-67_5.reload")
-  (uniview-send "oh231.reload")
+  ;; (uniview-send "oh231.reload")
+  (uniview-send "asteroids.reload")
   (uniview-reload-uses-shaders)
   )
 
