@@ -384,9 +384,9 @@ l is lab l, so the range is 0 to 100
 (setq enable-local-variables :safe)
 
 ;; hack to stop glsl-mode from indenting layout modifiers as knr argument declarations
-(eval-after-load 'glsl-mode
-  (add-hook 'glsl-mode
-            (lambda ()
-              (c-set-offset knr-argdecl [0]))))
+(add-hook 'glsl-mode-hook
+          (lambda ()
+            (message "asdfasdf")
+            (c-set-offset 'knr-argdecl [0])))
 
 (server-start)
