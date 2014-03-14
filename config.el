@@ -294,7 +294,8 @@ l is lab l, so the range is 0 to 100
                                                                             (paredit-mode t)))))
 
 ;; some uniview stuff for work
-(when (equal (system-name) "OVERTOWN")
+(when (or (equal (system-name) "OVERTOWN")
+          (equal (system-name) "SCISS-DEMOPC"))
   (require 'uniview-connection)
   (require 'uniview-tools))
 
