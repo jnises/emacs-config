@@ -50,7 +50,7 @@
   ;;(uniview-send "atlas.reload")
   ;;(uniview-send "pan.reload")
   ;; (uniview-send "SaturnRings.reload")
-  (uniview-send "SaturnRingDetails.reload")
+  ;;(uniview-send "SaturnRingDetails.reload")
   ;; (uniview-send "Saturn_Northern_Aurora.reload")
   ;; (uniview-send "Saturn_Southern_Aurora.reload")
   ;; (uniview-send "Jupiter_Northern_Aurora.reload")
@@ -80,6 +80,7 @@
   ;;(uniview-send "snr_0509-67_5.reload")
   ;; (uniview-send "oh231.reload")
   ;;(uniview-send "asteroids.reload")
+  (uniview-send "gaiastars.reload")
   (uniview-reload-uses-shaders)
   )
 

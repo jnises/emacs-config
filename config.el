@@ -45,7 +45,8 @@
           paredit
           multi-web-mode
           smex
-          flx-ido)))
+          flx-ido
+          projectile)))
 
 (unless (boundp 'el-path)
   (setq el-path (concat (getenv "HOME") "/.emacs.d/el")))
@@ -389,5 +390,10 @@ l is lab l, so the range is 0 to 100
 (add-hook 'glsl-mode-hook
           (lambda ()
             (c-set-offset 'knr-argdecl [0])))
+
+;; some projectile stuff
+(when (require 'projectile nil t)
+  (setq projectile-enable-caching t)
+  (projectile-global-mode))
 
 (server-start)
