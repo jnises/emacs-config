@@ -45,7 +45,6 @@
           paredit
           multi-web-mode
           smex
-          flx-ido
           projectile)))
 
 (unless (boundp 'el-path)
@@ -122,8 +121,9 @@
   (lambda()
     (interactive)
     (ido-initiate-auto-merge (current-buffer))))
-;; (when (fboundp 'flx-ido-mode)
-;;   (flx-ido-mode t))
+;; disable directory caching on windows
+(when (equal system-type 'windows-nt)
+  (setq ido-max-dir-file-cache 0)) 
 
 ;; font stuff
 (when window-system 
