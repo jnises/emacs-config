@@ -297,7 +297,8 @@ l is lab l, so the range is 0 to 100
 
 ;; some uniview stuff for work
 (when (or (equal (system-name) "OVERTOWN")
-          (equal (system-name) "SCISS-DEMOPC"))
+          (equal (system-name) "SCISS-DEMOPC")
+          (equal (system-name) "THALLIUM"))
   (require 'uniview-connection)
   (require 'uniview-tools))
 
