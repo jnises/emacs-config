@@ -398,4 +398,8 @@ l is lab l, so the range is 0 to 100
   (setq projectile-enable-caching t)
   (projectile-global-mode))
 
+(eval-after-load 'cider
+  '(progn (setq cider-lein-command "lein.bat")
+          (when (not (boundp 'clojure--prettify-symbols-alist)) (setq clojure--prettify-symbols-alist nil))))
+
 (server-start)
