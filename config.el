@@ -80,7 +80,8 @@
 
 ;; fix grep stuff
 (require 'grep)
-(grep-apply-setting 'grep-find-command '("find . -type f ! -path \"*.git*\" -exec grep -nH -e  {} +" . 51))
+(when (fboundp 'grep-apply-setting)
+  (grep-apply-setting 'grep-find-command '("find . -type f ! -path \"*.git*\" -exec grep -nH -e  {} +" . 51)))
 
 ;; change color theme
 (if (< emacs-major-version 24)
@@ -399,7 +400,8 @@ l is lab l, so the range is 0 to 100
   (projectile-global-mode))
 
 (eval-after-load 'cider
-  '(progn (setq cider-lein-command "lein.bat")
+  '(progn (when (string-equal system-type "windows-nt")
+            (setq cider-lein-command "lein.bat"))
           (when (not (boundp 'clojure--prettify-symbols-alist)) (setq clojure--prettify-symbols-alist nil))))
 
 (server-start)
