@@ -37,7 +37,6 @@
               (package-install package)))
         '(rainbow-delimiters
           clojure-mode
-          php-mode
           lua-mode
           highlight-indentation
           yascroll
@@ -45,7 +44,8 @@
           paredit
           multi-web-mode
           smex
-          projectile)))
+          projectile
+          js2-mode)))
 
 (unless (boundp 'el-path)
   (setq el-path (concat (getenv "HOME") "/.emacs.d/el")))
