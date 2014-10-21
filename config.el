@@ -127,11 +127,12 @@
   (setq ido-max-dir-file-cache 0)) 
 
 ;; font stuff
-(when window-system
-  (cl-flet ((set-face-font-if-it-exists (target fontname)
-                                        (when (x-list-fonts fontname)
-                                          (set-face-font target fontname))))
-    (set-face-font-if-it-exists 'default "-unknown-DejaVu Sans Mono-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1")))
+(when (and (>= emacs-major-version 24) (>= emacs-minor-version 4))
+  (when window-system
+    (cl-flet ((set-face-font-if-it-exists (target fontname)
+                                          (when (x-list-fonts fontname)
+                                            (set-face-font target fontname))))
+      (set-face-font-if-it-exists 'default "-unknown-DejaVu Sans Mono-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1"))))
 
 ;; enable improved window switching, disable if you don't want it to clobber
 ;; shift-<arrowkeys> for selection
