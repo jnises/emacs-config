@@ -127,11 +127,11 @@
   (setq ido-max-dir-file-cache 0)) 
 
 ;; font stuff
-(when window-system 
-  (defun set-face-font-if-it-exists (target fontname)
-    (when (x-list-fonts fontname)
-      (set-face-font target fontname)))
-  (set-face-font-if-it-exists 'default "-unknown-DejaVu Sans Mono-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1"))
+(when window-system
+  (cl-flet ((set-face-font-if-it-exists (target fontname)
+                                        (when (x-list-fonts fontname)
+                                          (set-face-font target fontname))))
+    (set-face-font-if-it-exists 'default "-unknown-DejaVu Sans Mono-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1")))
 
 ;; enable improved window switching, disable if you don't want it to clobber
 ;; shift-<arrowkeys> for selection
@@ -165,20 +165,7 @@
 
   ;; enable goto symbol
   (add-to-list 'load-path (concat el-path "/ido-goto-buffer-tag/"))
-  (when (require 'ido-goto-buffer-tag nil t) (global-set-key (kbd "C-c i") 'ido-goto-buffer-tag))
-
-  ;; set up some ede projects
-  ;; (flet ((add-proj (dir &optional name)
-  ;;                  (when (not (file-exists-p dir))
-  ;;                    (make-directory dir))
-  ;;                  (when (null name)
-  ;;                    (setq name (substring dir (+ 1 (string-match "/[^/]+$" dir)))))
-  ;;                  (let ((filething (concat dir "/." (user-login-name) "_ede_anchor")))
-  ;;                    (shell-command (concat "touch " filething))
-  ;;                    (ede-cpp-root-project name :file filething))))
-  ;;   ;; nothing is done here for now
-  ;;   )
-  )
+  (when (require 'ido-goto-buffer-tag nil t) (global-set-key (kbd "C-c i") 'ido-goto-buffer-tag)))
 
 ;; windows only stuff
 (when (string-equal system-type "windows-nt")
@@ -193,22 +180,14 @@
                                  ;;w32shell-cygwin-bin
                                  cygwin-bin-path
                                  "C:/Program Files (x86)/Git/bin"
-                                 "c:/program files (x86)/putty"
-                                 "C:/Program Files/Java/jre6/bin"
                                  (getenv "PATH")))
                      ";"))
 
   (add-to-list 'exec-path cygwin-bin-path)
   (add-to-list 'exec-path "C:/Program Files (x86)/Git/bin")
-  (add-to-list 'exec-path "C:/Program Files (x86)/putty")
   ;; (set-variable 'find-program "find.exe")
   ;; (set-variable 'grep-program "grep.exe")
-  (add-to-list 'exec-path "C:/Program Files (x86)/Aspell/bin/")
-  (setq ispell-program-name "aspell")
-  ;;(setq ange-ftp-ftp-program-name "c:/windows/system32/ftp.exe")
-  ;;(setq tramp-default-method "ftp")
-  (and (require 'cygwin-mount nil t) (require 'setup-cygwin nil t))
-)
+  (and (require 'cygwin-mount nil t) (require 'setup-cygwin nil t)))
 
 ;; enable indentation highlighting for modes that benefit from them (python)
 (when (require 'highlight-indentation nil t)
@@ -227,20 +206,16 @@
 
 (set-default-coding-systems 'utf-8)
 (prefer-coding-system 'utf-8)
-;(setq default-file-name-coding-system 'gb2312)
-;(setq default-file-name-coding-system 'utf-8)
 (setq default-process-coding-system '(utf-8-unix . utf-8-unix))
 
-
 (require 'git nil t)
-
-;; to shut svn up
-(setenv "LC_ALL" "C")
 
 ;; better eshell behaviour
 (setq eshell-cmpl-cycle-completions nil)
 
 (put 'narrow-to-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
 
 (defun c-style-hook-function ()
   (interactive)
@@ -253,10 +228,6 @@
 (add-hook 'c-mode-common-hook 'c-style-hook-function)
 
 (load (concat el-path "/fulpdb.el"))
-
-(put 'downcase-region 'disabled nil)
-(put 'upcase-region 'disabled nil)
-
 (load (concat el-path "/utils"))
 
 (when (require 'rainbow-delimiters nil t)
@@ -334,9 +305,10 @@ l is lab l, so the range is 0 to 100
   '(progn
      (set-face-foreground 'magit-diff-add "green3")
      (set-face-foreground 'magit-diff-del "red3")
-     (let ((gitpath "c:/Program Files (x86)/Git/bin/git.exe"))
-       (if (file-exists-p gitpath)
-           (setq magit-git-executable gitpath)))))
+     (when (string-equal system-type "windows-nt")
+       (let ((gitpath "c:/Program Files (x86)/Git/bin/git.exe"))
+         (if (file-exists-p gitpath)
+             (setq magit-git-executable gitpath))))))
 
 ;; web stuff
 (when (require 'multi-web-mode nil t)
@@ -355,8 +327,6 @@ l is lab l, so the range is 0 to 100
 (add-to-list 'auto-mode-alist '("\\.glsl\\'" . glsl-mode))
 
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
-
-(setq ange-ftp-ftp-program-name "c:/local/bin/ftp.exe")
 
 (when (require 'smex nil t)
   (global-set-key (kbd "M-x") (lambda ()
@@ -379,9 +349,6 @@ l is lab l, so the range is 0 to 100
                               ("^W.*$" . font-lock-function-name-face)
                               ("^I.*$" . font-lock-comment-face))))
   (setq mode-name "glog"))
-
-(when (require 'ace-jump-mode nil t)
-  (define-key global-map (kbd "C-c SPC") 'ace-jump-mode))
 
 ;; remove modula mode from the auto mode list
 (delete '("\\.mod\\'" . m2-mode) auto-mode-alist)

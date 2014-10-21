@@ -80,7 +80,11 @@
   ;;(uniview-send "snr_0509-67_5.reload")
   ;; (uniview-send "oh231.reload")
   ;;(uniview-send "asteroids.reload")
-  (uniview-send "gaiastars.reload")
+  ;;(uniview-send "gaiastars.reload")
+  ;;(uniview-send "cradle_comet")
+  ;; (uniview-send "lutetiaobj")
+  ;; (uniview-send "GlialCells")
+  (uniview-send "Mercury_Magneto")
   (uniview-reload-uses-shaders)
   )
 
