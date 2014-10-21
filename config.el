@@ -204,9 +204,10 @@
 
 (setq gud-pdb-command-name "python -i -m pdb")
 
-(set-default-coding-systems 'utf-8)
-(prefer-coding-system 'utf-8)
-(setq default-process-coding-system '(utf-8-unix . utf-8-unix))
+(when (or (< emacs-major-version 24) (< emacs-minor-version 4))
+  (set-default-coding-systems 'utf-8)
+  (prefer-coding-system 'utf-8)
+  (setq default-process-coding-system '(utf-8-unix . utf-8-unix)))
 
 (require 'git nil t)
 
