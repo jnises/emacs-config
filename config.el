@@ -28,6 +28,21 @@
   (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
   (package-initialize))
 
+(setq default-packages '(rainbow-delimiters
+                         clojure-mode
+                         lua-mode
+                         highlight-indentation
+                         yascroll
+                         undo-tree
+                         paredit
+                         multi-web-mode
+                         smex
+                         projectile
+                         js2-mode))
+
+(when (string-equal system-type "darwin")
+  (add-to-list 'default-packages 'exec-path-from-shell))
+
 (defun install-default-packages ()
   " install useful packages, call this method when starting emacs on a new machine "
   (interactive)
@@ -35,17 +50,7 @@
   (mapc (lambda (package)
           (if (not (package-installed-p package)) 
               (package-install package)))
-        '(rainbow-delimiters
-          clojure-mode
-          lua-mode
-          highlight-indentation
-          yascroll
-          undo-tree
-          paredit
-          multi-web-mode
-          smex
-          projectile
-          js2-mode)))
+        default-packages))
 
 (unless (boundp 'el-path)
   (setq el-path (concat (getenv "HOME") "/.emacs.d/el")))
@@ -372,5 +377,9 @@ l is lab l, so the range is 0 to 100
   '(progn (when (string-equal system-type "windows-nt")
             (setq cider-lein-command "lein.bat"))
           (when (not (boundp 'clojure--prettify-symbols-alist)) (setq clojure--prettify-symbols-alist nil))))
+
+(when (string-equal system-type "darwin")
+  (when (require 'exec-path-from-shell nil t)
+    (exec-path-from-shell-initialize)))
 
 (server-start)
