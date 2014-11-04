@@ -24,7 +24,7 @@
 
 ;; better package repo
 (when (require 'package nil t)
-  (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+  ;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
   (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
   (package-initialize))
 
@@ -206,6 +206,9 @@
                               (setq tab-width 4)
                               (setq python-indent 4)
                               (semantic-mode 1)))
+
+;; disable electric indent everywhere since it doesn't seem possible to disable it for python only
+(electric-indent-mode -1)
 
 
 (setq gud-pdb-command-name "python -i -m pdb")
