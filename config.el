@@ -115,7 +115,8 @@
 (setq ediff-split-window-function 'split-window-horizontally)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
-;; display column
+;; display line and column
+(line-number-mode t)
 (column-number-mode t)
 
 ;; enable ido mode
