@@ -186,8 +186,9 @@
   ;; (uniview-send "lutetiaobj.reload")
   ;; (uniview-send "GlialCells.reload")
   ;;(uniview-send "Mercury_Magneto.reload")
-  (uniview-send "neurodomePanorama.reload")
-  (uniview-reload-neurodome)
+  ;;(uniview-send "neurodomePanorama.reload")
+  ;;(uniview-reload-neurodome)
+  (uniview-send "neurodome_CT_1.reload")
   )
 
 (global-set-key (kbd "C-c u s") 'uniview-send)
