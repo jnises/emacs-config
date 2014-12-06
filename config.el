@@ -59,29 +59,28 @@
               (package-install package)))
         default-packages))
 
+(defun download-file-if-not-exist (url path &optional sha1)
+  (unless (file-exists-p path)
+    (url-retrieve url
+                  (lambda (status) (save-excursion
+                                     (goto-char (point-min))
+                                     (let ((httpok "HTTP/1.1 200 OK"))
+                                       (unless (string-equal (buffer-substring-no-properties 1 (+ 1 (length httpok))) httpok)
+                                         (error (concat "Error downloading " url))))
+                                     ;; strip the headers
+                                     (search-forward "\n\n")
+                                     (delete-region 1 (point))
+                                     (unless (or (not sha1) (string-equal (secure-hash 'sha1 (current-buffer)) sha1))
+                                       (error (concat "Error: " url " does not have the expected hash")))
+                                     (write-file path))))))
+
 (defun initial-setup ()
   (interactive)
   (install-default-packages)
   ;; system specific setup
   (cond ((string-equal system-type "darwin")
          ;; download gud from apple that supports lldb
-         (let ((gudurl "http://www.opensource.apple.com/source/lldb/lldb-69/utils/emacs/gud.el?txt")
-               (gudpath (concat downloaded-el-path "/gud.el"))
-               (gudsha1 "108a76a8d5d8ffa6aca950a103294a012bb606f9"))
-           (unless (file-exists-p gudpath)
-             (url-retrieve gudurl
-                           (lambda (status) (save-excursion
-                                              ;;(switch-to-buffer (current-buffer))
-                                              (goto-char (point-min))
-                                              (let ((httpok "HTTP/1.1 200 OK"))
-                                                (unless (string-equal (buffer-substring-no-properties 1 (+ 1 (length httpok))) httpok)
-                                                  (error (concat "Error downloading " gudurl))))
-                                              ;; strip the headers
-                                              (search-forward "\n\n")
-                                              (delete-region 1 (point))
-                                              (unless (string-equal (secure-hash 'sha1 (current-buffer)) gudsha1)
-                                                (error (concat "Error: " gudurl " does not have the expected hash")))
-                                              (write-file gudpath)))))))))
+         (download-file-if-not-exist "http://www.opensource.apple.com/source/lldb/lldb-69/utils/emacs/gud.el?txt" (concat downloaded-el-path "/gud.el") "108a76a8d5d8ffa6aca950a103294a012bb606f9"))))
 
 ;; faster startup
 (modify-frame-parameters nil '((wait-for-wm . nil)))
