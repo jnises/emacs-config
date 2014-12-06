@@ -24,6 +24,9 @@
 (unless (boundp 'el-path)
   (setq el-path (concat (getenv "HOME") "/.emacs.d/el")))
 (setq external-el-path (concat el-path "/external"))
+(setq downloaded-el-path (concat el-path "/downloaded"))
+(unless (file-directory-p downloaded-el-path)
+  (make-directory downloaded-el-path))
 
 ;; better package repo
 (when (require 'package nil t)
@@ -63,11 +66,12 @@
   (cond ((string-equal system-type "darwin")
          ;; download gud from apple that supports lldb
          (let ((gudurl "http://www.opensource.apple.com/source/lldb/lldb-69/utils/emacs/gud.el?txt")
-               (gudpath (concat external-el-path "/gud.el")))
+               (gudpath (concat downloaded-el-path "/gud.el"))
+               (gudsha1 "108a76a8d5d8ffa6aca950a103294a012bb606f9"))
            (unless (file-exists-p gudpath)
              (url-retrieve gudurl
                            (lambda (status) (save-excursion
-                                              (switch-to-buffer (current-buffer))
+                                              ;;(switch-to-buffer (current-buffer))
                                               (goto-char (point-min))
                                               (let ((httpok "HTTP/1.1 200 OK"))
                                                 (unless (string-equal (buffer-substring-no-properties 1 (+ 1 (length httpok))) httpok)
@@ -75,6 +79,8 @@
                                               ;; strip the headers
                                               (search-forward "\n\n")
                                               (delete-region 1 (point))
+                                              (unless (string-equal (secure-hash 'sha1 (current-buffer)) gudsha1)
+                                                (error (concat "Error: " gudurl " does not have the expected hash")))
                                               (write-file gudpath)))))))))
 
 ;; faster startup
@@ -219,7 +225,7 @@
 
 (when (string-equal system-type "darwin")
   ;; use apple gud that supports lldb
-  (load (concat external-el-path "/gud")))
+  (load (concat downloaded-el-path "/gud")))
 
 ;; enable indentation highlighting for modes that benefit from them (python)
 (when (require 'highlight-indentation nil t)
