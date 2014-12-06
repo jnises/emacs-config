@@ -21,6 +21,9 @@
  ;; If there is more than one, they won't work right.
  '(highlight ((t (:background "Gray12" :foreground nil)))))
 
+(unless (boundp 'el-path)
+  (setq el-path (concat (getenv "HOME") "/.emacs.d/el")))
+(setq external-el-path (concat el-path "/external"))
 
 ;; better package repo
 (when (require 'package nil t)
@@ -38,7 +41,8 @@
                          multi-web-mode
                          smex
                          projectile
-                         js2-mode))
+                         js2-mode
+                         magit))
 
 (when (string-equal system-type "darwin")
   (add-to-list 'default-packages 'exec-path-from-shell))
@@ -52,9 +56,26 @@
               (package-install package)))
         default-packages))
 
-(unless (boundp 'el-path)
-  (setq el-path (concat (getenv "HOME") "/.emacs.d/el")))
-(setq external-el-path (concat el-path "/external"))
+(defun initial-setup ()
+  (interactive)
+  (install-default-packages)
+  ;; system specific setup
+  (cond ((string-equal system-type "darwin")
+         ;; download gud from apple that supports lldb
+         (let ((gudurl "http://www.opensource.apple.com/source/lldb/lldb-69/utils/emacs/gud.el?txt")
+               (gudpath (concat external-el-path "/gud.el")))
+           (unless (file-exists-p gudpath)
+             (url-retrieve gudurl
+                           (lambda (status) (save-excursion
+                                              (switch-to-buffer (current-buffer))
+                                              (goto-char (point-min))
+                                              (let ((httpok "HTTP/1.1 200 OK"))
+                                                (unless (string-equal (buffer-substring-no-properties 1 (+ 1 (length httpok))) httpok)
+                                                  (error (concat "Error downloading " gudurl))))
+                                              ;; strip the headers
+                                              (search-forward "\n\n")
+                                              (delete-region 1 (point))
+                                              (write-file gudpath)))))))))
 
 ;; faster startup
 (modify-frame-parameters nil '((wait-for-wm . nil)))
@@ -195,6 +216,10 @@
   ;; (set-variable 'find-program "find.exe")
   ;; (set-variable 'grep-program "grep.exe")
   (and (require 'cygwin-mount nil t) (require 'setup-cygwin nil t)))
+
+(when (string-equal system-type "darwin")
+  ;; use apple gud that supports lldb
+  (load (concat external-el-path "/gud")))
 
 ;; enable indentation highlighting for modes that benefit from them (python)
 (when (require 'highlight-indentation nil t)
