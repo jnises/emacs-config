@@ -189,6 +189,7 @@
   ;;(uniview-send "neurodomePanorama.reload")
   ;;(uniview-reload-neurodome)
   (uniview-send "neurodome_CT_1.reload")
+  ;;(uniview-send "NGC6302.reload")
   )
 
 (global-set-key (kbd "C-c u s") 'uniview-send)
