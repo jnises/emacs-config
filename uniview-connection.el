@@ -188,8 +188,12 @@
   ;;(uniview-send "Mercury_Magneto.reload")
   ;;(uniview-send "neurodomePanorama.reload")
   ;;(uniview-reload-neurodome)
-  (uniview-send "neurodome_CT_1.reload")
+  ;;(uniview-send "neurodome_CT_1.reload")
   ;;(uniview-send "NGC6302.reload")
+  ;; (uniview-send "neurodome_glassbrain_left.reload")
+  ;; (uniview-send "neurodome_glassbrain_right.reload")
+  (uniview-send "neurodome_dti.reload")
+  ;;(uniview-send "neurodome_fadesphere.reload")
   )
 
 (global-set-key (kbd "C-c u s") 'uniview-send)

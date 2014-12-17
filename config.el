@@ -28,10 +28,15 @@
 (unless (file-directory-p downloaded-el-path)
   (make-directory downloaded-el-path))
 
+(add-to-list 'load-path el-path)
+(add-to-list 'load-path external-el-path)
+(add-to-list 'load-path downloaded-el-path)
+
 ;; better package repo
 (when (require 'package nil t)
   ;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
   (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+  (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
   (package-initialize))
 
 (setq default-packages '(rainbow-delimiters
@@ -106,9 +111,6 @@
 
 ;; but if there is, set the default tab width (determines how a tab is displayed)
 (setq default-tab-width 4)
-
-(add-to-list 'load-path el-path)
-(add-to-list 'load-path external-el-path)
 
 ;; fix grep stuff
 (require 'grep)
