@@ -118,23 +118,24 @@
   (grep-apply-setting 'grep-find-command '("find . -type f ! -path \"*.git*\" -exec grep -nH -e  {} +" . 51)))
 
 ;; change color theme
-(if (< emacs-major-version 24)
-    (when (and window-system (load (concat external-el-path "/color-theme")))
-      (color-theme-charcoal-black)
-      ;; highlight current line
-      (set-face-background 'highlight "Gray12")
-      (set-face-foreground 'highlight nil)
-      ;; force color
-      (add-hook 'hl-line-mode-hook (lambda () (set-face-foreground 'highlight nil)))
-      (add-hook 'global-hl-line-mode-hook (lambda () (set-face-foreground 'highlight nil)))
-      (global-hl-line-mode 1)
-      (hl-line-mode 1)
-      (set-face-background 'menu "Black"))
-  ;; emacs 24
-  (load-theme 'tango-dark)
-  ;; ugly hack to make ediff behave
-  (when (string-equal system-type "windows-nt")
-    (load "c:/local/emacs/etc/themes/tango-dark-theme.el" t)))
+(if (window-system)
+    (if (< emacs-major-version 24)
+        (when (and window-system (load (concat external-el-path "/color-theme")))
+          (color-theme-charcoal-black)
+          ;; highlight current line
+          (set-face-background 'highlight "Gray12")
+          (set-face-foreground 'highlight nil)
+          ;; force color
+          (add-hook 'hl-line-mode-hook (lambda () (set-face-foreground 'highlight nil)))
+          (add-hook 'global-hl-line-mode-hook (lambda () (set-face-foreground 'highlight nil)))
+          (global-hl-line-mode 1)
+          (hl-line-mode 1)
+          (set-face-background 'menu "Black"))
+      ;; emacs 24
+      (load-theme 'tango-dark)
+      ;; ugly hack to make ediff behave
+      (when (string-equal system-type "windows-nt")
+        (load "c:/local/emacs/etc/themes/tango-dark-theme.el" t))))
 
 ;; highlight line
 (global-hl-line-mode 1)
