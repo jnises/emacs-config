@@ -365,9 +365,8 @@ l is lab l, so the range is 0 to 100
 
 (global-set-key (kbd "C-c m") 'compile)
 
-(add-to-list 'load-path (concat external-el-path "/glsl-mode"))
-(autoload 'glsl-mode "glsl-mode" nil t)
-(add-to-list 'auto-mode-alist '("\\.glsl\\'" . glsl-mode))
+(when (require 'glsl-mode nil t)
+  (add-to-list 'auto-mode-alist '("\\.glsl\\'" . glsl-mode)))
 
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
@@ -378,8 +377,8 @@ l is lab l, so the range is 0 to 100
                                 (global-set-key (kbd "M-x") 'smex)
                                 (smex))))
 
-(add-to-list 'load-path (concat external-el-path "/qml-mode"))
-(require 'qml-mode nil t)
+;; (add-to-list 'load-path (concat external-el-path "/qml-mode"))
+;; (require 'qml-mode nil t)
 
 (when (fboundp 'magit-find-file-ido)
   (global-set-key (kbd "C-c f") 'magit-find-file-ido))
