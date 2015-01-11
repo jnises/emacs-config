@@ -231,9 +231,10 @@
   (load (concat downloaded-el-path "/gud")))
 
 ;; enable indentation highlighting for modes that benefit from them (python)
-(when (require 'highlight-indentation nil t)
-  (add-hook 'python-mode-hook (lambda ()
-                                (highlight-indentation-mode t))))
+(if (window-system)
+    (when (require 'highlight-indentation nil t)
+      (add-hook 'python-mode-hook (lambda ()
+                                    (highlight-indentation-mode t)))))
 
 ;; python stuff
 (add-hook 'python-mode-hook (lambda ()
