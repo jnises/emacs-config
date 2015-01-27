@@ -314,8 +314,9 @@ l is lab l, so the range is 0 to 100
                                                                             (paredit-mode t)))))
 
 ;; some uniview stuff for work
+;; note that system-name seems to be capitalized during startup
 (when (or (equal (system-name) "OVERTOWN")
-          (equal (system-name) "Copper"))
+          (equal (system-name) "COPPER"))
   (require 'uniview-connection)
   (require 'uniview-tools))
 
@@ -417,5 +418,11 @@ l is lab l, so the range is 0 to 100
 (when (string-equal system-type "darwin")
   (when (require 'exec-path-from-shell nil t)
     (exec-path-from-shell-initialize)))
+
+;; no backup files
+(setq make-backup-files nil)
+
+;; to make org mode not clobber windmove keys
+(setq org-replace-disputed-keys t)
 
 (server-start)
