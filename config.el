@@ -174,13 +174,6 @@
 ;; shift-<arrowkeys> for selection
 (windmove-default-keybindings)
 
-;; breadcrumb bookmarks, (as in visual studio)
-(when (load (concat external-el-path "/breadcrumb"))
-  (global-set-key [(control f2)]          'bc-set)
-  (global-set-key [(f2)]                  'bc-previous)
-  (global-set-key [(shift f2)]            'bc-next)
-  (global-set-key [(meta f2)]             'bc-list))
-
 ;; nicer buffer names
 (when (require 'uniquify nil t)
   (setq uniquify-buffer-name-style 'forward))
