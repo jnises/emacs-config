@@ -187,7 +187,7 @@
   ;; (uniview-send "GlialCells.reload")
   ;;(uniview-send "Mercury_Magneto.reload")
   ;;(uniview-send "neurodomePanorama.reload")
-  ;;(uniview-reload-neurodome)
+  (uniview-reload-neurodome)
   ;;(uniview-send "neurodome_CT_1.reload")
   ;;(uniview-send "NGC6302.reload")
   ;; (uniview-send "neurodome_glassbrain_left.reload")

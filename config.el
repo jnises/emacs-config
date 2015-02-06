@@ -34,7 +34,7 @@
 
 ;; better package repo
 (when (require 'package nil t)
-  ;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+  ;;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
   (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
   (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
   (package-initialize))
@@ -417,5 +417,8 @@ l is lab l, so the range is 0 to 100
 
 ;; to make org mode not clobber windmove keys
 (setq org-replace-disputed-keys t)
+
+(when (require 'js2-mode nil t)
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
 
 (server-start)
