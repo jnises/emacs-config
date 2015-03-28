@@ -300,11 +300,13 @@ l is lab l, so the range is 0 to 100
   )
 
 ;; use rainbow delimiters and paredit mode for some lisp files
-(dolist (hook '(clojure-mode-hook emacs-lisp-mode-hook)) (add-hook hook (lambda ()
-                                                                          (when (require 'rainbow-delimiters nil t)
-                                                                            (rainbow-delimiters-mode t))
-                                                                          (when (require 'paredit nil t)
-                                                                            (paredit-mode t)))))
+(dolist (hook '(clojure-mode-hook
+                emacs-lisp-mode-hook
+                scheme-mode-hook)) (add-hook hook (lambda ()
+                                                    (when (require 'rainbow-delimiters nil t)
+                                                      (rainbow-delimiters-mode t))
+                                                    (when (require 'paredit nil t)
+                                                      (paredit-mode t)))))
 
 ;; some uniview stuff for work
 ;; note that system-name seems to be capitalized during startup
