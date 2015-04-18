@@ -163,12 +163,11 @@
   (setq ido-max-dir-file-cache 0)) 
 
 ;; font stuff
-(when (and (>= emacs-major-version 24) (>= emacs-minor-version 4))
-  (when window-system
-    (cl-flet ((set-face-font-if-it-exists (target fontname)
-                                          (when (x-list-fonts fontname)
-                                            (set-face-font target fontname))))
-      (set-face-font-if-it-exists 'default "-unknown-DejaVu Sans Mono-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1"))))
+(when (and (>= emacs-major-version 24) (>= emacs-minor-version 4) window-system)
+  (cl-flet ((set-face-font-if-it-exists (target fontname)
+                                        (when (x-list-fonts fontname)
+                                          (set-face-font target fontname))))
+    (set-face-font-if-it-exists 'default "-unknown-DejaVu Sans Mono-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1")))
 
 ;; enable improved window switching, disable if you don't want it to clobber
 ;; shift-<arrowkeys> for selection
@@ -184,7 +183,7 @@
   (require 'semantic/sb)
   (semantic-mode t)
   (setq semantic-idle-work-update-headers-flag t)
-  (global-semantic-mru-bookmark-mode 1)
+  ;;(global-semantic-mru-bookmark-mode 1)
   (global-semanticdb-minor-mode t)
 
   ;; use shorter symref tag listing
@@ -238,7 +237,6 @@
 
 ;; disable electric indent everywhere since it doesn't seem possible to disable it for python only
 (electric-indent-mode -1)
-
 
 (setq gud-pdb-command-name "python -i -m pdb")
 
@@ -363,7 +361,11 @@ l is lab l, so the range is 0 to 100
 (global-set-key (kbd "C-c m") 'compile)
 
 (when (require 'glsl-mode nil t)
-  (add-to-list 'auto-mode-alist '("\\.glsl\\'" . glsl-mode)))
+  (add-to-list 'auto-mode-alist '("\\.glsl\\'" . glsl-mode))
+  ;; hack to stop glsl-mode from indenting layout modifiers as knr argument declarations
+  (add-hook 'glsl-mode-hook
+            (lambda ()
+              (c-set-offset 'knr-argdecl [0]))))
 
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
@@ -374,14 +376,13 @@ l is lab l, so the range is 0 to 100
                                 (global-set-key (kbd "M-x") 'smex)
                                 (smex))))
 
-;; (add-to-list 'load-path (concat external-el-path "/qml-mode"))
-;; (require 'qml-mode nil t)
-
 (when (fboundp 'magit-find-file-ido)
   (global-set-key (kbd "C-c f") 'magit-find-file-ido))
 
 ;; try to disable modula-2 mode
 (setq auto-mode-alist (remove (rassoc 'modula-2-mode auto-mode-alist) auto-mode-alist))
+;; remove modula mode from the auto mode list
+(delete '("\\.mod\\'" . m2-mode) auto-mode-alist)
 
 (define-derived-mode glog-mode fundamental-mode
   (setq font-lock-defaults '((("^E.*$" . font-lock-warning-face)
@@ -389,16 +390,9 @@ l is lab l, so the range is 0 to 100
                               ("^I.*$" . font-lock-comment-face))))
   (setq mode-name "glog"))
 
-;; remove modula mode from the auto mode list
-(delete '("\\.mod\\'" . m2-mode) auto-mode-alist)
 
 ;; ignore non-safe file local variables
 (setq enable-local-variables :safe)
-
-;; hack to stop glsl-mode from indenting layout modifiers as knr argument declarations
-(add-hook 'glsl-mode-hook
-          (lambda ()
-            (c-set-offset 'knr-argdecl [0])))
 
 ;; some projectile stuff
 (when (require 'projectile nil t)

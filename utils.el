@@ -2,15 +2,6 @@
 
 (random t)
 
-(defun sciss-get-random-person ()
-  (interactive)
-  (let ((persons ["per" "danne" "urban" "mike"]))
-    (let ((person (elt persons (random (length persons)))))
-      (if (called-interactively-p)
-          (message person)
-        person))))
-
-
 (defun double-indentation-line ()
   "Double the number of spaces at the start of a line"
   (interactive)
