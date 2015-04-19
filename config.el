@@ -178,23 +178,23 @@
   (setq uniquify-buffer-name-style 'forward))
 
 ;; load cedet
-(when (require 'cedet nil t)
-  (global-ede-mode t)
-  (require 'semantic/sb)
-  (semantic-mode t)
-  (setq semantic-idle-work-update-headers-flag t)
-  ;;(global-semantic-mru-bookmark-mode 1)
-  (global-semanticdb-minor-mode t)
+;; (when (require 'cedet nil t)
+;;   (global-ede-mode t)
+;;   (require 'semantic/sb)
+;;   (semantic-mode t)
+;;   (setq semantic-idle-work-update-headers-flag t)
+;;   ;;(global-semantic-mru-bookmark-mode 1)
+;;   (global-semanticdb-minor-mode t)
 
-  ;; use shorter symref tag listing
-  (setq semantic-symref-results-summary-function 'semantic-format-tag-canonical-name)
+;;   ;; use shorter symref tag listing
+;;   (setq semantic-symref-results-summary-function 'semantic-format-tag-canonical-name)
 
-  ;; enable sticky function globaly
-  (global-semantic-stickyfunc-mode 1)
+;;   ;; enable sticky function globaly
+;;   (global-semantic-stickyfunc-mode 1)
 
-  ;; enable goto symbol
-  (add-to-list 'load-path (concat el-path "/ido-goto-buffer-tag/"))
-  (when (require 'ido-goto-buffer-tag nil t) (global-set-key (kbd "C-c i") 'ido-goto-buffer-tag)))
+;;   ;; enable goto symbol
+;;   (add-to-list 'load-path (concat el-path "/ido-goto-buffer-tag/"))
+;;   (when (require 'ido-goto-buffer-tag nil t) (global-set-key (kbd "C-c i") 'ido-goto-buffer-tag)))
 
 ;; windows only stuff
 (when (string-equal system-type "windows-nt")
