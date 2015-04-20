@@ -233,7 +233,8 @@
                               ;; tab width is a mess, so force python to use the correct one
                               (setq tab-width 4)
                               (setq python-indent 4)
-                              (semantic-mode 1)))
+                              ;(semantic-mode 1)
+                              ))
 
 ;; disable electric indent everywhere since it doesn't seem possible to disable it for python only
 (electric-indent-mode -1)
@@ -260,7 +261,7 @@
   (setq c-basic-offset 4)
   (c-set-offset 'substatement-open 0)
   (c-set-offset 'inline-open 0)
-  (semantic-mode t)
+  ;;(semantic-mode t)
   (setq show-trailing-whitespace t))
 (add-hook 'c-mode-common-hook 'c-style-hook-function)
 
