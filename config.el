@@ -310,7 +310,8 @@ l is lab l, so the range is 0 to 100
 ;; some uniview stuff for work
 ;; note that system-name seems to be capitalized during startup
 (when (or (equal (system-name) "OVERTOWN")
-          (equal (system-name) "COPPER"))
+          (equal (system-name) "COPPER")
+          (equal (system-name) "BARIUM"))
   (require 'uniview-connection)
   (require 'uniview-tools))
 
@@ -418,5 +419,9 @@ l is lab l, so the range is 0 to 100
 
 (when (require 'js2-mode nil t)
   (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
+
+;; use python 3 by default
+(setq py-python-command "py -3")
+(setq python-python-command "py -3")
 
 (server-start)

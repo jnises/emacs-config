@@ -181,7 +181,7 @@
   ;;(uniview-send "snr_0509-67_5.reload")
   ;; (uniview-send "oh231.reload")
   ;;(uniview-send "asteroids.reload")
-  ;;(uniview-send "gaiastars.reload")
+  (uniview-send "gaiastars.reload")
   ;;(uniview-send "cradle_comet.reload")
   ;; (uniview-send "lutetiaobj.reload")
   ;; (uniview-send "GlialCells.reload")
@@ -195,7 +195,7 @@
   ;;(uniview-send "neurodome_dti.reload")
   ;;(uniview-send "neurodome_fadesphere.reload")
   ;;(uniview-send "neurodome_cortical_neurons.reload")
-  (uniview-send "Haumea.reload")
+  ;;(uniview-send "Haumea.reload")
   )
 
 (global-set-key (kbd "C-c u s") 'uniview-send)
