@@ -424,4 +424,8 @@ l is lab l, so the range is 0 to 100
 (setq py-python-command "py -3")
 (setq python-python-command "py -3")
 
+;; no suspend when not in terminal
+(when (window-system)
+  (global-unset-key [(control z)]))
+
 (server-start)
