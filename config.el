@@ -208,12 +208,12 @@
                      (mapcar (lambda (path) (replace-regexp-in-string "/" "\\\\" path)) (list ;;gnuwin-path
                                  ;;w32shell-cygwin-bin
                                  cygwin-bin-path
-                                 "C:/Program Files (x86)/Git/bin"
+                                 "C:/Program Files/Git/bin"
                                  (getenv "PATH")))
                      ";"))
 
   (add-to-list 'exec-path cygwin-bin-path)
-  (add-to-list 'exec-path "C:/Program Files (x86)/Git/bin")
+  (add-to-list 'exec-path "C:/Program Files/Git/bin")
   ;; (set-variable 'find-program "find.exe")
   ;; (set-variable 'grep-program "grep.exe")
   (and (require 'cygwin-mount nil t) (require 'setup-cygwin nil t)))
@@ -344,8 +344,8 @@ l is lab l, so the range is 0 to 100
 ;; change magit settings
 (eval-after-load 'magit
   '(progn
-     (set-face-foreground 'magit-diff-add "green3")
-     (set-face-foreground 'magit-diff-del "red3")
+     ;;(set-face-foreground 'magit-diff-add "green3")
+     ;;(set-face-foreground 'magit-diff-del "red3")
      (when (string-equal system-type "windows-nt")
        (let ((gitpath "c:/Program Files (x86)/Git/bin/git.exe"))
          (if (file-exists-p gitpath)
