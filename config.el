@@ -322,10 +322,6 @@ l is lab l, so the range is 0 to 100
 (global-set-key (kbd "C-c c c") 'comment-region)
 (global-set-key (kbd "C-c c u") 'uncomment-region)
 
-(when (string-equal system-type "windows-nt")
-  (when (require 'pyflakes nil t)
-    (set-variable 'pyflakes-command "python c:/python27/scripts/pyflakes")))
-  
 (if (window-system)
     (when (require 'yascroll nil t)
       (scroll-bar-mode -1)
