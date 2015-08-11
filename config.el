@@ -344,10 +344,8 @@ l is lab l, so the range is 0 to 100
 ;; change magit settings
 (eval-after-load 'magit
   '(progn
-     ;;(set-face-foreground 'magit-diff-add "green3")
-     ;;(set-face-foreground 'magit-diff-del "red3")
      (when (string-equal system-type "windows-nt")
-       (let ((gitpath "c:/Program Files (x86)/Git/bin/git.exe"))
+       (let ((gitpath "c:/Program Files/Git/bin/git.exe"))
          (if (file-exists-p gitpath)
              (setq magit-git-executable gitpath))))))
 
