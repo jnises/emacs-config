@@ -220,9 +220,9 @@
 
 (when (string-equal system-type "darwin")
   ;; use apple gud that supports lldb
-  (let (path (concat downloaded-el-path "/gud")))
-  (if (file-exists-p path)
-      (load path)))
+  (let ((path (concat downloaded-el-path "/gud")))
+    (if (file-exists-p path)
+        (load path))))
 
 ;; enable indentation highlighting for modes that benefit from them (python)
 (if (window-system)
