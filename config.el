@@ -50,7 +50,12 @@
                          smex
                          projectile
                          js2-mode
-                         magit))
+                         magit
+                         helm
+                         helm-projectile
+                         helm-ls-git
+                         helm-gtags
+                         ggtags))
 
 (when (string-equal system-type "darwin")
   (add-to-list 'default-packages 'exec-path-from-shell))
@@ -150,14 +155,26 @@
 (column-number-mode t)
 
 ;; enable ido mode
-(ido-mode t)
-(setq ido-enable-flex-matching t)
-;; disable auto searching for files unless called explicitly with C-c C-s
-(setq ido-auto-merge-delay-time 99999)
-(define-key ido-file-dir-completion-map (kbd "C-c C-s")
-  (lambda()
-    (interactive)
-    (ido-initiate-auto-merge (current-buffer))))
+(defun start-ido-mode ()
+  (interactive)
+  (ido-mode t)
+  (setq ido-enable-flex-matching t)
+  ;; disable auto searching for files unless called explicitly with C-c C-s
+  (setq ido-auto-merge-delay-time 99999)
+  (define-key ido-file-dir-completion-map (kbd "C-c C-s")
+    (lambda()
+      (interactive)
+      (ido-initiate-auto-merge (current-buffer))))
+  (when (fboundp 'magit-find-file-ido)
+    (global-set-key (kbd "C-c f") 'magit-find-file-ido)))
+
+(helm-mode 1)
+(setq helm-mode-fuzzy-match t)
+(setq helm-completion-in-region-fuzzy-match t)
+(setq helm-M-x-fuzzy-match t)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "M-x") 'helm-M-x)
+
 ;; disable directory caching on windows
 (when (equal system-type 'windows-nt)
   (setq ido-max-dir-file-cache 0)) 
@@ -368,15 +385,13 @@ l is lab l, so the range is 0 to 100
 
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
-(when (require 'smex nil t)
-  (global-set-key (kbd "M-x") (lambda ()
-                                (interactive)
-                                (or (boundp 'smex-cache) (smex-initialize))
-                                (global-set-key (kbd "M-x") 'smex)
-                                (smex))))
-
-(when (fboundp 'magit-find-file-ido)
-  (global-set-key (kbd "C-c f") 'magit-find-file-ido))
+(defun start-smex-mode ()
+  (when (require 'smex nil t)
+    (global-set-key (kbd "M-x") (lambda ()
+                                  (interactive)
+                                  (or (boundp 'smex-cache) (smex-initialize))
+                                  (global-set-key (kbd "M-x") 'smex)
+                                  (smex)))))
 
 ;; try to disable modula-2 mode
 (setq auto-mode-alist (remove (rassoc 'modula-2-mode auto-mode-alist) auto-mode-alist))
