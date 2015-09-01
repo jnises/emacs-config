@@ -137,10 +137,11 @@
           (hl-line-mode 1)
           (set-face-background 'menu "Black"))
       ;; emacs 24
-      (load-theme 'tango-dark)
+      (load-theme 'tsdh-dark)
       ;; ugly hack to make ediff behave
-      (when (string-equal system-type "windows-nt")
-        (load "c:/local/emacs/etc/themes/tango-dark-theme.el" t))))
+      ;; (when (string-equal system-type "windows-nt")
+      ;;   (load "c:/local/emacs/etc/themes/tango-dark-theme.el" t))
+      ))
 
 ;; highlight line
 (global-hl-line-mode 1)
