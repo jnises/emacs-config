@@ -47,7 +47,7 @@
                          undo-tree
                          paredit
                          multi-web-mode
-                         smex
+                         ;;smex
                          projectile
                          js2-mode
                          magit
