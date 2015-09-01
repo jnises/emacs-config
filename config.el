@@ -168,12 +168,16 @@
   (when (fboundp 'magit-find-file-ido)
     (global-set-key (kbd "C-c f") 'magit-find-file-ido)))
 
-(helm-mode 1)
-(setq helm-mode-fuzzy-match t)
-(setq helm-completion-in-region-fuzzy-match t)
-(setq helm-M-x-fuzzy-match t)
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
-(global-set-key (kbd "M-x") 'helm-M-x)
+(if (require 'helm-mode nil t)
+    (progn
+      (helm-mode 1)
+      (setq helm-mode-fuzzy-match t)
+      (setq helm-completion-in-region-fuzzy-match t)
+      (setq helm-M-x-fuzzy-match t)
+      (global-set-key (kbd "C-x C-f") 'helm-find-files)
+      (global-set-key (kbd "M-x") 'helm-M-x))
+  ;; fall back to ido-mode if helm is not available
+  (start-ido-mode))
 
 ;; disable directory caching on windows
 (when (equal system-type 'windows-nt)
