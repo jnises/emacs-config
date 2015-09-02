@@ -25,6 +25,7 @@
   (setq el-path (concat (getenv "HOME") "/.emacs.d/el")))
 (setq external-el-path (concat el-path "/external"))
 (setq downloaded-el-path (concat el-path "/downloaded"))
+(setq downloaded-tmp-path (concat el-path "/tmp"))
 (unless (file-directory-p downloaded-el-path)
   (make-directory downloaded-el-path))
 
@@ -425,6 +426,9 @@ l is lab l, so the range is 0 to 100
 ;; some projectile stuff
 (when (require 'projectile nil t)
   (setq projectile-enable-caching t)
+  (when (string-equal system-type "windows-nt")
+    (when (ignore-errors (call-process "ls"))
+      (setq projectile-indexing-method 'alien)))
   (projectile-global-mode))
 
 (eval-after-load 'cider
