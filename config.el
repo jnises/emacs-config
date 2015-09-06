@@ -170,6 +170,7 @@
   (when (fboundp 'magit-find-file-ido)
     (global-set-key (kbd "C-c f") 'magit-find-file-ido)))
 
+(start-ido-mode)
 (if (and (require 'helm nil t) (require 'helm-config nil t))
     (progn
       (setq ;;helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
@@ -183,13 +184,14 @@
        helm-buffers-fuzzy-matching t
        ;;helm-recentf-fuzzy-match t
        )
-      (helm-mode 1)
-      (global-set-key (kbd "C-x C-f") 'helm-find-files)
+      ;(helm-mode 1)
+      ;(global-set-key (kbd "C-x C-f") 'helm-find-files)
       (global-set-key (kbd "M-x") 'helm-M-x)
       (global-set-key (kbd "C-x b") 'helm-mini)
       (global-set-key (kbd "M-y") 'helm-show-kill-ring))
   ;; fall back to ido-mode if helm is not available
-  (start-ido-mode))
+  ;;(start-ido-mode)
+  )
 
 ;; disable directory caching on windows
 (when (equal system-type 'windows-nt)
