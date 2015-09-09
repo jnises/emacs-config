@@ -456,6 +456,16 @@ l is lab l, so the range is 0 to 100
 (setq py-python-command "py -3")
 (setq python-python-command "py -3")
 
+;; i don't want no autocomplete
+(setq company-auto-complete nil)
+(setq company-auto-complete-chars nil)
+(setq company-idle-delay 100000000)
+
+(eval-after-load 'elpy
+  '(add-hook 'elpy-mode-hook (lambda ()
+                               ;; stop elpy from messing with company mode settings
+                               (set (make-local-variable 'company-idle-delay) 10000000))))
+
 ;; no suspend when not in terminal
 (when (window-system)
   (global-unset-key [(control z)]))
