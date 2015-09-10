@@ -466,6 +466,9 @@ l is lab l, so the range is 0 to 100
                                ;; stop elpy from messing with company mode settings
                                (set (make-local-variable 'company-idle-delay) 10000000))))
 
+(eval-after-load 'omnisharp
+  '(add-hook 'omnisharp-mode-hook '(define-key omnisharp-mode-map (kbd "C-M-i") 'company-omnisharp)))
+
 ;; no suspend when not in terminal
 (when (window-system)
   (global-unset-key [(control z)]))
