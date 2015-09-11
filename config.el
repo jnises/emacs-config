@@ -383,14 +383,14 @@ l is lab l, so the range is 0 to 100
              (setq magit-git-executable gitpath))))))
 
 ;; web stuff
-(when (require 'multi-web-mode nil t)
-  (setq mweb-default-major-mode 'html-mode)
-  (setq mweb-tags '((php-mode "<\\?php\\|<\\? \\|<\\?=" "\\?>")
-                      (js-mode "<script *\\(type=\"text/javascript\"\\|language=\"javascript\"\\)?[^>]*>" "</script>")
-                      (css-mode "<style *\\(type=\"text/css\"\\)?[^>]*>" "</style>")))
-  (global-set-key (kbd "C-c w") (lambda ()
-                                  (interactive)
-                                  (multi-web-mode t))))
+(eval-after-load 'multi-web-mode
+  '(progn (setq mweb-default-major-mode 'html-mode)
+          (setq mweb-tags '((php-mode "<\\?php\\|<\\? \\|<\\?=" "\\?>")
+                            (js-mode "<script *\\(type=\"text/javascript\"\\|language=\"javascript\"\\)?[^>]*>" "</script>")
+                            (css-mode "<style *\\(type=\"text/css\"\\)?[^>]*>" "</style>")))
+          (global-set-key (kbd "C-c w") (lambda ()
+                                          (interactive)
+                                          (multi-web-mode t)))))
 
 (global-set-key (kbd "C-c m") 'compile)
 
