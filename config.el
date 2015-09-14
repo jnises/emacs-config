@@ -464,7 +464,9 @@ l is lab l, so the range is 0 to 100
 (eval-after-load 'elpy
   '(add-hook 'elpy-mode-hook (lambda ()
                                ;; stop elpy from messing with company mode settings
-                               (set (make-local-variable 'company-idle-delay) 10000000))))
+                               (set (make-local-variable 'company-idle-delay) 10000000)
+                               ;; don't like snippets
+                               (yas-minor-mode -1))))
 
 (eval-after-load 'omnisharp
   '(add-hook 'omnisharp-mode-hook '(define-key omnisharp-mode-map (kbd "C-M-i") 'company-omnisharp)))
