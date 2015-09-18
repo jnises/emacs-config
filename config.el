@@ -271,12 +271,17 @@
                               (setq tab-width 4)
                               (setq python-indent 4)
                               ;(semantic-mode 1)
+                              (let ((pycommand (if (string-equal system-type "windows-nt")
+                                                   "py -3"
+                                                 "ipython")))
+                                (setq python-shell-interpreter pycommand)
+                                (setq py-python-command pycommand))
                               ))
 
 ;; disable electric indent everywhere since it doesn't seem possible to disable it for python only
 (electric-indent-mode -1)
 
-(setq gud-pdb-command-name "python -i -m pdb")
+;(setq gud-pdb-command-name "python -i -m pdb")
 
 (when (or (< emacs-major-version 24) (< emacs-minor-version 4))
   (set-default-coding-systems 'utf-8)
@@ -453,8 +458,8 @@ l is lab l, so the range is 0 to 100
   (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
 
 ;; use python 3 by default
-(setq py-python-command "py -3")
-(setq python-python-command "py -3")
+;(setq py-python-command "py -3")
+;(setq python-python-command "py -3")
 
 ;; i don't want no autocomplete
 (setq company-auto-complete nil)
