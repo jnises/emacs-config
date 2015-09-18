@@ -471,6 +471,9 @@ l is lab l, so the range is 0 to 100
 (eval-after-load 'omnisharp
   '(add-hook 'omnisharp-mode-hook '(define-key omnisharp-mode-map (kbd "C-M-i") 'company-omnisharp)))
 
+(eval-after-load 'company-mode
+  '(global-set-key (kbd "C-c TAB") 'company-complete))
+
 ;; no suspend when not in terminal
 (when (window-system)
   (global-unset-key [(control z)]))
