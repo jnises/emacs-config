@@ -472,7 +472,9 @@ l is lab l, so the range is 0 to 100
                                (set (make-local-variable 'company-idle-delay) 10000000))))
 
 (eval-after-load 'omnisharp
-  '(add-hook 'omnisharp-mode-hook '(define-key omnisharp-mode-map (kbd "C-M-i") 'company-omnisharp)))
+  '(add-hook 'omnisharp-mode-hook (lambda ()
+                                    (company-mode t)
+                                    (define-key omnisharp-mode-map (kbd "C-M-i") 'company-omnisharp))))
 
 (eval-after-load 'company
   '(global-set-key (kbd "C-c TAB") 'company-complete))
