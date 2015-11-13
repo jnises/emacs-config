@@ -353,7 +353,8 @@ l is lab l, so the range is 0 to 100
 ;; note that system-name seems to be capitalized during startup
 (when (or (equal (system-name) "OVERTOWN")
           (equal (system-name) "COPPER")
-          (equal (system-name) "BARIUM"))
+          (equal (system-name) "BARIUM")
+          (equal (system-name) "NATURE"))
   (require 'uniview-connection)
   (require 'uniview-tools))
 
