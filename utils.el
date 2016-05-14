@@ -80,3 +80,8 @@ algorithm: v4
   (with-current-buffer
       (find-file-noselect filename)
     buffer-file-coding-system))
+
+(defun set-env-from-bash-profile (varname)
+  (let ((vardata (shell-command-to-string (format ". ~/.bash_profile; echo -n $%s" varname))))
+    (when (not (= 0 (length vardata)))
+      (setenv varname vardata))))

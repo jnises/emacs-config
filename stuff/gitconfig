@@ -11,5 +11,5 @@
 [push]
 	default = current
 [mergetool "kdiff3_"]
-	cmd = kdiff3.exe --L1 base --L2 local --L3 remote $BASE $LOCAL $REMOTE -o $MERGED
+	cmd = kdiff3 --L1 base --L2 local --L3 remote $BASE $LOCAL $REMOTE -o $MERGED
     trustExitCode = true

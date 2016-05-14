@@ -484,4 +484,16 @@ l is lab l, so the range is 0 to 100
 (when (window-system)
   (global-unset-key [(control z)]))
 
+
+(defun my-irony-mode-hook ()
+  (define-key irony-mode-map [remap completion-at-point]
+    'irony-completion-at-point-async)
+  (define-key irony-mode-map [remap complete-symbol]
+    'irony-completion-at-point-async))
+(add-hook 'irony-mode-hook 'my-irony-mode-hook)
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
+;; for racer to work
+(set-env-from-bash-profile "RUST_SRC_PATH")
+
 (server-start)
