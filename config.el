@@ -131,6 +131,22 @@
 
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
+;; try to disable modula-2 mode
+(setq auto-mode-alist (remove (rassoc 'modula-2-mode auto-mode-alist) auto-mode-alist))
+;; remove modula mode from the auto mode list
+(delete '("\\.mod\\'" . m2-mode) auto-mode-alist)
+
+;; ignore non-safe file local variables
+(setq enable-local-variables :safe)
+
+;; no backup files
+(setq make-backup-files nil)
+
+;; no suspend when not in terminal
+(when (window-system)
+  (global-unset-key [(control z)]))
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; packages
@@ -272,7 +288,9 @@ l is lab l, so the range is 0 to 100
 
 (use-package exec-path-from-shell
   :ensure t
-  :if (string-equal system-type "darwin"))
+  :if (string-equal system-type "darwin")
+  :init
+  (exec-path-from-shell-initialize))
 
 (use-package grep
   :config
@@ -389,11 +407,6 @@ l is lab l, so the range is 0 to 100
   (setq show-trailing-whitespace t))
 (add-hook 'c-mode-common-hook 'c-style-hook-function)
 
-;; try to disable modula-2 mode
-(setq auto-mode-alist (remove (rassoc 'modula-2-mode auto-mode-alist) auto-mode-alist))
-;; remove modula mode from the auto mode list
-(delete '("\\.mod\\'" . m2-mode) auto-mode-alist)
-
 (define-derived-mode glog-mode fundamental-mode
   (setq font-lock-defaults '((("^E.*$" . font-lock-warning-face)
                               ("^W.*$" . font-lock-function-name-face)
@@ -401,20 +414,10 @@ l is lab l, so the range is 0 to 100
   (setq mode-name "glog"))
 
 
-;; ignore non-safe file local variables
-(setq enable-local-variables :safe)
-
 (eval-after-load 'cider
   '(progn (when (string-equal system-type "windows-nt")
             (setq cider-lein-command "lein.bat"))
           (when (not (boundp 'clojure--prettify-symbols-alist)) (setq clojure--prettify-symbols-alist nil))))
-
-(when (string-equal system-type "darwin")
-  (when (require 'exec-path-from-shell nil t)
-    (exec-path-from-shell-initialize)))
-
-;; no backup files
-(setq make-backup-files nil)
 
 ;; to make org mode not clobber windmove keys
 (setq org-replace-disputed-keys t)
@@ -440,10 +443,6 @@ l is lab l, so the range is 0 to 100
 
 (eval-after-load 'company
   '(global-set-key (kbd "C-c TAB") 'company-complete))
-
-;; no suspend when not in terminal
-(when (window-system)
-  (global-unset-key [(control z)]))
 
 
 (defun my-irony-mode-hook ()
