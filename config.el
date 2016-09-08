@@ -173,7 +173,6 @@
   :ensure t
   :commands rainbow-delimiters-mode
   :init
-  :init
   (dolist (hook '(emacs-lisp-mode-hook
                   scheme-mode-hook)) (add-hook hook (lambda ()
                                                       (rainbow-delimiters-mode t))))
