@@ -146,13 +146,20 @@ l is lab l, so the range is 0 to 100
   :mode "\\.js\\'"
   :commands js2-mode)
 
-(setq default-packages '(magit
-                         helm
+(use-package magit
+  :ensure t
+  :commands (magit-status magit-find-file-ido)
+  :config
+  (when (string-equal system-type "windows-nt")
+    (let ((gitpath "c:/Program Files/Git/bin/git.exe"))
+      (if (file-exists-p gitpath)
+          (setq magit-git-executable gitpath)))))
+
+(setq default-packages '(helm
                          helm-projectile
                          helm-ls-git
                          helm-gtags
-                         ggtags
-                         use-package))
+                         ggtags))
 
 (when (string-equal system-type "darwin")
   (add-to-list 'default-packages 'exec-path-from-shell))
@@ -401,13 +408,6 @@ l is lab l, so the range is 0 to 100
 (global-set-key (kbd "C-c c c") 'comment-region)
 (global-set-key (kbd "C-c c u") 'uncomment-region)
 
-;; change magit settings
-(eval-after-load 'magit
-  '(progn
-     (when (string-equal system-type "windows-nt")
-       (let ((gitpath "c:/Program Files/Git/bin/git.exe"))
-         (if (file-exists-p gitpath)
-             (setq magit-git-executable gitpath))))))
 
 
 (global-set-key (kbd "C-c m") 'compile)
