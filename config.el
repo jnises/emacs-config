@@ -389,14 +389,6 @@ l is lab l, so the range is 0 to 100
   (setq show-trailing-whitespace t))
 (add-hook 'c-mode-common-hook 'c-style-hook-function)
 
-(defun start-smex-mode ()
-  (when (require 'smex nil t)
-    (global-set-key (kbd "M-x") (lambda ()
-                                  (interactive)
-                                  (or (boundp 'smex-cache) (smex-initialize))
-                                  (global-set-key (kbd "M-x") 'smex)
-                                  (smex)))))
-
 ;; try to disable modula-2 mode
 (setq auto-mode-alist (remove (rassoc 'modula-2-mode auto-mode-alist) auto-mode-alist))
 ;; remove modula mode from the auto mode list
