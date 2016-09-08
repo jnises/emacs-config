@@ -40,9 +40,9 @@
   (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
   (package-initialize))
 
-(if (not (package-installed-p 'use-package))
-    (package-refresh-contents)
-    (package-install 'use-package))
+(when (not (package-installed-p 'use-package))
+  (package-refresh-contents)
+  (package-install 'use-package))
 
 (use-package paredit
   :ensure t
