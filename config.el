@@ -103,9 +103,22 @@ l is lab l, so the range is 0 to 100
 (use-package highlight-indentation
   :ensure t)
 
-(setq default-packages '(yascroll
-                         undo-tree
-                         multi-web-mode
+(use-package yascroll
+  :ensure t
+  :if window-system
+  :init
+  (scroll-bar-mode -1)
+  (global-yascroll-bar-mode t)
+  (set-face-background 'yascroll:thumb-text-area "Gray80")
+  (set-face-background 'yascroll:thumb-fringe "Gray80")
+  (set-face-foreground 'yascroll:thumb-fringe "Gray80"))
+
+(use-package undo-tree
+  :ensure t
+  :init
+  (global-undo-tree-mode))
+
+(setq default-packages '(multi-web-mode
                          ;;smex
                          projectile
                          js2-mode
@@ -372,12 +385,6 @@ l is lab l, so the range is 0 to 100
       (set-face-background 'yascroll:thumb-fringe "Gray80")
       (set-face-foreground 'yascroll:thumb-fringe "Gray80")))
 
-(when (require 'undo-tree nil t)
-  (global-undo-tree-mode))
-
-(defun load-overtone-stuff ()
-  (interactive)
-  (global-set-key (kbd "C-c o s") (lambda () (interactive) (nrepl-send-string "(stop)" (lambda (ignored))))))
   
 ;; change magit settings
 (eval-after-load 'magit

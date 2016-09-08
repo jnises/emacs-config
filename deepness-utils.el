@@ -86,4 +86,8 @@ algorithm: v4
     (when (not (= 0 (length vardata)))
       (setenv varname vardata))))
 
+(defun load-overtone-stuff ()
+  (interactive)
+  (global-set-key (kbd "C-c o s") (lambda () (interactive) (nrepl-send-string "(stop)" (lambda (ignored))))))
+
 (provide 'deepness-utils)
