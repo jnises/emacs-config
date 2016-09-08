@@ -46,11 +46,20 @@
 
 (use-package paredit
   :ensure t
-  :commands paredit-mode)
+  :commands paredit-mode
+  :init
+  (dolist (hook '(emacs-lisp-mode-hook
+                  scheme-mode-hook)) (add-hook hook (lambda ()
+                                                      (paredit-mode t)))))
 
 (use-package rainbow-delimiters
   :ensure t
   :commands rainbow-delimiters-mode
+  :init
+  :init
+  (dolist (hook '(emacs-lisp-mode-hook
+                  scheme-mode-hook)) (add-hook hook (lambda ()
+                                                      (rainbow-delimiters-mode t))))
   :config
   (use-package color)
   (defun labhsl-to-rgb (h s l)
@@ -77,11 +86,18 @@ l is lab l, so the range is 0 to 100
       (set-face-foreground (nth n rainbowfaces)
                            (apply 'format "#%02x%02x%02x" (mapcar (lambda (x) (floor (* x 255))) (labhsl-to-rgb (* (/ shuffledn 9.0) pi 2) 130 80)))))))
 
+(use-package clojure-mode
+  :ensure t
+  :commands clojure-mode
+  :init
+  (add-hook 'clojure-mode-hook (lambda ()
+                                 (rainbow-delimiters-mode t)
+                                 (paredit-mode t))))
+
 (use-package deepness-utils
   :load-path el-path)
 
-(setq default-packages '(clojure-mode
-                         lua-mode
+(setq default-packages '(lua-mode
                          highlight-indentation
                          yascroll
                          undo-tree
@@ -336,8 +352,7 @@ l is lab l, so the range is 0 to 100
 (dolist (hook '(clojure-mode-hook
                 emacs-lisp-mode-hook
                 scheme-mode-hook)) (add-hook hook (lambda ()
-                                                    (rainbow-delimiters-mode t)
-                                                    (paredit-mode t))))
+                                                    (rainbow-delimiters-mode t))))
 
 ;; next/prev error shortcuts
 (global-set-key (kbd "<f5>") 'previous-error)
