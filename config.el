@@ -220,7 +220,7 @@ l is lab l, so the range is 0 to 100
   :commands highlight-indentation-mode
   :init
   ;; enable indentation highlighting for modes that benefit from them (python)
-  (add-hook 'python-mode-hook highlight-indentation-mode))
+  (add-hook 'python-mode-hook #'highlight-indentation-mode))
 
 (use-package yascroll
   :ensure t
