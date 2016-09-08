@@ -97,9 +97,13 @@ l is lab l, so the range is 0 to 100
 (use-package deepness-utils
   :load-path el-path)
 
-(setq default-packages '(lua-mode
-                         highlight-indentation
-                         yascroll
+(use-package lua-mode
+  :ensure t)
+
+(use-package highlight-indentation
+  :ensure t)
+
+(setq default-packages '(yascroll
                          undo-tree
                          multi-web-mode
                          ;;smex
@@ -301,10 +305,9 @@ l is lab l, so the range is 0 to 100
         (load path))))
 
 ;; enable indentation highlighting for modes that benefit from them (python)
-(if (window-system)
-    (when (require 'highlight-indentation nil t)
-      (add-hook 'python-mode-hook (lambda ()
-                                    (highlight-indentation-mode t)))))
+(add-hook 'python-mode-hook (lambda ()
+                              (when (window-system)
+                                (highlight-indentation-mode t))))
 
 ;; python stuff
 (add-hook 'python-mode-hook (lambda ()
