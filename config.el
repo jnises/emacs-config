@@ -107,6 +107,29 @@
 ;; disable electric indent everywhere since it doesn't seem possible to disable it for python only
 (electric-indent-mode -1)
 
+;; encoding stuff for old emacs versions
+(when (or (< emacs-major-version 24) (and (= emacs-major-version 24) (< emacs-minor-version 4)))
+  (set-default-coding-systems 'utf-8)
+  (prefer-coding-system 'utf-8)
+  (setq default-process-coding-system '(utf-8-unix . utf-8-unix)))
+
+;; better eshell behaviour
+(setq eshell-cmpl-cycle-completions nil)
+
+(put 'narrow-to-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+
+;; next/prev error shortcuts
+(global-set-key (kbd "<f5>") 'previous-error)
+(global-set-key (kbd "<f6>") 'next-error)
+
+(global-set-key (kbd "C-c c c") 'comment-region)
+(global-set-key (kbd "C-c c u") 'uncomment-region)
+
+(global-set-key (kbd "C-c m") 'compile)
+
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -257,7 +280,7 @@ l is lab l, so the range is 0 to 100
   (when (fboundp 'grep-apply-setting)
     (grep-apply-setting 'grep-find-command '("find . -type f ! -path \"*.git*\" -exec grep -nH -e  {} +" . 51))))
 
-
+(use-package git)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; package-dependent config
@@ -347,23 +370,6 @@ l is lab l, so the range is 0 to 100
                                 (setq py-python-command pycommand))
                               ))
 
-
-;(setq gud-pdb-command-name "python -i -m pdb")
-
-(when (or (< emacs-major-version 24) (and (= emacs-major-version 24) (< emacs-minor-version 4)))
-  (set-default-coding-systems 'utf-8)
-  (prefer-coding-system 'utf-8)
-  (setq default-process-coding-system '(utf-8-unix . utf-8-unix)))
-
-(require 'git nil t)
-
-;; better eshell behaviour
-(setq eshell-cmpl-cycle-completions nil)
-
-(put 'narrow-to-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
-(put 'upcase-region 'disabled nil)
-
 (defun c-style-hook-function ()
   (interactive)
   (c-set-style "linux")
@@ -374,31 +380,12 @@ l is lab l, so the range is 0 to 100
   (setq show-trailing-whitespace t))
 (add-hook 'c-mode-common-hook 'c-style-hook-function)
 
-;; use rainbow delimiters and paredit mode for some lisp files
-(dolist (hook '(clojure-mode-hook
-                emacs-lisp-mode-hook
-                scheme-mode-hook)) (add-hook hook (lambda ()
-                                                    (rainbow-delimiters-mode t))))
-
-;; next/prev error shortcuts
-(global-set-key (kbd "<f5>") 'previous-error)
-(global-set-key (kbd "<f6>") 'next-error)
-
-(global-set-key (kbd "C-c c c") 'comment-region)
-(global-set-key (kbd "C-c c u") 'uncomment-region)
-
-
-
-(global-set-key (kbd "C-c m") 'compile)
-
 (when (require 'glsl-mode nil t)
   (add-to-list 'auto-mode-alist '("\\.glsl\\'" . glsl-mode))
   ;; hack to stop glsl-mode from indenting layout modifiers as knr argument declarations
   (add-hook 'glsl-mode-hook
             (lambda ()
               (c-set-offset 'knr-argdecl [0]))))
-
-(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
 (defun start-smex-mode ()
   (when (require 'smex nil t)
