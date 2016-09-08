@@ -40,9 +40,15 @@
   (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
   (package-initialize))
 
+;; make sure use-package is loaded
 (when (not (package-installed-p 'use-package))
   (package-refresh-contents)
   (package-install 'use-package))
+
+
+;; a package with some random local utils
+(use-package deepness-utils
+  :load-path el-path)
 
 (use-package paredit
   :ensure t
@@ -94,9 +100,6 @@ l is lab l, so the range is 0 to 100
                                  (rainbow-delimiters-mode t)
                                  (paredit-mode t))))
 
-(use-package deepness-utils
-  :load-path el-path)
-
 (use-package lua-mode
   :ensure t)
 
@@ -128,8 +131,17 @@ l is lab l, so the range is 0 to 100
                     (css-mode "<style *\\(type=\"text/css\"\\)?[^>]*>" "</style>")))
   :bind ("C-c w" . multi-web-mode))
 
-(setq default-packages '(projectile
-                         js2-mode
+(use-package projectile
+  :ensure t
+  :config
+  (setq projectile-enable-caching t)
+  (when (string-equal system-type "windows-nt")
+    (when (ignore-errors (call-process "ls"))
+      (setq projectile-indexing-method 'alien)))
+  :init
+  (projectile-global-mode))
+
+(setq default-packages '(js2-mode
                          magit
                          helm
                          helm-projectile
@@ -427,14 +439,6 @@ l is lab l, so the range is 0 to 100
 
 ;; ignore non-safe file local variables
 (setq enable-local-variables :safe)
-
-;; some projectile stuff
-(when (require 'projectile nil t)
-  (setq projectile-enable-caching t)
-  (when (string-equal system-type "windows-nt")
-    (when (ignore-errors (call-process "ls"))
-      (setq projectile-indexing-method 'alien)))
-  (projectile-global-mode))
 
 (eval-after-load 'cider
   '(progn (when (string-equal system-type "windows-nt")
