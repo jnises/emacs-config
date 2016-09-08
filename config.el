@@ -472,6 +472,7 @@ l is lab l, so the range is 0 to 100
                                ;; stop elpy from messing with company mode settings
                                (set (make-local-variable 'company-idle-delay) 10000000))))
 
+;;(setq omnisharp-server-executable-path "/Users/joelnises/code/exnternal")
 (eval-after-load 'omnisharp
   '(add-hook 'omnisharp-mode-hook (lambda ()
                                     (company-mode t)
@@ -495,5 +496,10 @@ l is lab l, so the range is 0 to 100
 
 ;; for racer to work
 (set-env-from-bash-profile "RUST_SRC_PATH")
+(add-hook 'rust-mode 'racer-mode)
+
+;; python 3 in jedi
+;; (setq jedi:environment-virtualenv
+;;       (list "virtualenv3" "--system-site-packages"))
 
 (server-start)
