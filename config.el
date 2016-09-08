@@ -118,9 +118,17 @@ l is lab l, so the range is 0 to 100
   :init
   (global-undo-tree-mode))
 
-(setq default-packages '(multi-web-mode
-                         ;;smex
-                         projectile
+(use-package multi-web-mode
+  :ensure t
+  :commands multi-web-mode
+  :config
+  (setq mweb-default-major-mode 'html-mode)
+  (setq mweb-tags '((php-mode "<\\?php\\|<\\? \\|<\\?=" "\\?>")
+                    (js-mode "<script *\\(type=\"text/javascript\"\\|language=\"javascript\"\\)?[^>]*>" "</script>")
+                    (css-mode "<style *\\(type=\"text/css\"\\)?[^>]*>" "</style>")))
+  :bind ("C-c w" . multi-web-mode))
+
+(setq default-packages '(projectile
                          js2-mode
                          magit
                          helm
@@ -385,15 +393,6 @@ l is lab l, so the range is 0 to 100
          (if (file-exists-p gitpath)
              (setq magit-git-executable gitpath))))))
 
-;; web stuff
-(eval-after-load 'multi-web-mode
-  '(progn (setq mweb-default-major-mode 'html-mode)
-          (setq mweb-tags '((php-mode "<\\?php\\|<\\? \\|<\\?=" "\\?>")
-                            (js-mode "<script *\\(type=\"text/javascript\"\\|language=\"javascript\"\\)?[^>]*>" "</script>")
-                            (css-mode "<style *\\(type=\"text/css\"\\)?[^>]*>" "</style>")))
-          (global-set-key (kbd "C-c w") (lambda ()
-                                          (interactive)
-                                          (multi-web-mode t)))))
 
 (global-set-key (kbd "C-c m") 'compile)
 
