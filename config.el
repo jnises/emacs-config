@@ -140,6 +140,8 @@
 (line-number-mode t)
 (column-number-mode t)
 
+;; TODO use ivy instead of helm/ido?
+
 ;; enable ido mode
 (defun start-ido-mode ()
   (interactive)
