@@ -85,3 +85,5 @@ algorithm: v4
   (let ((vardata (shell-command-to-string (format ". ~/.bash_profile; echo -n $%s" varname))))
     (when (not (= 0 (length vardata)))
       (setenv varname vardata))))
+
+(provide 'deepness-utils)

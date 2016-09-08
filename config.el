@@ -40,13 +40,51 @@
   (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
   (package-initialize))
 
-(setq default-packages '(rainbow-delimiters
-                         clojure-mode
+(if (not (package-installed-p 'use-package))
+    (package-refresh-contents)
+    (package-install 'use-package))
+
+(use-package paredit
+  :ensure t
+  :commands paredit-mode)
+
+(use-package rainbow-delimiters
+  :ensure t
+  :commands rainbow-delimiters-mode
+  :config
+  (use-package color)
+  (defun labhsl-to-rgb (h s l)
+    "
+hsl to rgb by way of lab
+l is lab l, so the range is 0 to 100
+"
+    (let ((a (* (cos h) s))
+          (b (* (sin h) s)))
+      (mapcar (lambda (x) (max (min x 1) 0)) (color-lab-to-srgb l a b))))
+
+  ;; better colors for rainbow delimiters
+  (dotimes (n 9)
+    (let ((rainbowfaces '(rainbow-delimiters-depth-1-face
+                          rainbow-delimiters-depth-2-face
+                          rainbow-delimiters-depth-3-face
+                          rainbow-delimiters-depth-4-face
+                          rainbow-delimiters-depth-5-face
+                          rainbow-delimiters-depth-6-face
+                          rainbow-delimiters-depth-7-face
+                          rainbow-delimiters-depth-8-face
+                          rainbow-delimiters-depth-9-face))
+          (shuffledn (nth n '(3 7 1 4 6 0 5 8 2))))
+      (set-face-foreground (nth n rainbowfaces)
+                           (apply 'format "#%02x%02x%02x" (mapcar (lambda (x) (floor (* x 255))) (labhsl-to-rgb (* (/ shuffledn 9.0) pi 2) 130 80)))))))
+
+(use-package deepness-utils
+  :load-path el-path)
+
+(setq default-packages '(clojure-mode
                          lua-mode
                          highlight-indentation
                          yascroll
                          undo-tree
-                         paredit
                          multi-web-mode
                          ;;smex
                          projectile
@@ -295,46 +333,13 @@
 (add-hook 'c-mode-common-hook 'c-style-hook-function)
 
 (load (concat el-path "/fulpdb.el"))
-(load (concat el-path "/utils"))
-
-(when (require 'rainbow-delimiters nil t)
-  (require 'color)
-  (dolist (hook
-           '(clojure-mode-hook))
-    (add-hook hook (lambda () (rainbow-delimiters-mode t))))
-  (defun labhsl-to-rgb (h s l)
-    "
-hsl to rgb by way of lab
-l is lab l, so the range is 0 to 100
-"
-    (let ((a (* (cos h) s))
-          (b (* (sin h) s)))
-      (mapcar (lambda (x) (max (min x 1) 0)) (color-lab-to-srgb l a b))))
-
-  ;; better colors for rainbow delimiters
-  (dotimes (n 9)
-    (let ((rainbowfaces '(rainbow-delimiters-depth-1-face
-                          rainbow-delimiters-depth-2-face
-                          rainbow-delimiters-depth-3-face
-                          rainbow-delimiters-depth-4-face
-                          rainbow-delimiters-depth-5-face
-                          rainbow-delimiters-depth-6-face
-                          rainbow-delimiters-depth-7-face
-                          rainbow-delimiters-depth-8-face
-                          rainbow-delimiters-depth-9-face))
-          (shuffledn (nth n '(3 7 1 4 6 0 5 8 2))))
-      (set-face-foreground (nth n rainbowfaces)
-                           (apply 'format "#%02x%02x%02x" (mapcar (lambda (x) (floor (* x 255))) (labhsl-to-rgb (* (/ shuffledn 9.0) pi 2) 130 80))))))
-  )
 
 ;; use rainbow delimiters and paredit mode for some lisp files
 (dolist (hook '(clojure-mode-hook
                 emacs-lisp-mode-hook
                 scheme-mode-hook)) (add-hook hook (lambda ()
-                                                    (when (require 'rainbow-delimiters nil t)
-                                                      (rainbow-delimiters-mode t))
-                                                    (when (require 'paredit nil t)
-                                                      (paredit-mode t)))))
+                                                    (rainbow-delimiters-mode t)
+                                                    (paredit-mode t))))
 
 ;; next/prev error shortcuts
 (global-set-key (kbd "<f5>") 'previous-error)
