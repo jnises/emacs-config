@@ -334,15 +334,6 @@ l is lab l, so the range is 0 to 100
                                                     (when (require 'paredit nil t)
                                                       (paredit-mode t)))))
 
-;; some uniview stuff for work
-;; note that system-name seems to be capitalized during startup
-(when (or (equal (system-name) "OVERTOWN")
-          (equal (system-name) "COPPER")
-          (equal (system-name) "BARIUM")
-          (equal (system-name) "NATURE"))
-  (require 'uniview-connection)
-  (require 'uniview-tools))
-
 ;; next/prev error shortcuts
 (global-set-key (kbd "<f5>") 'previous-error)
 (global-set-key (kbd "<f6>") 'next-error)
