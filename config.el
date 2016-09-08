@@ -141,8 +141,12 @@ l is lab l, so the range is 0 to 100
   :init
   (projectile-global-mode))
 
-(setq default-packages '(js2-mode
-                         magit
+(use-package js2-mode
+  :ensure t
+  :mode "\\.js\\'"
+  :commands js2-mode)
+
+(setq default-packages '(magit
                          helm
                          helm-projectile
                          helm-ls-git
@@ -454,9 +458,6 @@ l is lab l, so the range is 0 to 100
 
 ;; to make org mode not clobber windmove keys
 (setq org-replace-disputed-keys t)
-
-(when (require 'js2-mode nil t)
-  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
 
 ;; use python 3 by default
 ;(setq py-python-command "py -3")
