@@ -155,47 +155,29 @@ l is lab l, so the range is 0 to 100
       (if (file-exists-p gitpath)
           (setq magit-git-executable gitpath)))))
 
-(setq default-packages '(helm
-                         helm-projectile
-                         helm-ls-git
-                         helm-gtags
-                         ggtags))
+(use-package helm
+  :ensure t)
+
+(use-package helm-projectile
+  :ensure t)
+
+(use-package helm-ls-git
+  :ensure t)
+
+(use-package helm-gtags
+  :ensure t)
+
+(use-package ggtags
+  :ensure t)
+
+(use-package exec-path-from-shell
+  :ensure t
+  :if (string-equal system-type "darwin"))
+
 
 (when (string-equal system-type "darwin")
-  (add-to-list 'default-packages 'exec-path-from-shell))
-
-(defun install-default-packages ()
-  " install useful packages, call this method when starting emacs on a new machine "
-  (interactive)
-  (package-refresh-contents)
-  (mapc (lambda (package)
-          (if (not (package-installed-p package)) 
-              (package-install package)))
-        default-packages))
-
-(defun download-file-if-not-exist (url path &optional sha1)
-  (unless (file-exists-p path)
-    (url-retrieve url
-                  (lambda (status) (unwind-protect
-                                       (progn
-                                         (goto-char (point-min))
-                                         (unless (looking-at "HTTP/1.1 200 OK")
-                                           (error (concat "Error downloading " url)))
-                                         ;; strip the headers
-                                         (search-forward "\n\n")
-                                         (delete-region 1 (point))
-                                         (unless (or (not sha1) (string-equal (secure-hash 'sha1 (current-buffer)) sha1))
-                                           (error (concat "Error: " url " does not have the expected hash")))
-                                         (write-file path))
-                                     (kill-buffer))))))
-
-(defun initial-setup ()
-  (interactive)
-  (install-default-packages)
-  ;; system specific setup
-  (cond ((string-equal system-type "darwin")
-         ;; download gud from apple that supports lldb
-         (download-file-if-not-exist "http://www.opensource.apple.com/source/lldb/lldb-69/utils/emacs/gud.el?txt" (concat downloaded-el-path "/gud.el") "108a76a8d5d8ffa6aca950a103294a012bb606f9"))))
+  ;; download gud from apple that supports lldb
+  (download-file-if-not-exist "http://www.opensource.apple.com/source/lldb/lldb-69/utils/emacs/gud.el?txt" (concat downloaded-el-path "/gud.el") "108a76a8d5d8ffa6aca950a103294a012bb606f9"))
 
 ;; faster startup
 (modify-frame-parameters nil '((wait-for-wm . nil)))

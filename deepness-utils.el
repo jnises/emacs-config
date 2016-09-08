@@ -90,4 +90,20 @@ algorithm: v4
   (interactive)
   (global-set-key (kbd "C-c o s") (lambda () (interactive) (nrepl-send-string "(stop)" (lambda (ignored))))))
 
+(defun download-file-if-not-exist (url path &optional sha1)
+  (unless (file-exists-p path)
+    (url-retrieve url
+                  (lambda (status) (unwind-protect
+                                       (progn
+                                         (goto-char (point-min))
+                                         (unless (looking-at "HTTP/1.1 200 OK")
+                                           (error (concat "Error downloading " url)))
+                                         ;; strip the headers
+                                         (search-forward "\n\n")
+                                         (delete-region 1 (point))
+                                         (unless (or (not sha1) (string-equal (secure-hash 'sha1 (current-buffer)) sha1))
+                                           (error (concat "Error: " url " does not have the expected hash")))
+                                         (write-file path))
+                                     (kill-buffer))))))
+
 (provide 'deepness-utils)
