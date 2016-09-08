@@ -40,11 +40,72 @@
   (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
   (package-initialize))
 
+;; faster startup
+(modify-frame-parameters nil '((wait-for-wm . nil)))
+
+(setq inhibit-splash-screen t)
+
+;; disable the toolbar
+(if (fboundp 'tool-bar-mode)
+    (tool-bar-mode 0))
+
+;; show matching parens
+(show-paren-mode t)
+
+;; enable syntax highlighting
+(global-font-lock-mode t)
+
+;; show marked region
+(transient-mark-mode t)
+
+;; no tabs!!!
+(setq-default indent-tabs-mode nil)
+
+;; but if there is, set the default tab width (determines how a tab is displayed)
+(setq default-tab-width 4)
+
+;; change color theme
+(if (window-system)
+  (load-theme 'tsdh-dark))
+
+;; highlight line
+(global-hl-line-mode 1)
+(hl-line-mode 1)
+
+;; nicer ediff
+(setq ediff-split-window-function 'split-window-horizontally)
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+
+;; display line and column
+(line-number-mode t)
+(column-number-mode t)
+
+;; disable directory caching on windows
+(when (equal system-type 'windows-nt)
+  (setq ido-max-dir-file-cache 0)) 
+
+;; font stuff
+(when (and (or (> emacs-major-version 24) (and (>= emacs-major-version 24) (>= emacs-minor-version 4))) window-system)
+  (cl-flet ((set-face-font-if-it-exists (target fontname)
+                                        (when (x-list-fonts fontname)
+                                          (set-face-font target fontname))))
+    (set-face-font-if-it-exists 'default "-unknown-DejaVu Sans Mono-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1")))
+
+;; enable improved window switching, disable if you don't want it to clobber
+;; shift-<arrowkeys> for selection
+(windmove-default-keybindings)
+
+;; nicer buffer names
+(when (require 'uniquify nil t)
+  (setq uniquify-buffer-name-style 'forward))
+
+
+
+
 ;; make sure use-package is loaded
 (when (not (package-installed-p 'use-package))
   (package-refresh-contents)
   (package-install 'use-package))
-
 
 ;; a package with some random local utils
 (use-package deepness-utils
@@ -174,55 +235,18 @@ l is lab l, so the range is 0 to 100
   :ensure t
   :if (string-equal system-type "darwin"))
 
+(use-package grep
+  :config
+  ;; fix grep stuff
+  (when (fboundp 'grep-apply-setting)
+    (grep-apply-setting 'grep-find-command '("find . -type f ! -path \"*.git*\" -exec grep -nH -e  {} +" . 51))))
+
 
 (when (string-equal system-type "darwin")
   ;; download gud from apple that supports lldb
   (download-file-if-not-exist "http://www.opensource.apple.com/source/lldb/lldb-69/utils/emacs/gud.el?txt" (concat downloaded-el-path "/gud.el") "108a76a8d5d8ffa6aca950a103294a012bb606f9"))
 
-;; faster startup
-(modify-frame-parameters nil '((wait-for-wm . nil)))
 
-(setq inhibit-splash-screen t)
-
-;; disable the toolbar
-(if (fboundp 'tool-bar-mode)
-    (tool-bar-mode 0))
-
-;; show matching parens
-(show-paren-mode t)
-
-;; enable syntax highlighting
-(global-font-lock-mode t)
-
-;; show marked region
-(transient-mark-mode t)
-
-;; no tabs!!!
-(setq-default indent-tabs-mode nil)
-
-;; but if there is, set the default tab width (determines how a tab is displayed)
-(setq default-tab-width 4)
-
-;; fix grep stuff
-(require 'grep)
-(when (fboundp 'grep-apply-setting)
-  (grep-apply-setting 'grep-find-command '("find . -type f ! -path \"*.git*\" -exec grep -nH -e  {} +" . 51)))
-
-;; change color theme
-(if (window-system)
-  (load-theme 'tsdh-dark))
-
-;; highlight line
-(global-hl-line-mode 1)
-(hl-line-mode 1)
-
-;; nicer ediff
-(setq ediff-split-window-function 'split-window-horizontally)
-(setq ediff-window-setup-function 'ediff-setup-windows-plain)
-
-;; display line and column
-(line-number-mode t)
-(column-number-mode t)
 
 ;; TODO use ivy instead of helm/ido?
 
@@ -262,25 +286,6 @@ l is lab l, so the range is 0 to 100
   ;; fall back to ido-mode if helm is not available
   ;;(start-ido-mode)
   )
-
-;; disable directory caching on windows
-(when (equal system-type 'windows-nt)
-  (setq ido-max-dir-file-cache 0)) 
-
-;; font stuff
-(when (and (or (> emacs-major-version 24) (and (>= emacs-major-version 24) (>= emacs-minor-version 4))) window-system)
-  (cl-flet ((set-face-font-if-it-exists (target fontname)
-                                        (when (x-list-fonts fontname)
-                                          (set-face-font target fontname))))
-    (set-face-font-if-it-exists 'default "-unknown-DejaVu Sans Mono-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1")))
-
-;; enable improved window switching, disable if you don't want it to clobber
-;; shift-<arrowkeys> for selection
-(windmove-default-keybindings)
-
-;; nicer buffer names
-(when (require 'uniquify nil t)
-  (setq uniquify-buffer-name-style 'forward))
 
 ;; load cedet
 ;; (when (require 'cedet nil t)
