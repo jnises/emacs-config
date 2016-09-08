@@ -40,6 +40,11 @@
   (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
   (package-initialize))
 
+
+;;;;;;;;;;;;;;;;;;;;;;
+;; startup config
+;;;;;;;;;;;;;;;;;;;;;;
+
 ;; faster startup
 (modify-frame-parameters nil '((wait-for-wm . nil)))
 
@@ -99,8 +104,14 @@
 (when (require 'uniquify nil t)
   (setq uniquify-buffer-name-style 'forward))
 
+;; disable electric indent everywhere since it doesn't seem possible to disable it for python only
+(electric-indent-mode -1)
 
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; packages
+;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; make sure use-package is loaded
 (when (not (package-installed-p 'use-package))
@@ -165,7 +176,12 @@ l is lab l, so the range is 0 to 100
   :ensure t)
 
 (use-package highlight-indentation
-  :ensure t)
+  :ensure t
+  :if window-system
+  :commands highlight-indentation-mode
+  :init
+  ;; enable indentation highlighting for modes that benefit from them (python)
+  (add-hook 'python-mode-hook highlight-indentation-mode))
 
 (use-package yascroll
   :ensure t
@@ -242,9 +258,17 @@ l is lab l, so the range is 0 to 100
     (grep-apply-setting 'grep-find-command '("find . -type f ! -path \"*.git*\" -exec grep -nH -e  {} +" . 51))))
 
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; package-dependent config
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (when (string-equal system-type "darwin")
-  ;; download gud from apple that supports lldb
-  (download-file-if-not-exist "http://www.opensource.apple.com/source/lldb/lldb-69/utils/emacs/gud.el?txt" (concat downloaded-el-path "/gud.el") "108a76a8d5d8ffa6aca950a103294a012bb606f9"))
+  ;; use apple gud that supports lldb
+  (let ((path (concat downloaded-el-path "/gud.el")))
+    (download-file-if-not-exist "http://www.opensource.apple.com/source/lldb/lldb-69/utils/emacs/gud.el?txt" path "108a76a8d5d8ffa6aca950a103294a012bb606f9")
+    (if (file-exists-p path)
+        (load path))))
 
 
 
@@ -310,17 +334,6 @@ l is lab l, so the range is 0 to 100
   ;; (set-variable 'grep-program "grep.exe")
   (and (require 'cygwin-mount nil t) (require 'setup-cygwin nil t)))
 
-(when (string-equal system-type "darwin")
-  ;; use apple gud that supports lldb
-  (let ((path (concat downloaded-el-path "/gud")))
-    (if (file-exists-p path)
-        (load path))))
-
-;; enable indentation highlighting for modes that benefit from them (python)
-(add-hook 'python-mode-hook (lambda ()
-                              (when (window-system)
-                                (highlight-indentation-mode t))))
-
 ;; python stuff
 (add-hook 'python-mode-hook (lambda ()
                               ;; tab width is a mess, so force python to use the correct one
@@ -334,8 +347,6 @@ l is lab l, so the range is 0 to 100
                                 (setq py-python-command pycommand))
                               ))
 
-;; disable electric indent everywhere since it doesn't seem possible to disable it for python only
-(electric-indent-mode -1)
 
 ;(setq gud-pdb-command-name "python -i -m pdb")
 
