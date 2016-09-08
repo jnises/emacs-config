@@ -56,7 +56,8 @@
                          helm-projectile
                          helm-ls-git
                          helm-gtags
-                         ggtags))
+                         ggtags
+                         use-package))
 
 (when (string-equal system-type "darwin")
   (add-to-list 'default-packages 'exec-path-from-shell))
@@ -125,24 +126,7 @@
 
 ;; change color theme
 (if (window-system)
-    (if (< emacs-major-version 24)
-        (when (and window-system (load (concat external-el-path "/color-theme")))
-          (color-theme-charcoal-black)
-          ;; highlight current line
-          (set-face-background 'highlight "Gray12")
-          (set-face-foreground 'highlight nil)
-          ;; force color
-          (add-hook 'hl-line-mode-hook (lambda () (set-face-foreground 'highlight nil)))
-          (add-hook 'global-hl-line-mode-hook (lambda () (set-face-foreground 'highlight nil)))
-          (global-hl-line-mode 1)
-          (hl-line-mode 1)
-          (set-face-background 'menu "Black"))
-      ;; emacs 24
-      (load-theme 'tsdh-dark)
-      ;; ugly hack to make ediff behave
-      ;; (when (string-equal system-type "windows-nt")
-      ;;   (load "c:/local/emacs/etc/themes/tango-dark-theme.el" t))
-      ))
+  (load-theme 'tsdh-dark))
 
 ;; highlight line
 (global-hl-line-mode 1)
@@ -198,7 +182,7 @@
   (setq ido-max-dir-file-cache 0)) 
 
 ;; font stuff
-(when (and (>= emacs-major-version 24) (>= emacs-minor-version 4) window-system)
+(when (and (or (> emacs-major-version 24) (and (>= emacs-major-version 24) (>= emacs-minor-version 4))) window-system)
   (cl-flet ((set-face-font-if-it-exists (target fontname)
                                         (when (x-list-fonts fontname)
                                           (set-face-font target fontname))))
@@ -234,6 +218,7 @@
 ;; windows only stuff
 (when (string-equal system-type "windows-nt")
   ;; set cygwin path for w32 emac
+  ;; TODO only use git bash unix utils?
   ;;(setq w32shell-cygwin-bin "C:/cygwin/bin")
   ;;(setq gnuwin-path "c:/local/gnuwin32/bin")
   (setq cygwin-root-directory (if (file-exists-p "c:/cygwin64") "c:/cygwin64" "c:/cygwin"))
@@ -283,7 +268,7 @@
 
 ;(setq gud-pdb-command-name "python -i -m pdb")
 
-(when (or (< emacs-major-version 24) (< emacs-minor-version 4))
+(when (or (< emacs-major-version 24) (and (= emacs-major-version 24) (< emacs-minor-version 4)))
   (set-default-coding-systems 'utf-8)
   (prefer-coding-system 'utf-8)
   (setq default-process-coding-system '(utf-8-unix . utf-8-unix)))
