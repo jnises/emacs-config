@@ -377,15 +377,6 @@ l is lab l, so the range is 0 to 100
 (global-set-key (kbd "C-c c c") 'comment-region)
 (global-set-key (kbd "C-c c u") 'uncomment-region)
 
-(if (window-system)
-    (when (require 'yascroll nil t)
-      (scroll-bar-mode -1)
-      (global-yascroll-bar-mode t)
-      (set-face-background 'yascroll:thumb-text-area "Gray80")
-      (set-face-background 'yascroll:thumb-fringe "Gray80")
-      (set-face-foreground 'yascroll:thumb-fringe "Gray80")))
-
-  
 ;; change magit settings
 (eval-after-load 'magit
   '(progn
