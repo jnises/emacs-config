@@ -282,6 +282,15 @@ l is lab l, so the range is 0 to 100
 
 (use-package git)
 
+(use-package glsl-mode
+  :ensure t
+  :mode "\\.glsl\\'"
+  :config
+  ;; hack to stop glsl-mode from indenting layout modifiers as knr argument declarations
+  (add-hook 'glsl-mode-hook
+            (lambda ()
+              (c-set-offset 'knr-argdecl [0]))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; package-dependent config
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -379,13 +388,6 @@ l is lab l, so the range is 0 to 100
   ;;(semantic-mode t)
   (setq show-trailing-whitespace t))
 (add-hook 'c-mode-common-hook 'c-style-hook-function)
-
-(when (require 'glsl-mode nil t)
-  (add-to-list 'auto-mode-alist '("\\.glsl\\'" . glsl-mode))
-  ;; hack to stop glsl-mode from indenting layout modifiers as knr argument declarations
-  (add-hook 'glsl-mode-hook
-            (lambda ()
-              (c-set-offset 'knr-argdecl [0]))))
 
 (defun start-smex-mode ()
   (when (require 'smex nil t)
