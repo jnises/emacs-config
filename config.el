@@ -332,8 +332,6 @@ l is lab l, so the range is 0 to 100
   (setq show-trailing-whitespace t))
 (add-hook 'c-mode-common-hook 'c-style-hook-function)
 
-(load (concat el-path "/fulpdb.el"))
-
 ;; use rainbow delimiters and paredit mode for some lisp files
 (dolist (hook '(clojure-mode-hook
                 emacs-lisp-mode-hook
