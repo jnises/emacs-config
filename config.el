@@ -313,10 +313,11 @@ l is lab l, so the range is 0 to 100
   :init
   (ivy-mode t)
   (setq ivy-use-virtual-buffers t)
-  (setq ivy-re-builders-alist
-        '((t . ivy--regex-fuzzy)))
+  ;; (setq ivy-re-builders-alist
+  ;;       '((t . ivy--regex-fuzzy)))
   :bind (("\C-s" . counsel-grep-or-swiper)
-         ("M-x" . counsel-M-x))
+         ("M-x" . counsel-M-x)
+         ("M-y" . counsel-yank-pop))
   ;; (global-set-key "\C-s" 'swiper)
   ;; (global-set-key (kbd "C-c C-r") 'ivy-resume)
   ;; (global-set-key (kbd "<f6>") 'ivy-resume)
