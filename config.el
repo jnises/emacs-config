@@ -308,12 +308,15 @@ l is lab l, so the range is 0 to 100
             (lambda ()
               (c-set-offset 'knr-argdecl [0]))))
 
-(use-package swiper
+(use-package counsel
   :ensure t
-  :bind ("\C-s" . swiper)
-  :config
-  ;;(ivy-mode t)
+  :init
+  (ivy-mode t)
   (setq ivy-use-virtual-buffers t)
+  (setq ivy-re-builders-alist
+        '((t . ivy--regex-fuzzy)))
+  :bind (("\C-s" . counsel-grep-or-swiper)
+         ("M-x" . counsel-M-x))
   ;; (global-set-key "\C-s" 'swiper)
   ;; (global-set-key (kbd "C-c C-r") 'ivy-resume)
   ;; (global-set-key (kbd "<f6>") 'ivy-resume)
@@ -361,28 +364,29 @@ l is lab l, so the range is 0 to 100
   (when (fboundp 'magit-find-file-ido)
     (global-set-key (kbd "C-c f") 'magit-find-file-ido)))
 
-(start-ido-mode)
-(if (and (require 'helm nil t) (require 'helm-config nil t))
-    (progn
-      (setq ;;helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
-       ;; helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-       ;;helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
-       ;;helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
-       ;;helm-ff-file-name-history-use-recentf t
-       helm-mode-fuzzy-match t
-       helm-completion-in-region-fuzzy-match t
-       helm-M-x-fuzzy-match t
-       helm-buffers-fuzzy-matching t
-       ;;helm-recentf-fuzzy-match t
-       )
-      ;(helm-mode 1)
-      ;(global-set-key (kbd "C-x C-f") 'helm-find-files)
-      (global-set-key (kbd "M-x") 'helm-M-x)
-      (global-set-key (kbd "C-x b") 'helm-mini)
-      (global-set-key (kbd "M-y") 'helm-show-kill-ring))
-  ;; fall back to ido-mode if helm is not available
-  ;;(start-ido-mode)
-  )
+;(start-ido-mode)
+
+;; (if (and (require 'helm nil t) (require 'helm-config nil t))
+;;     (progn
+;;       (setq ;;helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
+;;        ;; helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+;;        ;;helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+;;        ;;helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+;;        ;;helm-ff-file-name-history-use-recentf t
+;;        helm-mode-fuzzy-match t
+;;        helm-completion-in-region-fuzzy-match t
+;;        helm-M-x-fuzzy-match t
+;;        helm-buffers-fuzzy-matching t
+;;        ;;helm-recentf-fuzzy-match t
+;;        )
+;;                                         ;(helm-mode 1)
+;;                                         ;(global-set-key (kbd "C-x C-f") 'helm-find-files)
+;;       (global-set-key (kbd "M-x") 'helm-M-x)
+;;       (global-set-key (kbd "C-x b") 'helm-mini)
+;;       (global-set-key (kbd "M-y") 'helm-show-kill-ring))
+;;   ;; fall back to ido-mode if helm is not available
+;;   ;;(start-ido-mode)
+;;   )
 
 ;; windows only stuff
 (when (string-equal system-type "windows-nt")
