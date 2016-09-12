@@ -315,7 +315,8 @@ l is lab l, so the range is 0 to 100
   (setq ivy-use-virtual-buffers t)
   ;; (setq ivy-re-builders-alist
   ;;       '((t . ivy--regex-fuzzy)))
-  :bind (("\C-s" . counsel-grep-or-swiper)
+  :bind (
+         ;;("\C-s" . counsel-grep-or-swiper)
          ("M-x" . counsel-M-x)
          ("M-y" . counsel-yank-pop))
   ;; (global-set-key "\C-s" 'swiper)
