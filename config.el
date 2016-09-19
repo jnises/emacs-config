@@ -270,17 +270,17 @@ l is lab l, so the range is 0 to 100
       (if (file-exists-p gitpath)
           (setq magit-git-executable gitpath)))))
 
-(use-package helm
-  :ensure t)
+;; (use-package helm
+;;   :ensure t)
 
-(use-package helm-projectile
-  :ensure t)
+;; (use-package helm-projectile
+;;   :ensure t)
 
-(use-package helm-ls-git
-  :ensure t)
+;; (use-package helm-ls-git
+;;   :ensure t)
 
-(use-package helm-gtags
-  :ensure t)
+;; (use-package helm-gtags
+;;   :ensure t)
 
 (use-package ggtags
   :ensure t)
@@ -318,22 +318,20 @@ l is lab l, so the range is 0 to 100
   :bind (
          ;;("\C-s" . counsel-grep-or-swiper)
          ("M-x" . counsel-M-x)
-         ("M-y" . counsel-yank-pop))
-  ;; (global-set-key "\C-s" 'swiper)
-  ;; (global-set-key (kbd "C-c C-r") 'ivy-resume)
-  ;; (global-set-key (kbd "<f6>") 'ivy-resume)
-  ;; (global-set-key (kbd "M-x") 'counsel-M-x)
-  ;; (global-set-key (kbd "C-x C-f") 'counsel-find-file)
-  ;; (global-set-key (kbd "<f1> f") 'counsel-describe-function)
-  ;; (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-  ;; (global-set-key (kbd "<f1> l") 'counsel-load-library)
-  ;; (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-  ;; (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
-  ;; (global-set-key (kbd "C-c g") 'counsel-git)
-  ;; (global-set-key (kbd "C-c j") 'counsel-git-grep)
-  ;; (global-set-key (kbd "C-c k") 'counsel-ag)
-  ;; (global-set-key (kbd "C-x l") 'counsel-locate)
-  ;; (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+         ("M-y" . counsel-yank-pop)
+         ("C-c C-r" . ivy-resume)
+         ;("C-x C-f" . counsel-find-file)
+         ("<f1> f" . counsel-describe-function)
+         ("<f1> v" . counsel-describe-variable)
+         ("<f1> l" . counsel-load-library)
+         ("<f2> i" . counsel-info-lookup-symbol)
+         ("<f2> u" . counsel-unicode-char)
+         ;; ("C-c g" . counsel-git)
+         ;; ("C-c j" . counsel-git-grep)
+         ;; ("C-c k" . counsel-ag)
+         ;; ("C-x l" . counsel-locate)
+         ;; ("C-S-o" . counsel-rhythmbox)
+)
   ;; (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
 )
 
@@ -350,8 +348,6 @@ l is lab l, so the range is 0 to 100
 
 
 
-;; TODO use ivy instead of helm/ido?
-
 ;; enable ido mode
 (defun start-ido-mode ()
   (interactive)
@@ -366,7 +362,7 @@ l is lab l, so the range is 0 to 100
   (when (fboundp 'magit-find-file-ido)
     (global-set-key (kbd "C-c f") 'magit-find-file-ido)))
 
-;(start-ido-mode)
+(start-ido-mode)
 
 ;; (if (and (require 'helm nil t) (require 'helm-config nil t))
 ;;     (progn
