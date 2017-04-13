@@ -484,6 +484,10 @@ l is lab l, so the range is 0 to 100
 (add-hook 'irony-mode-hook 'my-irony-mode-hook)
 (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
+(defun hightlight-nonascii ()
+  (interactive)
+  (highlight-regexp "[^[:ascii:]]"))
+
 ;; for racer to work
 (set-env-from-bash-profile "RUST_SRC_PATH")
 (add-hook 'rust-mode 'racer-mode)
