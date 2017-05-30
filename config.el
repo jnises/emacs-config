@@ -202,17 +202,6 @@ l is lab l, so the range is 0 to 100
       (set-face-foreground (nth n rainbowfaces)
                            (apply 'format "#%02x%02x%02x" (mapcar (lambda (x) (floor (* x 255))) (labhsl-to-rgb (* (/ shuffledn 9.0) pi 2) 130 80)))))))
 
-(use-package clojure-mode
-  :ensure t
-  :commands clojure-mode
-  :init
-  (add-hook 'clojure-mode-hook (lambda ()
-                                 (rainbow-delimiters-mode t)
-                                 (paredit-mode t))))
-
-(use-package lua-mode
-  :ensure t)
-
 (use-package highlight-indentation
   :ensure t
   :if window-system
