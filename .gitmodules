@@ -1,9 +1,6 @@
 [submodule "ido-goto-buffer-tag"]
 	path = ido-goto-buffer-tag
 	url = https://github.com/moushkka/ido-goto-buffer-tag.git
-[submodule "external/qml-mode"]
-	path = external/qml-mode
-	url = https://github.com/coldnew/qml-mode.git
 [submodule "external/use-package"]
 	path = external/use-package
 	url = https://github.com/jwiegley/use-package.git
