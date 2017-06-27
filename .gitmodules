@@ -4,3 +4,6 @@
 [submodule "external/qml-mode"]
 	path = external/qml-mode
 	url = https://github.com/coldnew/qml-mode.git
+[submodule "external/use-package"]
+	path = external/use-package
+	url = https://github.com/jwiegley/use-package.git

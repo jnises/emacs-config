@@ -3,6 +3,7 @@
 ;; put something like
 ;; (setq home-el-path "~/.emacs.d/el")
 ;; (load (concat home-el-path "/config.el"))
+;; (setq download-packages t) ; or not if you don't want to download external things
 ;; in your .emacs
 
 ;; some customize shit. doesn't seem to be possible to set default tab-width without it
@@ -32,13 +33,6 @@
 (add-to-list 'load-path el-path)
 (add-to-list 'load-path external-el-path)
 (add-to-list 'load-path downloaded-el-path)
-
-;; better package repo
-(when (require 'package nil t)
-  ;;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
-  ;;(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
-  (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
-  (package-initialize))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;
@@ -152,135 +146,20 @@
 ;; packages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; better package repo
+(when (and (boundp 'download-packages) download-packages (require 'package nil t))
+  ;;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+  ;;(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+  (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
+  (package-initialize))
+
 ;; make sure use-package is loaded
-(when (not (package-installed-p 'use-package))
-  (package-refresh-contents)
-  (package-install 'use-package))
+(add-to-list 'load-path (concat external-el-path "/use-package"))
+(require 'use-package)
 
 ;; a package with some random local utils
 (use-package deepness-utils
   :load-path el-path)
-
-(use-package paredit
-  :ensure t
-  :commands paredit-mode
-  :init
-  (dolist (hook '(emacs-lisp-mode-hook
-                  scheme-mode-hook)) (add-hook hook (lambda ()
-                                                      (paredit-mode t)))))
-
-(use-package rainbow-delimiters
-  :ensure t
-  :commands rainbow-delimiters-mode
-  :init
-  (dolist (hook '(emacs-lisp-mode-hook
-                  scheme-mode-hook)) (add-hook hook (lambda ()
-                                                      (rainbow-delimiters-mode t))))
-  :config
-  (use-package color)
-  (defun labhsl-to-rgb (h s l)
-    "
-hsl to rgb by way of lab
-l is lab l, so the range is 0 to 100
-"
-    (let ((a (* (cos h) s))
-          (b (* (sin h) s)))
-      (mapcar (lambda (x) (max (min x 1) 0)) (color-lab-to-srgb l a b))))
-
-  ;; better colors for rainbow delimiters
-  (dotimes (n 9)
-    (let ((rainbowfaces '(rainbow-delimiters-depth-1-face
-                          rainbow-delimiters-depth-2-face
-                          rainbow-delimiters-depth-3-face
-                          rainbow-delimiters-depth-4-face
-                          rainbow-delimiters-depth-5-face
-                          rainbow-delimiters-depth-6-face
-                          rainbow-delimiters-depth-7-face
-                          rainbow-delimiters-depth-8-face
-                          rainbow-delimiters-depth-9-face))
-          (shuffledn (nth n '(3 7 1 4 6 0 5 8 2))))
-      (set-face-foreground (nth n rainbowfaces)
-                           (apply 'format "#%02x%02x%02x" (mapcar (lambda (x) (floor (* x 255))) (labhsl-to-rgb (* (/ shuffledn 9.0) pi 2) 130 80)))))))
-
-(use-package highlight-indentation
-  :ensure t
-  :if window-system
-  :commands highlight-indentation-mode
-  :init
-  ;; enable indentation highlighting for modes that benefit from them (python)
-  (add-hook 'python-mode-hook #'highlight-indentation-mode))
-
-(use-package yascroll
-  :ensure t
-  :if window-system
-  :init
-  (scroll-bar-mode -1)
-  (global-yascroll-bar-mode t)
-  (set-face-background 'yascroll:thumb-text-area "Gray80")
-  (set-face-background 'yascroll:thumb-fringe "Gray80")
-  (set-face-foreground 'yascroll:thumb-fringe "Gray80"))
-
-(use-package undo-tree
-  :ensure t
-  :init
-  (global-undo-tree-mode))
-
-(use-package multi-web-mode
-  :ensure t
-  :commands multi-web-mode
-  :config
-  (setq mweb-default-major-mode 'html-mode)
-  (setq mweb-tags '((php-mode "<\\?php\\|<\\? \\|<\\?=" "\\?>")
-                    (js-mode "<script *\\(type=\"text/javascript\"\\|language=\"javascript\"\\)?[^>]*>" "</script>")
-                    (css-mode "<style *\\(type=\"text/css\"\\)?[^>]*>" "</style>")))
-  :bind ("C-c w" . multi-web-mode))
-
-(use-package projectile
-  :ensure t
-  :config
-  (setq projectile-enable-caching t)
-  (when (string-equal system-type "windows-nt")
-    (when (ignore-errors (call-process "ls"))
-      (setq projectile-indexing-method 'alien)))
-  :init
-  (projectile-global-mode))
-
-(use-package js2-mode
-  :ensure t
-  :mode "\\.js\\'"
-  :commands js2-mode)
-
-(use-package magit
-  :ensure t
-  :commands (magit-status magit-find-file-ido)
-  :config
-  (progn
-    (when (string-equal system-type "windows-nt")
-      (let ((gitpath "c:/Program Files/Git/bin/git.exe"))
-        (if (file-exists-p gitpath)
-            (setq magit-git-executable gitpath)))))
-  (setq magit-auto-revert-mode nil))
-
-;; (use-package helm
-;;   :ensure t)
-
-;; (use-package helm-projectile
-;;   :ensure t)
-
-;; (use-package helm-ls-git
-;;   :ensure t)
-
-;; (use-package helm-gtags
-;;   :ensure t)
-
-(use-package ggtags
-  :ensure t)
-
-(use-package exec-path-from-shell
-  :ensure t
-  :if (string-equal system-type "darwin")
-  :init
-  (exec-path-from-shell-initialize))
 
 (use-package grep
   :config
@@ -290,52 +169,152 @@ l is lab l, so the range is 0 to 100
 
 (use-package git)
 
-(use-package glsl-mode
-  :ensure t
-  :mode "\\.glsl\\'"
-  :config
-  ;; hack to stop glsl-mode from indenting layout modifiers as knr argument declarations
-  (add-hook 'glsl-mode-hook
-            (lambda ()
-              (c-set-offset 'knr-argdecl [0]))))
+(when (and (boundp 'download-packages) download-packages)
 
-(use-package counsel
-  :ensure t
-  :init
-  (ivy-mode t)
-  (setq ivy-use-virtual-buffers t)
-  ;; (setq ivy-re-builders-alist
-  ;;       '((t . ivy--regex-fuzzy)))
-  :bind (
-         ;;("\C-s" . counsel-grep-or-swiper)
-         ("M-x" . counsel-M-x)
-         ("M-y" . counsel-yank-pop)
-         ("C-c C-r" . ivy-resume)
-         ;("C-x C-f" . counsel-find-file)
-         ("<f1> f" . counsel-describe-function)
-         ("<f1> v" . counsel-describe-variable)
-         ("<f1> l" . counsel-load-library)
-         ("<f2> i" . counsel-info-lookup-symbol)
-         ("<f2> u" . counsel-unicode-char)
-         ;; ("C-c g" . counsel-git)
-         ;; ("C-c j" . counsel-git-grep)
-         ;; ("C-c k" . counsel-ag)
-         ;; ("C-x l" . counsel-locate)
-         ;; ("C-S-o" . counsel-rhythmbox)
-)
-  ;; (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
-)
+  (use-package paredit
+    :ensure t
+    :commands paredit-mode
+    :init
+    (dolist (hook '(emacs-lisp-mode-hook
+                    scheme-mode-hook)) (add-hook hook (lambda ()
+                                                        (paredit-mode t)))))
+
+  (use-package rainbow-delimiters
+    :ensure t
+    :commands rainbow-delimiters-mode
+    :init
+    (dolist (hook '(emacs-lisp-mode-hook
+                    scheme-mode-hook)) (add-hook hook (lambda ()
+                                                        (rainbow-delimiters-mode t))))
+    :config
+    (use-package color)
+    (defun labhsl-to-rgb (h s l)
+      "
+hsl to rgb by way of lab
+l is lab l, so the range is 0 to 100
+"
+      (let ((a (* (cos h) s))
+            (b (* (sin h) s)))
+        (mapcar (lambda (x) (max (min x 1) 0)) (color-lab-to-srgb l a b))))
+
+    ;; better colors for rainbow delimiters
+    (dotimes (n 9)
+      (let ((rainbowfaces '(rainbow-delimiters-depth-1-face
+                            rainbow-delimiters-depth-2-face
+                            rainbow-delimiters-depth-3-face
+                            rainbow-delimiters-depth-4-face
+                            rainbow-delimiters-depth-5-face
+                            rainbow-delimiters-depth-6-face
+                            rainbow-delimiters-depth-7-face
+                            rainbow-delimiters-depth-8-face
+                            rainbow-delimiters-depth-9-face))
+            (shuffledn (nth n '(3 7 1 4 6 0 5 8 2))))
+        (set-face-foreground (nth n rainbowfaces)
+                             (apply 'format "#%02x%02x%02x" (mapcar (lambda (x) (floor (* x 255))) (labhsl-to-rgb (* (/ shuffledn 9.0) pi 2) 130 80)))))))
+
+  (use-package highlight-indentation
+    :ensure t
+    :if window-system
+    :commands highlight-indentation-mode
+    :init
+    ;; enable indentation highlighting for modes that benefit from them (python)
+    (add-hook 'python-mode-hook #'highlight-indentation-mode))
+
+  (use-package yascroll
+    :ensure t
+    :if window-system
+    :init
+    (scroll-bar-mode -1)
+    (global-yascroll-bar-mode t)
+    (set-face-background 'yascroll:thumb-text-area "Gray80")
+    (set-face-background 'yascroll:thumb-fringe "Gray80")
+    (set-face-foreground 'yascroll:thumb-fringe "Gray80"))
+
+  (use-package undo-tree
+    :ensure t
+    :init
+    (global-undo-tree-mode))
+
+  (use-package multi-web-mode
+    :ensure t
+    :commands multi-web-mode
+    :config
+    (setq mweb-default-major-mode 'html-mode)
+    (setq mweb-tags '((php-mode "<\\?php\\|<\\? \\|<\\?=" "\\?>")
+                      (js-mode "<script *\\(type=\"text/javascript\"\\|language=\"javascript\"\\)?[^>]*>" "</script>")
+                      (css-mode "<style *\\(type=\"text/css\"\\)?[^>]*>" "</style>")))
+    :bind ("C-c w" . multi-web-mode))
+
+  (use-package projectile
+    :ensure t
+    :config
+    (setq projectile-enable-caching t)
+    (when (string-equal system-type "windows-nt")
+      (when (ignore-errors (call-process "ls"))
+        (setq projectile-indexing-method 'alien)))
+    :init
+    (projectile-global-mode))
+
+  (use-package js2-mode
+    :ensure t
+    :mode "\\.js\\'"
+    :commands js2-mode)
+
+  (use-package magit
+    :ensure t
+    :commands (magit-status magit-find-file-ido)
+    :config
+    (progn
+      (when (string-equal system-type "windows-nt")
+        (let ((gitpath "c:/Program Files/Git/bin/git.exe"))
+          (if (file-exists-p gitpath)
+              (setq magit-git-executable gitpath)))))
+    (setq magit-auto-revert-mode nil))
+
+  (use-package exec-path-from-shell
+    :ensure t
+    :if (string-equal system-type "darwin")
+    :init
+    (exec-path-from-shell-initialize))
+
+
+  (use-package counsel
+    :ensure t
+    :init
+    (ivy-mode t)
+    (setq ivy-use-virtual-buffers t)
+    ;; (setq ivy-re-builders-alist
+    ;;       '((t . ivy--regex-fuzzy)))
+    :bind (
+           ;;("\C-s" . counsel-grep-or-swiper)
+           ("M-x" . counsel-M-x)
+           ("M-y" . counsel-yank-pop)
+           ("C-c C-r" . ivy-resume)
+                                        ;("C-x C-f" . counsel-find-file)
+           ("<f1> f" . counsel-describe-function)
+           ("<f1> v" . counsel-describe-variable)
+           ("<f1> l" . counsel-load-library)
+           ("<f2> i" . counsel-info-lookup-symbol)
+           ("<f2> u" . counsel-unicode-char)
+           ;; ("C-c g" . counsel-git)
+           ;; ("C-c j" . counsel-git-grep)
+           ;; ("C-c k" . counsel-ag)
+           ;; ("C-x l" . counsel-locate)
+           ;; ("C-S-o" . counsel-rhythmbox)
+           )
+    ;; (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
+    ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; package-dependent config
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(when (string-equal system-type "darwin")
-  ;; use apple gud that supports lldb
-  (let ((path (concat downloaded-el-path "/gud.el")))
-    (download-file-if-not-exist "http://www.opensource.apple.com/source/lldb/lldb-69/utils/emacs/gud.el?txt" path "108a76a8d5d8ffa6aca950a103294a012bb606f9")
-    (if (file-exists-p path)
-        (load path))))
+(when (and (boundp 'download-packages) download-packages)
+  (when (string-equal system-type "darwin")
+    ;; use apple gud that supports lldb
+    (let ((path (concat downloaded-el-path "/gud.el")))
+      (download-file-if-not-exist "http://www.opensource.apple.com/source/lldb/lldb-69/utils/emacs/gud.el?txt" path "108a76a8d5d8ffa6aca950a103294a012bb606f9")
+      (if (file-exists-p path)
+          (load path)))))
 
 
 
