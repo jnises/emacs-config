@@ -177,9 +177,12 @@
                   scheme-mode-hook)) (add-hook hook (lambda ()
                                                       (paredit-mode t)))))
 
+(use-package undo-tree
+  :load-path (lambda () (concat external-el-path "/undo-tree"))
+  :init
+  (global-undo-tree-mode))
+
 (when (and (boundp 'download-packages) download-packages)
-
-
   (use-package rainbow-delimiters
     :ensure t
     :commands rainbow-delimiters-mode
@@ -230,11 +233,6 @@ l is lab l, so the range is 0 to 100
     (set-face-background 'yascroll:thumb-text-area "Gray80")
     (set-face-background 'yascroll:thumb-fringe "Gray80")
     (set-face-foreground 'yascroll:thumb-fringe "Gray80"))
-
-  (use-package undo-tree
-    :ensure t
-    :init
-    (global-undo-tree-mode))
 
   (use-package multi-web-mode
     :ensure t

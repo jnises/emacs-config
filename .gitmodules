@@ -7,3 +7,6 @@
 [submodule "external/paredit"]
 	path = external/paredit
 	url = https://mumble.net/~campbell/git/paredit.git
+[submodule "external/undo-tree"]
+	path = external/undo-tree
+	url = http://www.dr-qubit.org/git/undo-tree.git
