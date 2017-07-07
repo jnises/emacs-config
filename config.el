@@ -169,15 +169,16 @@
 
 (use-package git)
 
+(use-package paredit
+  :load-path (lambda () (concat external-el-path "/paredit"))
+  :commands paredit-mode
+  :init
+  (dolist (hook '(emacs-lisp-mode-hook
+                  scheme-mode-hook)) (add-hook hook (lambda ()
+                                                      (paredit-mode t)))))
+
 (when (and (boundp 'download-packages) download-packages)
 
-  (use-package paredit
-    :load-path external-el-path
-    :commands paredit-mode
-    :init
-    (dolist (hook '(emacs-lisp-mode-hook
-                    scheme-mode-hook)) (add-hook hook (lambda ()
-                                                        (paredit-mode t)))))
 
   (use-package rainbow-delimiters
     :ensure t
