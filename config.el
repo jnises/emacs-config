@@ -172,7 +172,7 @@
 (when (and (boundp 'download-packages) download-packages)
 
   (use-package paredit
-    :ensure t
+    :load-path external-el-path
     :commands paredit-mode
     :init
     (dolist (hook '(emacs-lisp-mode-hook

@@ -4,3 +4,6 @@
 [submodule "external/use-package"]
 	path = external/use-package
 	url = https://github.com/jwiegley/use-package.git
+[submodule "external/paredit"]
+	path = external/paredit
+	url = https://mumble.net/~campbell/git/paredit.git
