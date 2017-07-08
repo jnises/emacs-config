@@ -180,7 +180,7 @@
 
 (use-package undo-tree
   :load-path (lambda () (concat external-el-path "/undo-tree"))
-  :init
+  :config
   (global-undo-tree-mode))
 
 (when (and (boundp 'download-packages) download-packages)
