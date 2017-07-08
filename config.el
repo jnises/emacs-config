@@ -145,17 +145,16 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; packages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;; better package repo
+(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+                    (not (gnutls-available-p))))
+       (proto (if no-ssl "http" "https")))
+  (add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
+  ;;(add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/") url) t)
+  (when (< emacs-major-version 24)
+    ;; For important compatibility libraries like cl-lib
+    (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
 (when (and (boundp 'download-packages) download-packages (require 'package nil t))
-  (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-                      (not (gnutls-available-p))))
-         (proto (if no-ssl "http" "https")))
-    (add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
-    ;;(add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.milkbox.net/packages/") url) t)
-    (when (< emacs-major-version 24)
-      ;; For important compatibility libraries like cl-lib
-      (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
   (package-initialize))
 
 ;; make sure use-package is loaded
@@ -233,12 +232,13 @@ l is lab l, so the range is 0 to 100
   (use-package yascroll
     :ensure t
     :if window-system
-    :init
+    :config
     (scroll-bar-mode -1)
     (global-yascroll-bar-mode t)
-    (set-face-background 'yascroll:thumb-text-area "Gray80")
-    (set-face-background 'yascroll:thumb-fringe "Gray80")
-    (set-face-foreground 'yascroll:thumb-fringe "Gray80"))
+    ;(set-face-background 'yascroll:thumb-text-area "Gray80")
+    ;(set-face-background 'yascroll:thumb-fringe "Gray80")
+    ;(set-face-foreground 'yascroll:thumb-fringe "Gray80")
+    )
 
   (use-package multi-web-mode
     :ensure t
