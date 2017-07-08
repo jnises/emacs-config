@@ -61,7 +61,7 @@
 (setq-default indent-tabs-mode nil)
 
 ;; but if there is, set the default tab width (determines how a tab is displayed)
-(setq default-tab-width 4)
+(setq tab-width 4)
 
 ;; change color theme
 (if (window-system)
@@ -148,9 +148,14 @@
 
 ;; better package repo
 (when (and (boundp 'download-packages) download-packages (require 'package nil t))
-  ;;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
-  ;;(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
-  (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
+  (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+                      (not (gnutls-available-p))))
+         (proto (if no-ssl "http" "https")))
+    (add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/") url) t)
+    ;;(add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.milkbox.net/packages/") url) t)
+    (when (< emacs-major-version 24)
+      ;; For important compatibility libraries like cl-lib
+      (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
   (package-initialize))
 
 ;; make sure use-package is loaded
