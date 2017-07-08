@@ -155,7 +155,8 @@
 
 ;; make sure use-package is loaded
 (add-to-list 'load-path (concat external-el-path "/use-package"))
-(require 'use-package)
+(eval-when-compile
+  (require 'use-package))
 
 ;; a package with some random local utils
 (use-package deepness-utils
