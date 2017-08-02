@@ -6,6 +6,8 @@
 ;; (load (concat home-el-path "/config.el"))
 ;; in your .emacs
 
+;; on windows create a symlink from %userprofile%/.gitconfig to %appdata%/.gitconfig
+
 ;; some customize shit. doesn't seem to be possible to set default tab-width without it
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -33,7 +35,6 @@
 (add-to-list 'load-path el-path)
 (add-to-list 'load-path external-el-path)
 (add-to-list 'load-path downloaded-el-path)
-
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; startup config
@@ -289,6 +290,10 @@ l is lab l, so the range is 0 to 100
   :config
   (exec-path-from-shell-initialize))
 
+(use-package smex
+  :ensure t
+  :if download-packages
+  :bind (("M-x" . smex)))
 
 (use-package counsel
   :ensure t
@@ -300,7 +305,7 @@ l is lab l, so the range is 0 to 100
   ;;       '((t . ivy--regex-fuzzy)))
   :bind (
          ;;("\C-s" . counsel-grep-or-swiper)
-         ("M-x" . counsel-M-x)
+         ;;("M-x" . counsel-M-x)
          ("M-y" . counsel-yank-pop)
          ("C-c C-r" . ivy-resume)
                                         ;("C-x C-f" . counsel-find-file)
