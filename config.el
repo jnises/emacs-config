@@ -149,6 +149,9 @@
 (eval-and-compile
   (setq download-packages (if (boundp 'download-packages) download-packages nil)))
 
+(unless (boundp 'package-archives)
+  (setq package-archives '()))
+
 ;; better package repo
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
                     (not (gnutls-available-p))))
