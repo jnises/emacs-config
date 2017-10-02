@@ -485,4 +485,9 @@ l is lab l, so the range is 0 to 100
 ;; (setq jedi:environment-virtualenv
 ;;       (list "virtualenv3" "--system-site-packages"))
 
+(defun highlight-log ()
+  (interactive)
+  (highlight-regexp "error" 'hi-pink)
+  (highlight-regexp "warning" 'hi-yellow))
+
 (server-start)
