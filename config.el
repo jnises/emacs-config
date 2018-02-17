@@ -332,13 +332,12 @@ l is lab l, so the range is 0 to 100
   :config
   (add-hook 'rust-mode 'racer-mode))
 
+;; for racer to work
+(set-env-from-bash-profile "RUST_SRC_PATH")
 (use-package racer
   :ensure t
   :if download-packages
-  :commands racer-mode
-  :config
-  ;; for racer to work
-  (set-env-from-bash-profile "RUST_SRC_PATH"))
+  :commands racer-mode)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
