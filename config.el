@@ -326,6 +326,21 @@ l is lab l, so the range is 0 to 100
   ;; (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
   )
 
+(use-package rust-mode
+  :ensure t
+  :if download-packages
+  :config
+  (add-hook 'rust-mode 'racer-mode))
+
+(use-package racer
+  :ensure t
+  :if download-packages
+  :commands racer-mode
+  :config
+  ;; for racer to work
+  (set-env-from-bash-profile "RUST_SRC_PATH"))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; package-dependent config
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -477,9 +492,6 @@ l is lab l, so the range is 0 to 100
   (interactive)
   (highlight-regexp "[^[:ascii:]]"))
 
-;; for racer to work
-(set-env-from-bash-profile "RUST_SRC_PATH")
-(add-hook 'rust-mode 'racer-mode)
 
 ;; python 3 in jedi
 ;; (setq jedi:environment-virtualenv
