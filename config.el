@@ -330,15 +330,24 @@ l is lab l, so the range is 0 to 100
   :ensure t
   :if download-packages
   :config
-  (add-hook 'rust-mode 'racer-mode))
+  (add-hook 'rust-mode-hook 'racer-mode))
 
 ;; for racer to work
-(set-env-from-bash-profile "RUST_SRC_PATH")
 (use-package racer
   :ensure t
   :if download-packages
-  :commands racer-mode)
+  :commands racer-mode
+  :init
+  (set-env-from-bash-profile "RUST_SRC_PATH"))
 
+(use-package elpy
+  :ensure t
+  :if download-packages
+  :commands
+  elpy-mode
+  elpy-enable
+  :init
+  (add-hook 'python-mode-hook #'elpy-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; package-dependent config
