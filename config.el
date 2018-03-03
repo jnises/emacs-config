@@ -348,7 +348,11 @@ l is lab l, so the range is 0 to 100
   elpy-mode
   elpy-enable
   :init
-  (add-hook 'python-mode-hook #'elpy-mode))
+  (add-hook 'python-mode-hook #'elpy-mode)
+  :config
+  (add-hook 'elpy-mode-hook #'(lambda ()
+                                ;; stop elpy from messing with company mode settings
+                                (set (make-local-variable 'company-idle-delay) 10000000))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; package-dependent config
@@ -473,11 +477,6 @@ l is lab l, so the range is 0 to 100
 (setq company-auto-complete nil)
 (setq company-auto-complete-chars nil)
 (setq company-idle-delay 100000000)
-
-(eval-after-load 'elpy
-  '(add-hook 'elpy-mode-hook (lambda ()
-                               ;; stop elpy from messing with company mode settings
-                               (set (make-local-variable 'company-idle-delay) 10000000))))
 
 ;;(setq omnisharp-server-executable-path "/Users/joelnises/code/exnternal")
 (eval-after-load 'omnisharp
