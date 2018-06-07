@@ -40,6 +40,8 @@
 ;; startup config
 ;;;;;;;;;;;;;;;;;;;;;;
 
+(require 'subr-x)
+
 ;; faster startup
 (modify-frame-parameters nil '((wait-for-wm . nil)))
 
@@ -157,7 +159,7 @@
                     (not (gnutls-available-p))))
        (proto (if no-ssl "http" "https")))
   (add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
-  ;;(add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/") url) t)
+  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
   (when (< emacs-major-version 24)
     ;; For important compatibility libraries like cl-lib
     (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
@@ -273,7 +275,9 @@ l is lab l, so the range is 0 to 100
   :ensure t
   :if download-packages
   :mode "\\.js\\'"
-  :commands js2-mode)
+  :commands js2-mode
+  :config
+  (setq js2-strict-missing-semi-warning nil))
 
 (use-package magit
   :ensure t
@@ -298,33 +302,33 @@ l is lab l, so the range is 0 to 100
   :if download-packages
   :bind (("M-x" . smex)))
 
-(use-package counsel
-  :ensure t
-  :if download-packages
-  :config
-  (ivy-mode t)
-  (setq ivy-use-virtual-buffers t)
-  ;; (setq ivy-re-builders-alist
-  ;;       '((t . ivy--regex-fuzzy)))
-  :bind (
-         ;;("\C-s" . counsel-grep-or-swiper)
-         ;;("M-x" . counsel-M-x)
-         ("M-y" . counsel-yank-pop)
-         ("C-c C-r" . ivy-resume)
-                                        ;("C-x C-f" . counsel-find-file)
-         ("<f1> f" . counsel-describe-function)
-         ("<f1> v" . counsel-describe-variable)
-         ("<f1> l" . counsel-load-library)
-         ("<f2> i" . counsel-info-lookup-symbol)
-         ("<f2> u" . counsel-unicode-char)
-         ;; ("C-c g" . counsel-git)
-         ;; ("C-c j" . counsel-git-grep)
-         ;; ("C-c k" . counsel-ag)
-         ;; ("C-x l" . counsel-locate)
-         ;; ("C-S-o" . counsel-rhythmbox)
-         )
-  ;; (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
-  )
+;; (use-package counsel
+;;   :ensure t
+;;   :if download-packages
+;;   :config
+;;   (ivy-mode t)
+;;   (setq ivy-use-virtual-buffers t)
+;;   ;; (setq ivy-re-builders-alist
+;;   ;;       '((t . ivy--regex-fuzzy)))
+;;   :bind (
+;;          ;;("\C-s" . counsel-grep-or-swiper)
+;;          ;;("M-x" . counsel-M-x)
+;;          ("M-y" . counsel-yank-pop)
+;;          ("C-c C-r" . ivy-resume)
+;;                                         ;("C-x C-f" . counsel-find-file)
+;;          ("<f1> f" . counsel-describe-function)
+;;          ("<f1> v" . counsel-describe-variable)
+;;          ("<f1> l" . counsel-load-library)
+;;          ("<f2> i" . counsel-info-lookup-symbol)
+;;          ("<f2> u" . counsel-unicode-char)
+;;          ;; ("C-c g" . counsel-git)
+;;          ;; ("C-c j" . counsel-git-grep)
+;;          ;; ("C-c k" . counsel-ag)
+;;          ;; ("C-x l" . counsel-locate)
+;;          ;; ("C-S-o" . counsel-rhythmbox)
+;;          )
+;;   ;; (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
+;;   )
 
 (use-package rust-mode
   :ensure t
@@ -339,6 +343,9 @@ l is lab l, so the range is 0 to 100
   :commands racer-mode
   :init
   (set-env-from-bash-profile "RUST_SRC_PATH")
+  ;(call-process "rustc" nil nil nil "--print" "sysroot")
+  ;; TODO check first if rustc returns properly
+  (setenv "RUST_SRC_PATH" (concat (string-trim (shell-command-to-string "rustc --print sysroot")) "/lib/rustlib/src/rust/src"))
   (add-hook 'rust-mode-hook 'racer-mode))
 
 (use-package elpy
