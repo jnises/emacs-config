@@ -190,8 +190,6 @@
   (when (fboundp 'grep-apply-setting)
     (grep-apply-setting 'grep-find-command '("find . -type f ! -path \"*.git*\" -exec grep -nH -e  {} +" . 51))))
 
-(use-package git)
-
 (use-package paredit
   :load-path (lambda () (concat external-el-path "/paredit"))
   :commands paredit-mode
@@ -293,11 +291,10 @@ l is lab l, so the range is 0 to 100
   :if download-packages
   :commands (magit-status magit-find-file-ido)
   :config
-  (progn
-    (when (string-equal system-type "windows-nt")
-      (let ((gitpath (concat (find-windows-git-root) "/bin/git.exe")))
-        (if (file-exists-p gitpath)
-            (setq magit-git-executable gitpath)))))
+  (when (string-equal system-type "windows-nt")
+    (let ((gitpath (concat (or (find-windows-git-root) "") "/bin/git.exe")))
+      (if (file-exists-p gitpath)
+          (setq magit-git-executable gitpath))))
   (setq magit-auto-revert-mode nil))
 
 (use-package exec-path-from-shell
@@ -399,31 +396,38 @@ l is lab l, so the range is 0 to 100
 
 (start-ido-mode)
 
+(defun add-to-path (paths)
+  "paths: a path to add to path, or a list of paths"
+  (let ((paths (if (listp paths) paths (list paths))))
+    (setenv "PATH"
+            (mapconcat 'identity
+                       (mapcar (lambda (path) (replace-regexp-in-string "/" "\\\\" path)) (append paths (list (getenv "PATH"))))
+                       ";"))))
+
 ;; windows only stuff
 (when (string-equal system-type "windows-nt")
-  ;; set cygwin path for w32 emac
-  ;; TODO only use git bash unix utils?
-  ;;(setq w32shell-cygwin-bin "C:/cygwin/bin")
-  ;;(setq gnuwin-path "c:/local/gnuwin32/bin")
-  (setq cygwin-root-directory (if (file-exists-p "c:/cygwin64") "c:/cygwin64" "c:/cygwin"))
-  (setq cygwin-bin-path (concat cygwin-root-directory "/bin"))
-  (setq cygwin-usr-bin-path (concat cygwin-root-directory "/usr/bin"))
-  (setenv "PATH"
-          (mapconcat 'identity
-                     (mapcar (lambda (path) (replace-regexp-in-string "/" "\\\\" path)) (list ;;gnuwin-path
-                                 ;;w32shell-cygwin-bin
-                                 cygwin-bin-path
-                                 cygwin-usr-bin-path
-                                 "C:/Program Files/Git/bin"
-                                 (getenv "PATH")))
-                     ";"))
+  (if-let ((gitroot (find-windows-git-root)))
+      (dolist (path (mapcar 
+                     (lambda (suffix) (concat gitroot suffix))
+                     '("/bin" "/usr/bin")))
+        (add-to-path path)
+        (add-to-list 'exec-path path))
 
-  (add-to-list 'exec-path cygwin-bin-path)
-  (add-to-list 'exec-path cygwin-usr-bin-path)
-  (add-to-list 'exec-path "C:/Program Files/Git/bin")
-  ;; (set-variable 'find-program "find.exe")
-  ;; (set-variable 'grep-program "grep.exe")
-  (and (require 'cygwin-mount nil t) (require 'setup-cygwin nil t)))
+    ;; try cygwin instead
+
+    ;; set cygwin path for w32 emac
+    ;; TODO only use git bash unix utils?
+    ;;(setq w32shell-cygwin-bin "C:/cygwin/bin")
+    ;;(setq gnuwin-path "c:/local/gnuwin32/bin")
+    (setq cygwin-root-directory (if (file-exists-p "c:/cygwin64") "c:/cygwin64" "c:/cygwin"))
+    (setq cygwin-bin-path (concat cygwin-root-directory "/bin"))
+    (setq cygwin-usr-bin-path (concat cygwin-root-directory "/usr/bin"))
+    (add-to-path '(cygwin-bin-path cygwin-usr-bin-path))
+    (add-to-list 'exec-path cygwin-bin-path)
+    (add-to-list 'exec-path cygwin-usr-bin-path)
+    ;; (set-variable 'find-program "find.exe")
+    ;; (set-variable 'grep-program "grep.exe")
+    (and (require 'cygwin-mount nil t) (require 'setup-cygwin nil t))))
 
 ;; python stuff
 (add-hook 'python-mode-hook (lambda ()
