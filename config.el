@@ -144,6 +144,14 @@
 (when (window-system)
   (global-unset-key [(control z)]))
 
+(defun find-windows-git-root ()
+    (let* ((output (shell-command-to-string (concat "reg.exe query HKEY_LOCAL_MACHINE\\Software\\GitForWindows /v InstallPath")))
+           (regpos (string-match "REG_SZ" output)))
+      (if regpos
+          (let* ((pathstart (string-match "[^[:blank:]]" output (+ regpos (length "REG_SZ"))))
+                 (pathend (string-match "\n" output pathstart)))
+            (replace-regexp-in-string "\\\\" "/" (substring output pathstart pathend)))
+        nil)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -287,7 +295,7 @@ l is lab l, so the range is 0 to 100
   :config
   (progn
     (when (string-equal system-type "windows-nt")
-      (let ((gitpath "c:/Program Files/Git/bin/git.exe"))
+      (let ((gitpath (concat (find-windows-git-root) "/bin/git.exe")))
         (if (file-exists-p gitpath)
             (setq magit-git-executable gitpath)))))
   (setq magit-auto-revert-mode nil))
@@ -390,28 +398,6 @@ l is lab l, so the range is 0 to 100
     (global-set-key (kbd "C-c f") 'magit-find-file-ido)))
 
 (start-ido-mode)
-
-;; (if (and (require 'helm nil t) (require 'helm-config nil t))
-;;     (progn
-;;       (setq ;;helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
-;;        ;; helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-;;        ;;helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
-;;        ;;helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
-;;        ;;helm-ff-file-name-history-use-recentf t
-;;        helm-mode-fuzzy-match t
-;;        helm-completion-in-region-fuzzy-match t
-;;        helm-M-x-fuzzy-match t
-;;        helm-buffers-fuzzy-matching t
-;;        ;;helm-recentf-fuzzy-match t
-;;        )
-;;                                         ;(helm-mode 1)
-;;                                         ;(global-set-key (kbd "C-x C-f") 'helm-find-files)
-;;       (global-set-key (kbd "M-x") 'helm-M-x)
-;;       (global-set-key (kbd "C-x b") 'helm-mini)
-;;       (global-set-key (kbd "M-y") 'helm-show-kill-ring))
-;;   ;; fall back to ido-mode if helm is not available
-;;   ;;(start-ido-mode)
-;;   )
 
 ;; windows only stuff
 (when (string-equal system-type "windows-nt")
