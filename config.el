@@ -40,7 +40,8 @@
 ;; startup config
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'subr-x)
+(eval-when-compile
+  (require 'subr-x))
 
 ;; faster startup
 (modify-frame-parameters nil '((wait-for-wm . nil)))
