@@ -148,9 +148,10 @@
     (let* ((output (shell-command-to-string (concat "reg.exe query HKEY_LOCAL_MACHINE\\Software\\GitForWindows /v InstallPath")))
            (regpos (string-match "REG_SZ" output)))
       (if regpos
-          (let* ((pathstart (string-match "[^[:blank:]]" output (+ regpos (length "REG_SZ"))))
-                 (pathend (string-match "\n" output pathstart)))
-            (replace-regexp-in-string "\\\\" "/" (substring output pathstart pathend)))
+          (if-let ((pathstart (string-match "[^[:blank:]]" output (+ regpos (length "REG_SZ"))))
+                   (pathend (string-match "\n" output pathstart)))
+              (replace-regexp-in-string "\\\\" "/" (substring output pathstart pathend))
+            nil)
         nil)))
 
 
