@@ -145,14 +145,12 @@
   (global-unset-key [(control z)]))
 
 (defun find-windows-git-root ()
-    (let* ((output (shell-command-to-string (concat "reg.exe query HKEY_LOCAL_MACHINE\\Software\\GitForWindows /v InstallPath")))
-           (regpos (string-match "REG_SZ" output)))
-      (if regpos
-          (if-let ((pathstart (string-match "[^[:blank:]]" output (+ regpos (length "REG_SZ"))))
-                   (pathend (string-match "\n" output pathstart)))
-              (replace-regexp-in-string "\\\\" "/" (substring output pathstart pathend))
-            nil)
-        nil)))
+  (if-let ((output (shell-command-to-string (concat "reg.exe query HKEY_LOCAL_MACHINE\\Software\\GitForWindows /v InstallPath")))
+           (regpos (string-match "REG_SZ" output))
+           (pathstart (string-match "[^[:blank:]]" output (+ regpos (length "REG_SZ"))))
+           (pathend (string-match "\n" output pathstart)))
+      (replace-regexp-in-string "\\\\" "/" (substring output pathstart pathend))
+    nil))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
