@@ -105,10 +105,11 @@
 ;; disable electric indent everywhere since it doesn't seem possible to disable it for python only
 (electric-indent-mode -1)
 
+(set-default-coding-systems 'utf-8)
+(prefer-coding-system 'utf-8)
+
 ;; encoding stuff for old emacs versions
 (when (or (< emacs-major-version 24) (and (= emacs-major-version 24) (< emacs-minor-version 4)))
-  (set-default-coding-systems 'utf-8)
-  (prefer-coding-system 'utf-8)
   (setq default-process-coding-system '(utf-8-unix . utf-8-unix)))
 
 ;; better eshell behaviour
