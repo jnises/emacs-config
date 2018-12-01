@@ -309,7 +309,6 @@ l is lab l, so the range is 0 to 100
   :if download-packages
   :bind (("M-x" . smex)))
 
-
 (use-package rust-mode
   :ensure t
   :if download-packages
@@ -344,14 +343,6 @@ l is lab l, so the range is 0 to 100
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; package-dependent config
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(when (and download-packages
-           (string-equal system-type "darwin"))
-  ;; use apple gud that supports lldb
-  (let ((path (concat downloaded-el-path "/gud.el")))
-    (download-file-if-not-exist "http://www.opensource.apple.com/source/lldb/lldb-69/utils/emacs/gud.el?txt" path "108a76a8d5d8ffa6aca950a103294a012bb606f9")
-    (if (file-exists-p path)
-        (load path))))
-
 
 
 ;; enable ido mode
