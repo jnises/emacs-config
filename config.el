@@ -40,6 +40,7 @@
 ;; startup config
 ;;;;;;;;;;;;;;;;;;;;;;
 
+;; util functions
 (eval-when-compile
   (require 'subr-x))
 
