@@ -309,33 +309,6 @@ l is lab l, so the range is 0 to 100
   :if download-packages
   :bind (("M-x" . smex)))
 
-;; (use-package counsel
-;;   :ensure t
-;;   :if download-packages
-;;   :config
-;;   (ivy-mode t)
-;;   (setq ivy-use-virtual-buffers t)
-;;   ;; (setq ivy-re-builders-alist
-;;   ;;       '((t . ivy--regex-fuzzy)))
-;;   :bind (
-;;          ;;("\C-s" . counsel-grep-or-swiper)
-;;          ;;("M-x" . counsel-M-x)
-;;          ("M-y" . counsel-yank-pop)
-;;          ("C-c C-r" . ivy-resume)
-;;                                         ;("C-x C-f" . counsel-find-file)
-;;          ("<f1> f" . counsel-describe-function)
-;;          ("<f1> v" . counsel-describe-variable)
-;;          ("<f1> l" . counsel-load-library)
-;;          ("<f2> i" . counsel-info-lookup-symbol)
-;;          ("<f2> u" . counsel-unicode-char)
-;;          ;; ("C-c g" . counsel-git)
-;;          ;; ("C-c j" . counsel-git-grep)
-;;          ;; ("C-c k" . counsel-ag)
-;;          ;; ("C-x l" . counsel-locate)
-;;          ;; ("C-S-o" . counsel-rhythmbox)
-;;          )
-;;   ;; (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
-;;   )
 
 (use-package rust-mode
   :ensure t
