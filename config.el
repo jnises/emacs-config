@@ -170,6 +170,104 @@
 
 (start-ido-mode)
 
+(defun add-to-path (paths)
+  "paths: a path to add to path, or a list of paths"
+  (let ((paths (if (listp paths) paths (list paths))))
+    (setenv "PATH"
+            (mapconcat 'identity
+                       (mapcar (lambda (path) (replace-regexp-in-string "/" "\\\\" path)) (append paths (list (getenv "PATH"))))
+                       ";"))))
+
+;; windows only stuff
+(when (string-equal system-type "windows-nt")
+  (if-let ((gitroot (find-windows-git-root)))
+      (dolist (path (mapcar 
+                     (lambda (suffix) (concat gitroot suffix))
+                     '("/bin" "/usr/bin")))
+        (add-to-path path)
+        (add-to-list 'exec-path path))
+
+    ;; try cygwin instead
+
+    ;; set cygwin path for w32 emac
+    ;; TODO only use git bash unix utils?
+    ;;(setq w32shell-cygwin-bin "C:/cygwin/bin")
+    ;;(setq gnuwin-path "c:/local/gnuwin32/bin")
+    (setq cygwin-root-directory (if (file-exists-p "c:/cygwin64") "c:/cygwin64" "c:/cygwin"))
+    (setq cygwin-bin-path (concat cygwin-root-directory "/bin"))
+    (setq cygwin-usr-bin-path (concat cygwin-root-directory "/usr/bin"))
+    (add-to-path '(cygwin-bin-path cygwin-usr-bin-path))
+    (add-to-list 'exec-path cygwin-bin-path)
+    (add-to-list 'exec-path cygwin-usr-bin-path)
+    ;; (set-variable 'find-program "find.exe")
+    ;; (set-variable 'grep-program "grep.exe")
+    (and (require 'cygwin-mount nil t) (require 'setup-cygwin nil t))))
+
+;; python stuff
+(add-hook 'python-mode-hook (lambda ()
+                              ;; tab width is a mess, so force python to use the correct one
+                              (setq tab-width 4)
+                              (setq python-indent 4)
+                              ;(semantic-mode 1)
+                              (let ((pycommand (if (string-equal system-type "windows-nt")
+                                                   "py -3"
+                                                 "ipython")))
+                                (setq python-shell-interpreter pycommand)
+                                (setq py-python-command pycommand))
+                              ))
+
+(defun c-style-hook-function ()
+  (interactive)
+  (c-set-style "linux")
+  (setq c-basic-offset 4)
+  (c-set-offset 'substatement-open 0)
+  (c-set-offset 'inline-open 0)
+  ;;(semantic-mode t)
+  (setq show-trailing-whitespace t))
+(add-hook 'c-mode-common-hook 'c-style-hook-function)
+
+(define-derived-mode glog-mode fundamental-mode
+  (setq font-lock-defaults '((("^E.*$" . font-lock-warning-face)
+                              ("^W.*$" . font-lock-function-name-face)
+                              ("^I.*$" . font-lock-comment-face))))
+  (setq mode-name "glog"))
+
+
+;; to make org mode not clobber windmove keys
+(setq org-replace-disputed-keys t)
+
+;; use python 3 by default
+;(setq py-python-command "py -3")
+;(setq python-python-command "py -3")
+
+;; i don't want no autocomplete
+(setq company-auto-complete nil)
+(setq company-auto-complete-chars nil)
+(setq company-idle-delay 100000000)
+
+
+(eval-after-load 'company
+  '(global-set-key (kbd "C-c TAB") 'company-complete))
+
+
+(defun my-irony-mode-hook ()
+  (define-key irony-mode-map [remap completion-at-point]
+    'irony-completion-at-point-async)
+  (define-key irony-mode-map [remap complete-symbol]
+    'irony-completion-at-point-async))
+(add-hook 'irony-mode-hook 'my-irony-mode-hook)
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
+(defun hightlight-nonascii ()
+  (interactive)
+  (highlight-regexp "[^[:ascii:]]"))
+
+
+(defun highlight-log ()
+  (interactive)
+  (highlight-regexp "error" 'hi-pink)
+  (highlight-regexp "warning" 'hi-yellow))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; packages
@@ -366,102 +464,5 @@ l is lab l, so the range is 0 to 100
 
 
 
-(defun add-to-path (paths)
-  "paths: a path to add to path, or a list of paths"
-  (let ((paths (if (listp paths) paths (list paths))))
-    (setenv "PATH"
-            (mapconcat 'identity
-                       (mapcar (lambda (path) (replace-regexp-in-string "/" "\\\\" path)) (append paths (list (getenv "PATH"))))
-                       ";"))))
-
-;; windows only stuff
-(when (string-equal system-type "windows-nt")
-  (if-let ((gitroot (find-windows-git-root)))
-      (dolist (path (mapcar 
-                     (lambda (suffix) (concat gitroot suffix))
-                     '("/bin" "/usr/bin")))
-        (add-to-path path)
-        (add-to-list 'exec-path path))
-
-    ;; try cygwin instead
-
-    ;; set cygwin path for w32 emac
-    ;; TODO only use git bash unix utils?
-    ;;(setq w32shell-cygwin-bin "C:/cygwin/bin")
-    ;;(setq gnuwin-path "c:/local/gnuwin32/bin")
-    (setq cygwin-root-directory (if (file-exists-p "c:/cygwin64") "c:/cygwin64" "c:/cygwin"))
-    (setq cygwin-bin-path (concat cygwin-root-directory "/bin"))
-    (setq cygwin-usr-bin-path (concat cygwin-root-directory "/usr/bin"))
-    (add-to-path '(cygwin-bin-path cygwin-usr-bin-path))
-    (add-to-list 'exec-path cygwin-bin-path)
-    (add-to-list 'exec-path cygwin-usr-bin-path)
-    ;; (set-variable 'find-program "find.exe")
-    ;; (set-variable 'grep-program "grep.exe")
-    (and (require 'cygwin-mount nil t) (require 'setup-cygwin nil t))))
-
-;; python stuff
-(add-hook 'python-mode-hook (lambda ()
-                              ;; tab width is a mess, so force python to use the correct one
-                              (setq tab-width 4)
-                              (setq python-indent 4)
-                              ;(semantic-mode 1)
-                              (let ((pycommand (if (string-equal system-type "windows-nt")
-                                                   "py -3"
-                                                 "ipython")))
-                                (setq python-shell-interpreter pycommand)
-                                (setq py-python-command pycommand))
-                              ))
-
-(defun c-style-hook-function ()
-  (interactive)
-  (c-set-style "linux")
-  (setq c-basic-offset 4)
-  (c-set-offset 'substatement-open 0)
-  (c-set-offset 'inline-open 0)
-  ;;(semantic-mode t)
-  (setq show-trailing-whitespace t))
-(add-hook 'c-mode-common-hook 'c-style-hook-function)
-
-(define-derived-mode glog-mode fundamental-mode
-  (setq font-lock-defaults '((("^E.*$" . font-lock-warning-face)
-                              ("^W.*$" . font-lock-function-name-face)
-                              ("^I.*$" . font-lock-comment-face))))
-  (setq mode-name "glog"))
-
-
-;; to make org mode not clobber windmove keys
-(setq org-replace-disputed-keys t)
-
-;; use python 3 by default
-;(setq py-python-command "py -3")
-;(setq python-python-command "py -3")
-
-;; i don't want no autocomplete
-(setq company-auto-complete nil)
-(setq company-auto-complete-chars nil)
-(setq company-idle-delay 100000000)
-
-
-(eval-after-load 'company
-  '(global-set-key (kbd "C-c TAB") 'company-complete))
-
-
-(defun my-irony-mode-hook ()
-  (define-key irony-mode-map [remap completion-at-point]
-    'irony-completion-at-point-async)
-  (define-key irony-mode-map [remap complete-symbol]
-    'irony-completion-at-point-async))
-(add-hook 'irony-mode-hook 'my-irony-mode-hook)
-(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
-
-(defun hightlight-nonascii ()
-  (interactive)
-  (highlight-regexp "[^[:ascii:]]"))
-
-
-(defun highlight-log ()
-  (interactive)
-  (highlight-regexp "error" 'hi-pink)
-  (highlight-regexp "warning" 'hi-yellow))
 
 (server-start)
