@@ -154,6 +154,22 @@
       (replace-regexp-in-string "\\\\" "/" (substring output pathstart pathend))
     nil))
 
+;; enable ido mode
+(defun start-ido-mode ()
+  (interactive)
+  (ido-mode t)
+  (setq ido-enable-flex-matching t)
+  ;; disable auto searching for files unless called explicitly with C-c C-s
+  (setq ido-auto-merge-delay-time 99999)
+  (define-key ido-file-dir-completion-map (kbd "C-c C-s")
+    (lambda()
+      (interactive)
+      (ido-initiate-auto-merge (current-buffer))))
+  (when (fboundp 'magit-find-file-ido)
+    (global-set-key (kbd "C-c f") 'magit-find-file-ido)))
+
+(start-ido-mode)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; packages
@@ -203,6 +219,10 @@
   :load-path (lambda () (concat external-el-path "/undo-tree"))
   :config
   (global-undo-tree-mode))
+
+
+;;;;;;;;;;;;;;;;;;;;
+;; ensured packages
 
 (use-package rainbow-delimiters
   :if download-packages
@@ -345,21 +365,6 @@ l is lab l, so the range is 0 to 100
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-;; enable ido mode
-(defun start-ido-mode ()
-  (interactive)
-  (ido-mode t)
-  (setq ido-enable-flex-matching t)
-  ;; disable auto searching for files unless called explicitly with C-c C-s
-  (setq ido-auto-merge-delay-time 99999)
-  (define-key ido-file-dir-completion-map (kbd "C-c C-s")
-    (lambda()
-      (interactive)
-      (ido-initiate-auto-merge (current-buffer))))
-  (when (fboundp 'magit-find-file-ido)
-    (global-set-key (kbd "C-c f") 'magit-find-file-ido)))
-
-(start-ido-mode)
 
 (defun add-to-path (paths)
   "paths: a path to add to path, or a list of paths"
@@ -424,11 +429,6 @@ l is lab l, so the range is 0 to 100
   (setq mode-name "glog"))
 
 
-(eval-after-load 'cider
-  '(progn (when (string-equal system-type "windows-nt")
-            (setq cider-lein-command "lein.bat"))
-          (when (not (boundp 'clojure--prettify-symbols-alist)) (setq clojure--prettify-symbols-alist nil))))
-
 ;; to make org mode not clobber windmove keys
 (setq org-replace-disputed-keys t)
 
@@ -441,11 +441,6 @@ l is lab l, so the range is 0 to 100
 (setq company-auto-complete-chars nil)
 (setq company-idle-delay 100000000)
 
-;;(setq omnisharp-server-executable-path "/Users/joelnises/code/exnternal")
-(eval-after-load 'omnisharp
-  '(add-hook 'omnisharp-mode-hook (lambda ()
-                                    (company-mode t)
-                                    (define-key omnisharp-mode-map (kbd "C-M-i") 'company-omnisharp))))
 
 (eval-after-load 'company
   '(global-set-key (kbd "C-c TAB") 'company-complete))
@@ -463,10 +458,6 @@ l is lab l, so the range is 0 to 100
   (interactive)
   (highlight-regexp "[^[:ascii:]]"))
 
-
-;; python 3 in jedi
-;; (setq jedi:environment-virtualenv
-;;       (list "virtualenv3" "--system-site-packages"))
 
 (defun highlight-log ()
   (interactive)
