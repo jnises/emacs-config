@@ -2,6 +2,7 @@
 
 ;; put something like
 ;; (setq download-packages t) ; or not if you don't want to download external things
+;; ;(setq deepness-company "propellerheads") ;; for company specific settings
 ;; (setq home-el-path "~/.emacs.d/el")
 ;; (load (concat home-el-path "/config.el"))
 ;; in your .emacs
@@ -45,7 +46,7 @@
   (require 'subr-x))
 
 ;; faster startup
-(modify-frame-parameters nil '((wait-for-wm . nil)))
+;(modify-frame-parameters nil '((wait-for-wm . nil)))
 
 (setq inhibit-splash-screen t)
 
@@ -63,7 +64,8 @@
 (transient-mark-mode t)
 
 ;; no tabs!!!
-(setq-default indent-tabs-mode nil)
+(unless (and (boundp 'deepness-company) (string= deepness-company "propellerheads"))
+  (setq-default indent-tabs-mode nil))
 
 ;; but if there is, set the default tab width (determines how a tab is displayed)
 (setq tab-width 4)
@@ -104,7 +106,7 @@
   (setq uniquify-buffer-name-style 'forward))
 
 ;; disable electric indent everywhere since it doesn't seem possible to disable it for python only
-(electric-indent-mode -1)
+;(electric-indent-mode -1)
 
 (set-default-coding-systems 'utf-8)
 (prefer-coding-system 'utf-8)
@@ -129,6 +131,7 @@
 
 (global-set-key (kbd "C-c m") 'compile)
 
+;; mostly editing c++ code these days
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
 ;; try to disable modula-2 mode
@@ -204,7 +207,14 @@
     (add-to-list 'exec-path cygwin-usr-bin-path)
     ;; (set-variable 'find-program "find.exe")
     ;; (set-variable 'grep-program "grep.exe")
-    (and (require 'cygwin-mount nil t) (require 'setup-cygwin nil t))))
+    (and (require 'cygwin-mount nil t) (require 'setup-cygwin nil t)))
+
+  ;; msys
+  (let ((msysroot "c:/msys64"))
+    (when (file-exists-p msysroot)
+      (let ((msysusrbin (concat msysroot "/usr/bin")))
+        (add-to-path msysusrbin)
+        (add-to-list 'exec-path msysusrbin)))))
 
 ;; python stuff
 (add-hook 'python-mode-hook (lambda ()
@@ -394,11 +404,12 @@ l is lab l, so the range is 0 to 100
   :if download-packages
   :config
   (setq projectile-enable-caching t)
-  (when (string-equal system-type "windows-nt")
-    (when (ignore-errors (call-process "ls"))
-      (setq projectile-indexing-method 'alien)))
+  ;; (when (string-equal system-type "windows-nt")
+  ;;   (when (ignore-errors (call-process "ls"))
+  ;;     (setq projectile-indexing-method 'alien)))
   :init
-  (projectile-global-mode))
+  (projectile-global-mode)
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 
 (use-package js2-mode
   :ensure t
@@ -469,6 +480,18 @@ l is lab l, so the range is 0 to 100
   (add-hook 'elpy-mode-hook #'(lambda ()
                                 ;; stop elpy from messing with company mode settings
                                 (set (make-local-variable 'company-idle-delay) 10000000))))
+
+
+(use-package ggtags
+  :ensure t
+  :if download-packages
+  :commands ggtags-mode
+  :diminish ggtags-mode
+  :init
+  (add-hook 'c-mode-common-hook
+            #'(lambda ()
+                (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
+                  (ggtags-mode 1)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; package-dependent config
