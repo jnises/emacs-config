@@ -488,10 +488,15 @@ l is lab l, so the range is 0 to 100
   :commands ggtags-mode
   :diminish ggtags-mode
   :init
-  (add-hook 'c-mode-common-hook
-            #'(lambda ()
-                (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
-                  (ggtags-mode 1)))))
+  (progn
+	(let ((globalpath "c:/local/global-6.6.3/bin"))
+	  (when (file-exists-p globalpath)
+		(add-to-path globalpath)
+		(add-to-list 'exec-path globalpath)))
+	(add-hook 'c-mode-common-hook
+              #'(lambda ()
+                  (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
+					(ggtags-mode 1))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; package-dependent config
