@@ -281,6 +281,42 @@
   (highlight-regexp "error" 'hi-pink)
   (highlight-regexp "warning" 'hi-yellow))
 
+;; prefer horizontal splits
+(with-eval-after-load "window"
+  (fmakunbound #'split-window-sensibly)
+  (defun split-window-sensibly (&optional window)
+	"Have a look at window.el for documentation"
+	(let ((window (or window (selected-window))))
+      (or
+	   (and (window-splittable-p window t)
+			;; Split window horizontally.
+			(with-selected-window window
+			  (split-window-right)))
+	   (and (window-splittable-p window)
+			;; Split window vertically.
+			(with-selected-window window
+			  (split-window-below)))
+	   (and
+        ;; If WINDOW is the only usable window on its frame (it is
+        ;; the only one or, not being the only one, all the other
+        ;; ones are dedicated) and is not the minibuffer window, try
+        ;; to split it vertically disregarding the value of
+        ;; `split-height-threshold'.
+        (let ((frame (window-frame window)))
+          (or
+           (eq window (frame-root-window frame))
+           (catch 'done
+             (walk-window-tree (lambda (w)
+                                 (unless (or (eq w window)
+                                             (window-dedicated-p w))
+                                   (throw 'done nil)))
+                               frame)
+             t)))
+		(not (window-minibuffer-p window))
+		(let ((split-height-threshold 0))
+		  (when (window-splittable-p window)
+			(with-selected-window window
+			  (split-window-below)))))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; packages
