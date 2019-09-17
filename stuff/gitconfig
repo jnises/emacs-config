@@ -6,10 +6,12 @@
 
 [mergetool.ediff]
     cmd = ediff.sh $LOCAL $REMOTE $MERGED $BASE
-[mergetool "meld"]
-	path = c:/local/meld-1.5.3/bin/meld
 [push]
 	default = current
 [mergetool "kdiff3_"]
 	cmd = kdiff3 --L1 base --L2 local --L3 remote $BASE $LOCAL $REMOTE -o $MERGED
     trustExitCode = true
+[alias]
+	branch-by-date = for-each-ref --sort=-committerdate refs/heads/
+	branch-by-rdate = for-each-ref --sort=committerdate refs/heads/	
+	
