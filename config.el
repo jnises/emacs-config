@@ -152,6 +152,8 @@
 (global-set-key (kbd "M-/") 'hippie-expand)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
+(setq compilation-scroll-output t)
+
 (defun find-windows-git-root ()
   (if-let ((output (shell-command-to-string "reg.exe query HKEY_LOCAL_MACHINE\\Software\\GitForWindows /v InstallPath"))
            (regpos (string-match "REG_SZ" output))
