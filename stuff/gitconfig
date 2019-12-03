@@ -13,5 +13,7 @@
     trustExitCode = true
 [alias]
 	branch-by-date = for-each-ref --sort=-committerdate refs/heads/
-	branch-by-rdate = for-each-ref --sort=committerdate refs/heads/	
-	
+	branch-by-rdate = for-each-ref --sort=committerdate refs/heads/
+;; on windows to get symlinks
+;[core]
+;	symlinks = true
