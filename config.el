@@ -283,6 +283,7 @@
   (highlight-regexp "error" 'hi-pink)
   (highlight-regexp "warning" 'hi-yellow))
 
+
 ;; prefer horizontal splits
 (with-eval-after-load "window"
   (fmakunbound #'split-window-sensibly)
@@ -294,10 +295,11 @@
 			;; Split window horizontally.
 			(with-selected-window window
 			  (split-window-right)))
-	   (and (window-splittable-p window)
-			;; Split window vertically.
-			(with-selected-window window
-			  (split-window-below)))
+	   ;;;; in fact don't split vertically at all
+	   ;; (and (window-splittable-p window)
+	   ;; 		;; Split window vertically.
+	   ;; 		(with-selected-window window
+	   ;; 		  (split-window-below)))
 	   (and
         ;; If WINDOW is the only usable window on its frame (it is
         ;; the only one or, not being the only one, all the other
