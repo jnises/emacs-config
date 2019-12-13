@@ -514,19 +514,24 @@ l is lab l, so the range is 0 to 100
 ;;   (setenv "RUST_SRC_PATH" (concat (string-trim (shell-command-to-string "rustc --print sysroot")) "/lib/rustlib/src/rust/src"))
 ;;   (add-hook 'rust-mode-hook 'racer-mode))
 
-(use-package elpy
+;; (use-package elpy
+;;   :ensure t
+;;   :if download-packages
+;;   :commands
+;;   elpy-mode
+;;   elpy-enable
+;;   :init
+;;   (add-hook 'python-mode-hook #'elpy-mode)
+;;   :config
+;;   (add-hook 'elpy-mode-hook #'(lambda ()
+;;                                 ;; stop elpy from messing with company mode settings
+;;                                 (set (make-local-variable 'company-idle-delay) 10000000))))
+
+(use-package lsp-mode
   :ensure t
   :if download-packages
-  :commands
-  elpy-mode
-  elpy-enable
-  :init
-  (add-hook 'python-mode-hook #'elpy-mode)
-  :config
-  (add-hook 'elpy-mode-hook #'(lambda ()
-                                ;; stop elpy from messing with company mode settings
-                                (set (make-local-variable 'company-idle-delay) 10000000))))
-
+  :hook (python-mode . lsp)
+  :commands lsp)
 
 (use-package ggtags
   :ensure t
