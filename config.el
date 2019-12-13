@@ -226,7 +226,7 @@
                               ;(semantic-mode 1)
                               (let ((pycommand (if (string-equal system-type "windows-nt")
                                                    "py -3"
-                                                 "ipython")))
+                                                 "python3")))
                                 (setq python-shell-interpreter pycommand)
                                 (setq py-python-command pycommand))
                               ))
@@ -252,8 +252,8 @@
 (setq org-replace-disputed-keys t)
 
 ;; use python 3 by default
-;(setq py-python-command "py -3")
-;(setq python-python-command "py -3")
+(setq py-python-command "py -3")
+(setq python-python-command "py -3")
 
 ;; i don't want no autocomplete
 (setq company-auto-complete nil)
@@ -492,14 +492,16 @@ l is lab l, so the range is 0 to 100
   :ensure t
   :if download-packages
   :commands lsp
+  :hook ((rust-mode python-mode) . lsp)
   :init
-  (add-hook 'rust-mode-hook #'lsp)
   (setq lsp-enable-snippet nil)
   (setq lsp-eldoc-enable-hover nil)
   (setq lsp-eldoc-enable-signature-help nil)
   (setq lsp-eldoc-prefer-signature-help nil)
   (setq lsp-signature-render-all nil)
-  (setq lsp-enable-symbol-highlighting nil))
+  (setq lsp-enable-symbol-highlighting nil)
+  (when (string-equal system-type "windows-nt")
+	(setq lsp-pyls-server-command "py -3 -m pyls")))
 
 ;; don't need racer with lsp-mode
 ;; for racer to work
@@ -513,25 +515,6 @@ l is lab l, so the range is 0 to 100
 ;;   ;; TODO check first if rustc returns properly
 ;;   (setenv "RUST_SRC_PATH" (concat (string-trim (shell-command-to-string "rustc --print sysroot")) "/lib/rustlib/src/rust/src"))
 ;;   (add-hook 'rust-mode-hook 'racer-mode))
-
-;; (use-package elpy
-;;   :ensure t
-;;   :if download-packages
-;;   :commands
-;;   elpy-mode
-;;   elpy-enable
-;;   :init
-;;   (add-hook 'python-mode-hook #'elpy-mode)
-;;   :config
-;;   (add-hook 'elpy-mode-hook #'(lambda ()
-;;                                 ;; stop elpy from messing with company mode settings
-;;                                 (set (make-local-variable 'company-idle-delay) 10000000))))
-
-(use-package lsp-mode
-  :ensure t
-  :if download-packages
-  :hook (python-mode . lsp)
-  :commands lsp)
 
 (use-package ggtags
   :ensure t
