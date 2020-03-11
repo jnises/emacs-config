@@ -71,7 +71,7 @@
 (setq tab-width 4)
 
 ;; change color theme
-(if (window-system)
+(if (and (window-system) (not (and download-packages (require 'doom-themes nil 'noerror))))
   (load-theme 'tsdh-dark))
 
 ;; highlight line
@@ -374,6 +374,13 @@
 
 ;;;;;;;;;;;;;;;;;;;;
 ;; ensured packages
+
+(when (window-system)
+  (use-package doom-themes
+	:if download-packages
+	:ensure t
+	:config
+	(load-theme 'doom-one t)))
 
 (use-package rainbow-delimiters
   :if download-packages
