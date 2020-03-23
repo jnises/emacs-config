@@ -380,7 +380,7 @@
 	:if download-packages
 	:ensure t
 	:config
-	(load-theme 'doom-one t)))
+	(load-theme 'doom-dark+ t)))
 
 (use-package rainbow-delimiters
   :if download-packages
