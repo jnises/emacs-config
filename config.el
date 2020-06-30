@@ -155,7 +155,7 @@
 (setq compilation-scroll-output t)
 
 (defun find-windows-git-root ()
-  (if-let ((output (shell-command-to-string "reg.exe query HKEY_LOCAL_MACHINE\\Software\\GitForWindows /v InstallPath"))
+  (if-let ((output (shell-command-to-string "reg.exe query HKEY_LOCAL_MACHINE\\Software\\GitForWindows -v InstallPath"))
            (regpos (string-match "REG_SZ" output))
            (pathstart (string-match "[^[:blank:]]" output (+ regpos (length "REG_SZ"))))
            (pathend (string-match "\n" output pathstart)))
