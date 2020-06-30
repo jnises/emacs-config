@@ -204,7 +204,7 @@
     (setq cygwin-root-directory (if (file-exists-p "c:/cygwin64") "c:/cygwin64" "c:/cygwin"))
     (setq cygwin-bin-path (concat cygwin-root-directory "/bin"))
     (setq cygwin-usr-bin-path (concat cygwin-root-directory "/usr/bin"))
-    (add-to-path '(cygwin-bin-path cygwin-usr-bin-path))
+    (add-to-path (list cygwin-bin-path cygwin-usr-bin-path))
     (add-to-list 'exec-path cygwin-bin-path)
     (add-to-list 'exec-path cygwin-usr-bin-path)
     ;; (set-variable 'find-program "find.exe")
