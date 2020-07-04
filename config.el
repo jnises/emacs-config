@@ -154,8 +154,14 @@
 
 (setq compilation-scroll-output t)
 
+;; shell-command-to-string doesn't seem to work in some versions of windows 10
+(defun better-shell-command-to-string (command &rest args)
+  (with-output-to-string
+    (with-current-buffer standard-output
+      (apply 'call-process command nil t nil args))))
+
 (defun find-windows-git-root ()
-  (if-let ((output (shell-command-to-string "reg.exe query HKEY_LOCAL_MACHINE\\Software\\GitForWindows -v InstallPath"))
+  (if-let ((output (better-shell-command-to-string "reg.exe" "query" "HKEY_LOCAL_MACHINE\\Software\\GitForWindows" "-v" "InstallPath"))
            (regpos (string-match "REG_SZ" output))
            (pathstart (string-match "[^[:blank:]]" output (+ regpos (length "REG_SZ"))))
            (pathend (string-match "\n" output pathstart)))
