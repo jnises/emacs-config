@@ -258,8 +258,8 @@
 (setq org-replace-disputed-keys t)
 
 ;; use python 3 by default
-(setq py-python-command "py -3")
-(setq python-python-command "py -3")
+;(setq py-python-command "py -3")
+;(setq python-python-command "py -3")
 
 ;; i don't want no autocomplete
 (setq company-auto-complete nil)
