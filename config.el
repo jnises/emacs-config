@@ -346,7 +346,7 @@
   (when (< emacs-major-version 24)
     ;; For important compatibility libraries like cl-lib
     (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
-(when (and download-packages (require 'package nil t))
+(when (and download-packages (require 'package nil t) (< emacs-major-version 27))
   (package-initialize))
 
 ;; make sure use-package is loaded
