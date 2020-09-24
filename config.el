@@ -505,7 +505,7 @@ l is lab l, so the range is 0 to 100
   :ensure t
   :if download-packages
   :commands lsp
-  :hook ((rust-mode python-mode) . lsp)
+  :hook ((rust-mode) . lsp)
   :init
   (setq lsp-enable-snippet nil)
   (setq lsp-eldoc-enable-hover nil)
