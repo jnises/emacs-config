@@ -1,5 +1,6 @@
 [merge]
 	tool = kdiff3_
+	conflictStyle = diff3
 
 [diff]
 	tool = kdiff3
