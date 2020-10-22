@@ -64,8 +64,7 @@
 (transient-mark-mode t)
 
 ;; no tabs!!!
-(unless (and (boundp 'deepness-company) (string= deepness-company "propellerheads"))
-  (setq-default indent-tabs-mode nil))
+(setq-default indent-tabs-mode nil)
 
 ;; but if there is, set the default tab width (determines how a tab is displayed)
 (setq tab-width 4)
@@ -246,6 +245,12 @@
   ;;(semantic-mode t)
   (setq show-trailing-whitespace t))
 (add-hook 'c-mode-common-hook 'c-style-hook-function)
+
+(add-hook 'c++-mode-hook
+		  (lambda ()
+			;; at reason studios they like tabs for c++
+			(when (and (boundp 'deepness-company) (string= deepness-company "propellerheads"))
+			  (setq indent-tabs-mode t))))
 
 (define-derived-mode glog-mode fundamental-mode
   (setq font-lock-defaults '((("^E.*$" . font-lock-warning-face)
