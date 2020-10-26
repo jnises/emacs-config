@@ -550,6 +550,12 @@ l is lab l, so the range is 0 to 100
                   (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
 					(ggtags-mode 1))))))
 
+(use-package editorconfig
+  :ensure t
+  :if download-packages
+  :config
+  (editorconfig-mode 1))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; package-dependent config
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
