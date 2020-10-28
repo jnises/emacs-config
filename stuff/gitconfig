@@ -1,3 +1,7 @@
+[core]
+	symlinks = true
+	autocrlf = input
+
 [merge]
 	tool = kdiff3_
 	conflictStyle = diff3
@@ -15,6 +19,3 @@
 [alias]
 	branch-by-date = for-each-ref --sort=-committerdate refs/heads/
 	branch-by-rdate = for-each-ref --sort=committerdate refs/heads/
-;; on windows to get symlinks
-;[core]
-;	symlinks = true
