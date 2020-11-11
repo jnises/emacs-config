@@ -91,10 +91,9 @@
 
 ;; font stuff
 (when (and (or (> emacs-major-version 24) (and (>= emacs-major-version 24) (>= emacs-minor-version 4))) window-system)
-  (cl-flet ((set-face-font-if-it-exists (target fontname)
-                                        (when (x-list-fonts fontname)
-                                          (set-face-font target fontname))))
-    (set-face-font-if-it-exists 'default "-unknown-DejaVu Sans Mono-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1")))
+  (let ((fontname "-unknown-DejaVu Sans Mono-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1"))
+    (when (x-list-fonts fontname)
+      (set-face-font 'default fontname))))
 
 ;; enable improved window switching, disable if you don't want it to clobber
 ;; shift-<arrowkeys> for selection
@@ -332,6 +331,11 @@
 		  (when (window-splittable-p window)
 			(with-selected-window window
 			  (split-window-below)))))))))
+
+;; no beeps!
+(when (string-equal system-type "darwin")
+  (setq ring-bell-function 'ignore))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; packages
