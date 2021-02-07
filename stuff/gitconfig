@@ -9,8 +9,6 @@
 [diff]
 	tool = kdiff3
 
-[mergetool.ediff]
-    cmd = ediff.sh $LOCAL $REMOTE $MERGED $BASE
 [push]
 	default = current
 [mergetool "kdiff3_"]
