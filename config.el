@@ -514,7 +514,7 @@ l is lab l, so the range is 0 to 100
   :ensure t
   :if download-packages
   :commands lsp
-  :hook ((rust-mode) . lsp)
+  ;; :hook ((rust-mode) . lsp)
   :init
   (setq lsp-enable-snippet nil)
   (setq lsp-eldoc-enable-hover nil)
@@ -524,19 +524,6 @@ l is lab l, so the range is 0 to 100
   (setq lsp-enable-symbol-highlighting nil)
   (when (string-equal system-type "windows-nt")
 	(setq lsp-pyls-server-command "py -3 -m pyls")))
-
-;; don't need racer with lsp-mode
-;; for racer to work
-;; (use-package racer
-;;   :ensure t
-;;   :if download-packages
-;;   :commands racer-mode
-;;   :init
-;;   (set-env-from-bash-profile "RUST_SRC_PATH")
-;;   ;(call-process "rustc" nil nil nil "--print" "sysroot")
-;;   ;; TODO check first if rustc returns properly
-;;   (setenv "RUST_SRC_PATH" (concat (string-trim (shell-command-to-string "rustc --print sysroot")) "/lib/rustlib/src/rust/src"))
-;;   (add-hook 'rust-mode-hook 'racer-mode))
 
 (use-package ggtags
   :ensure t
