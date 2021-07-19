@@ -46,7 +46,7 @@
   (require 'subr-x))
 
 ;; faster startup
-;(modify-frame-parameters nil '((wait-for-wm . nil)))
+                                        ;(modify-frame-parameters nil '((wait-for-wm . nil)))
 
 (setq inhibit-splash-screen t)
 
@@ -71,7 +71,7 @@
 
 ;; change color theme
 (if (and (window-system) (not (and download-packages (require 'doom-themes nil 'noerror))))
-  (load-theme 'tsdh-dark))
+    (load-theme 'tsdh-dark))
 
 ;; highlight line
 (global-hl-line-mode 1)
@@ -104,7 +104,7 @@
   (setq uniquify-buffer-name-style 'forward))
 
 ;; disable electric indent everywhere since it doesn't seem possible to disable it for python only
-;(electric-indent-mode -1)
+                                        ;(electric-indent-mode -1)
 
 (set-default-coding-systems 'utf-8)
 (prefer-coding-system 'utf-8)
@@ -227,7 +227,7 @@
                               ;; tab width is a mess, so force python to use the correct one
                               (setq tab-width 4)
                               (setq python-indent 4)
-                              ;(semantic-mode 1)
+                                        ;(semantic-mode 1)
                               (let ((pycommand (if (string-equal system-type "windows-nt")
                                                    "py -3"
                                                  "python3")))
@@ -371,7 +371,7 @@
   :init
   (dolist (hook '(emacs-lisp-mode-hook
                   scheme-mode-hook)) (add-hook hook (lambda ()
-                                                      (paredit-mode t)))))
+                  (paredit-mode t)))))
 
 (use-package undo-tree
   :load-path (lambda () (concat external-el-path "/undo-tree"))
@@ -396,7 +396,7 @@
   :init
   (dolist (hook '(emacs-lisp-mode-hook
                   scheme-mode-hook)) (add-hook hook (lambda ()
-                                                      (rainbow-delimiters-mode t))))
+                  (rainbow-delimiters-mode t))))
   :config
   (use-package color)
   (defun labhsl-to-rgb (h s l)
