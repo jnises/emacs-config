@@ -493,6 +493,7 @@ l is lab l, so the range is 0 to 100
   :ensure t
   :if download-packages
   :commands lsp
+  :hook ((c-mode c++-mode) . 'lsp)
   ;; :hook ((rust-mode) . lsp)
   :init
   (setq lsp-enable-snippet nil)
