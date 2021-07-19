@@ -440,17 +440,6 @@ l is lab l, so the range is 0 to 100
                                         ;(set-face-foreground 'yascroll:thumb-fringe "Gray80")
   )
 
-(use-package multi-web-mode
-  :ensure t
-  :if download-packages
-  :commands multi-web-mode
-  :config
-  (setq mweb-default-major-mode 'html-mode)
-  (setq mweb-tags '((php-mode "<\\?php\\|<\\? \\|<\\?=" "\\?>")
-                    (js-mode "<script *\\(type=\"text/javascript\"\\|language=\"javascript\"\\)?[^>]*>" "</script>")
-                    (css-mode "<style *\\(type=\"text/css\"\\)?[^>]*>" "</style>")))
-  :bind ("C-c w" . multi-web-mode))
-
 (use-package projectile
   :ensure t
   :if download-packages
