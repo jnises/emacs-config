@@ -255,16 +255,6 @@
 ;; to make org mode not clobber windmove keys
 (setq org-replace-disputed-keys t)
 
-;; i don't want no autocomplete
-(setq company-auto-complete nil)
-(setq company-auto-complete-chars nil)
-(setq company-idle-delay 100000000)
-
-
-(eval-after-load 'company
-  '(global-set-key (kbd "C-c TAB") 'company-complete))
-
-
 (defun my-irony-mode-hook ()
   (define-key irony-mode-map [remap completion-at-point]
     'irony-completion-at-point-async)
@@ -507,27 +497,52 @@ l is lab l, so the range is 0 to 100
   (when (string-equal system-type "windows-nt")
 	(setq lsp-pyls-server-command "py -3 -m pyls")))
 
-(use-package ggtags
+(use-package dap-mode
   :ensure t
-  :if download-packages
-  :commands ggtags-mode
-  :diminish ggtags-mode
-  :init
-  (progn
-	(let ((globalpath "c:/local/global-6.6.3/bin"))
-	  (when (file-exists-p globalpath)
-		(add-to-path globalpath)
-		(add-to-list 'exec-path globalpath)))
-	(add-hook 'c-mode-common-hook
-              #'(lambda ()
-                  (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
-					(ggtags-mode 1))))))
+  :if download-packages)
+
+;;; this seems recommended by the emacs-lsp docs, but doesn't seem to work
+;; (use-package dap-cpptools
+;;   :ensure t
+;;   :if download-packages)
+
+;;; I guess I don't need ggtags with lsp-mode?
+;; (use-package ggtags
+;;   :ensure t
+;;   :if download-packages
+;;   :commands ggtags-mode
+;;   :diminish ggtags-mode
+;;   :init
+;;   (progn
+;; 	(let ((globalpath "c:/local/global-6.6.3/bin"))
+;; 	  (when (file-exists-p globalpath)
+;; 		(add-to-path globalpath)
+;; 		(add-to-list 'exec-path globalpath)))
+;; 	(add-hook 'c-mode-common-hook
+;;               #'(lambda ()
+;;                   (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
+;; 					(ggtags-mode 1))))))
 
 (use-package editorconfig
   :ensure t
   :if download-packages
   :config
   (editorconfig-mode 1))
+
+(use-package company
+  :ensure t
+  :if download-packages
+  :init
+  ;; i don't want no autocomplete
+  (setq company-auto-complete nil)
+  (setq company-auto-complete-chars nil)
+  (setq company-idle-delay 100000000)
+  :config
+  (global-set-key (kbd "C-c TAB") 'company-complete))
+
+(use-package flycheck
+  :ensure t
+  :if download-packages)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; package-dependent config
