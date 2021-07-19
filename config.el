@@ -322,9 +322,11 @@
 			(with-selected-window window
 			  (split-window-below)))))))))
 
-;; no beeps!
 (when (string-equal system-type "darwin")
-  (setq ring-bell-function 'ignore))
+  ;; no beeps!
+  (setq ring-bell-function 'ignore)
+  ;; macos ls doesn't support --dired
+  (setq dired-use-ls-dired nil))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
