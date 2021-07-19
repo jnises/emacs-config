@@ -245,12 +245,6 @@
   (setq show-trailing-whitespace t))
 (add-hook 'c-mode-common-hook 'c-style-hook-function)
 
-(add-hook 'c++-mode-hook
-		  (lambda ()
-			;; at reason studios they like tabs for c++
-			(when (and (boundp 'deepness-company) (string= deepness-company "propellerheads"))
-			  (setq indent-tabs-mode t))))
-
 (define-derived-mode glog-mode fundamental-mode
   (setq font-lock-defaults '((("^E.*$" . font-lock-warning-face)
                               ("^W.*$" . font-lock-function-name-face)
@@ -260,10 +254,6 @@
 
 ;; to make org mode not clobber windmove keys
 (setq org-replace-disputed-keys t)
-
-;; use python 3 by default
-;(setq py-python-command "py -3")
-;(setq python-python-command "py -3")
 
 ;; i don't want no autocomplete
 (setq company-auto-complete nil)
