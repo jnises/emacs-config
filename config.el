@@ -503,6 +503,13 @@ l is lab l, so the range is 0 to 100
   :ensure t
   :if download-packages)
 
+(use-package lsp-pyright
+  :ensure t
+  :if download-packages
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-pyright)
+                          (lsp))))  ; or lsp-deferred
+
 ;;; this seems recommended by the emacs-lsp docs, but doesn't seem to work
 ;; (use-package dap-cpptools
 ;;   :ensure t
