@@ -501,16 +501,17 @@ l is lab l, so the range is 0 to 100
   (when (string-equal system-type "windows-nt")
 	(setq lsp-pyls-server-command "py -3 -m pyls")))
 
-(use-package dap-mode
-  :ensure t
-  :if download-packages)
+;; dap-mode and lsp-pyright seems to have dependencies that fail to compile
+;; (use-package dap-mode
+;;   :ensure t
+;;   :if download-packages)
 
-(use-package lsp-pyright
-  :ensure t
-  :if download-packages
-  :hook (python-mode . (lambda ()
-                          (require 'lsp-pyright)
-                          (lsp))))  ; or lsp-deferred
+;; (use-package lsp-pyright
+;;   :ensure t
+;;   :if download-packages
+;;   :hook (python-mode . (lambda ()
+;;                           (require 'lsp-pyright)
+;;                           (lsp))))  ; or lsp-deferred
 
 ;;; this seems recommended by the emacs-lsp docs, but doesn't seem to work
 ;; (use-package dap-cpptools
