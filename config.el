@@ -329,6 +329,8 @@
   (setq package-archives '()))
 
 ;; better package repo
+;; this seems to fix certificate issues
+(setq gnutls-algorithm-priority "normal:-vers-tls1.3")
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
                     (not (gnutls-available-p))))
        (proto (if no-ssl "http" "https")))
