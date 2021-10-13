@@ -106,4 +106,14 @@ algorithm: v4
                                          (write-file path))
                                      (kill-buffer))))))
 
+
+(defun timetosec (time)
+  "only handles hours minutes and seconds"
+  (+ (* 60 (* 60 (nth 2 time)) (nth 1 time)) (nth 0 time)))
+
+(defun timedelta (base time)
+  (let ((basesec (timetosec (parse-time-string base))))
+    (- (timetosec (parse-time-string time)) basesec)
+    ))
+
 (provide 'deepness-utils)
