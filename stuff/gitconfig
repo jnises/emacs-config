@@ -1,6 +1,6 @@
 [core]
 	symlinks = true
-	autocrlf = input
+	autocrlf = false
 
 [merge]
 	tool = kdiff3_

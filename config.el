@@ -500,8 +500,12 @@ l is lab l, so the range is 0 to 100
   (setq lsp-signature-auto-activate nil)
   ;; no flycheck noise
   ;; (setq lsp-diagnostics-provider :none)
-  (when (string-equal system-type "windows-nt")
-	(setq lsp-pyls-server-command "py -3 -m pyls")))
+  (cond ((string-equal system-type "windows-nt")
+	     (setq lsp-pyls-server-command "py -3 -m pyls"))
+        ;; ((string-equal system-type "darwin")
+        ;;  (setq lsp-clients-clangd-executable "/opt/homebrew/opt/llvm/bin/clangd"))
+        ))
+
 
 ;; dap-mode and lsp-pyright seems to have dependencies that fail to compile
 ;; (use-package dap-mode
