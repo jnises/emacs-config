@@ -340,12 +340,12 @@
   (when (< emacs-major-version 24)
     ;; For important compatibility libraries like cl-lib
     (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
-(when (and download-packages (require 'package nil t) (< emacs-major-version 27))
-  (package-initialize))
+;; (when (and download-packages (require 'package nil t) (< emacs-major-version 27))
+;;   (package-initialize))
 
 ;; make sure use-package is loaded
-(add-to-list 'load-path (concat external-el-path "/use-package"))
 (eval-when-compile
+  (add-to-list 'load-path (concat external-el-path "/use-package"))
   (require 'use-package))
 
 ;; a package with some random local utils
