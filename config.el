@@ -487,26 +487,27 @@ l is lab l, so the range is 0 to 100
   :commands rust-mode)
 
 ;; lsp seems broken on windows. some elpa certificate thing
-;; language server support
-;; (use-package lsp-mode
-;;   :ensure t
-;;   :if download-packages
-;;   :commands lsp
-;;   :hook ((c-mode c++-mode rust-mode) . 'lsp)
-;;   :init
-;;   (setq lsp-keymap-prefix "C-c l")
-;;   (setq lsp-enable-snippet nil)
-;;   (setq lsp-eldoc-enable-hover nil)
-;;   (setq lsp-eldoc-enable-signature-help nil)
-;;   (setq lsp-eldoc-prefer-signature-help nil)
-;;   (setq lsp-signature-render-all nil)
-;;   (setq lsp-enable-symbol-highlighting nil)
-;;   ;; don't show docs in minibuffer
-;;   (setq lsp-signature-auto-activate nil)
-;;   ;; no flycheck noise
-;;   ;; (setq lsp-diagnostics-provider :none)
-;;   (when (string-equal system-type "windows-nt")
-;; 	(setq lsp-pyls-server-command "py -3 -m pyls")))
+(when (not (string-equal system-type "windows-nt"))
+  ;; language server support
+  (use-package lsp-mode
+    :ensure t
+    :if download-packages
+    :commands lsp
+    :hook ((c-mode c++-mode rust-mode) . 'lsp)
+    :init
+    (setq lsp-keymap-prefix "C-c l")
+    (setq lsp-enable-snippet nil)
+    (setq lsp-eldoc-enable-hover nil)
+    (setq lsp-eldoc-enable-signature-help nil)
+    (setq lsp-eldoc-prefer-signature-help nil)
+    (setq lsp-signature-render-all nil)
+    (setq lsp-enable-symbol-highlighting nil)
+    ;; don't show docs in minibuffer
+    (setq lsp-signature-auto-activate nil)
+    ;; no flycheck noise
+    ;; (setq lsp-diagnostics-provider :none)
+    (when (string-equal system-type "windows-nt")
+	  (setq lsp-pyls-server-command "py -3 -m pyls"))))
 
 ;; dap-mode and lsp-pyright seems to have dependencies that fail to compile
 ;; (use-package dap-mode
