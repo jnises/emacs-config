@@ -329,9 +329,6 @@
 (unless (boundp 'package-archives)
   (setq package-archives '()))
 
-;; remove the elpa packages. they seem to have certificate issues or something
-(setq package-archives '())
-
 ;; better package repo
 ;; this seems to fix certificate issues
 (setq gnutls-algorithm-priority "normal:-vers-tls1.3")
