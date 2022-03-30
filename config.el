@@ -477,11 +477,10 @@ l is lab l, so the range is 0 to 100
   :if download-packages
   :bind (("M-x" . smex)))
 
-(use-package rust-mode
+;; rustic is an extension to rust-mode
+(use-package rustic
   :ensure t
-  :if download-packages
-  :mode "\\.rs\\'"
-  :commands rust-mode)
+  :if download-packages)
 
 ;; lsp seems broken on windows. some elpa certificate thing
 (when (not (string-equal system-type "windows-nt"))
