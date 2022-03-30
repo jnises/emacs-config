@@ -90,7 +90,7 @@
   (setq ido-max-dir-file-cache 0)) 
 
 ;; font stuff
-(when (and (or (> emacs-major-version 24) (and (>= emacs-major-version 24) (>= emacs-minor-version 4))) window-system)
+(when window-system
   (let ((fontname "-unknown-DejaVu Sans Mono-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1"))
     (when (x-list-fonts fontname)
       (set-face-font 'default fontname))))
@@ -106,12 +106,9 @@
 ;; disable electric indent everywhere since it doesn't seem possible to disable it for python only
                                         ;(electric-indent-mode -1)
 
-(set-default-coding-systems 'utf-8)
-(prefer-coding-system 'utf-8)
-
-;; encoding stuff for old emacs versions
-(when (or (< emacs-major-version 24) (and (= emacs-major-version 24) (< emacs-minor-version 4)))
-  (setq default-process-coding-system '(utf-8-unix . utf-8-unix)))
+(set-language-environment "UTF-8")
+;; set-language-enviornment sets default-input-method, which is unwanted
+(setq default-input-method nil)
 
 ;; better eshell behaviour
 (setq eshell-cmpl-cycle-completions nil)
@@ -131,11 +128,6 @@
 
 ;; mostly editing c++ code these days
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
-
-;; try to disable modula-2 mode
-(setq auto-mode-alist (remove (rassoc 'modula-2-mode auto-mode-alist) auto-mode-alist))
-;; remove modula mode from the auto mode list
-(delete '("\\.mod\\'" . m2-mode) auto-mode-alist)
 
 ;; ignore non-safe file local variables
 (setq enable-local-variables :safe)
@@ -246,6 +238,7 @@
   (setq show-trailing-whitespace t))
 (add-hook 'c-mode-common-hook 'c-style-hook-function)
 
+;; google glog file mode
 (define-derived-mode glog-mode fundamental-mode
   (setq font-lock-defaults '((("^E.*$" . font-lock-warning-face)
                               ("^W.*$" . font-lock-function-name-face)
@@ -335,7 +328,6 @@
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
                     (not (gnutls-available-p))))
        (proto (if no-ssl "http" "https")))
-  ;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
   (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
   (when (< emacs-major-version 24)
     ;; For important compatibility libraries like cl-lib
@@ -478,9 +470,9 @@ l is lab l, so the range is 0 to 100
   :bind (("M-x" . smex)))
 
 ;; rustic is an extension to rust-mode
-(use-package rustic
-  :ensure t
-  :if download-packages)
+;; (use-package rustic
+;;   :ensure t
+;;   :if download-packages)
 
 ;; lsp seems broken on windows. some elpa certificate thing
 (when (not (string-equal system-type "windows-nt"))
