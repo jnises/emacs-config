@@ -515,6 +515,7 @@ l is lab l, so the range is 0 to 100
     (setq lsp-eldoc-prefer-signature-help nil)
     (setq lsp-signature-render-all nil)
     (setq lsp-enable-symbol-highlighting nil)
+    (setq lsp-headerline-breadcrumb-enable nil)
     ;; don't show docs in minibuffer
     (setq lsp-signature-auto-activate nil)
     ;; no flycheck noise
