@@ -4,6 +4,7 @@
 ;; TODO garbage collection optimizations
 ;; TODO freeze straight.el versions
 ;; TODO look at doom and bring in useful things 
+;; TODO put (setq package-enable-at-startup nil) in early-init.el
 
 ;; put something like
 ;; (setq download-packages t) ; or not if you don't want to download external things
@@ -49,6 +50,8 @@
 (eval-and-compile
   (setq download-packages (if (boundp 'download-packages) download-packages nil)))
 
+(defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
+
 ;; util functions
 (eval-when-compile
   (require 'subr-x))
@@ -56,7 +59,14 @@
 ;; faster startup
                                         ;(modify-frame-parameters nil '((wait-for-wm . nil)))
 
-(setq inhibit-splash-screen t)
+(setq inhibit-splash-screen t
+      inhibit-default-init t
+      initial-major-mode 'fundamental-mode
+      initial-scratch-message nil
+      ;; Resizing the Emacs frame can be a terribly expensive part of changing the
+      ;; font. By inhibiting this, we halve startup times, particularly when we use
+      ;; fonts that are larger than the system default (which would resize the frame).
+      frame-inhibit-implied-resize t)
 
 ;; disable the toolbar
 (if (fboundp 'tool-bar-mode)
@@ -324,6 +334,34 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; packages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; from doom
+;; Emacs is essentially one huge security vulnerability, what with all the
+;; dependencies it pulls in from all corners of the globe. Let's try to be at
+;; least a little more discerning.
+(setq gnutls-verify-error (and (fboundp 'gnutls-available-p)
+                               (gnutls-available-p)
+                               (not (getenv-internal "INSECURE")))
+      gnutls-algorithm-priority
+      (when (boundp 'libgnutls-version)
+        (concat "SECURE128:+SECURE192:-VERS-ALL"
+                (if (and (not IS-WINDOWS)
+                         (>= libgnutls-version 30605))
+                    ":+VERS-TLS1.3")
+                ":+VERS-TLS1.2"))
+      ;; `gnutls-min-prime-bits' is set based on recommendations from
+      ;; https://www.keylength.com/en/4/
+      gnutls-min-prime-bits 3072
+      tls-checktrust gnutls-verify-error
+      ;; Emacs is built with `gnutls' by default, so `tls-program' would not be
+      ;; used in that case. Otherwise, people have reasons to not go with
+      ;; `gnutls', we use `openssl' instead. For more details, see
+      ;; https://redd.it/8sykl1
+      tls-program '("openssl s_client -connect %h:%p -CAfile %t -nbio -no_ssl3 -no_tls1 -no_tls1_1 -ign_eof"
+                    "gnutls-cli -p %p --dh-bits=3072 --ocsp --x509cafile=%t \
+--strict-tofu --priority='SECURE192:+SECURE128:-VERS-ALL:+VERS-TLS1.2:+VERS-TLS1.3' %h"
+                    ;; compatibility fallbacks
+                    "gnutls-cli -p %p %h"))
 
 ;; TODO get this using submodule instead?
 (when download-packages
