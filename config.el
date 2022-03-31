@@ -1,5 +1,9 @@
 ;;; -*- lexical-binding: t -*-
 
+;; TODOs
+;; * use init.el early-init.el
+;; * garbage collection optimizations
+
 ;; put something like
 ;; (setq download-packages t) ; or not if you don't want to download external things
 ;; ;(setq deepness-company "propellerheads") ;; for company specific settings
@@ -40,6 +44,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; startup config
 ;;;;;;;;;;;;;;;;;;;;;;
+
+(eval-and-compile
+  (setq download-packages (if (boundp 'download-packages) download-packages nil)))
 
 ;; util functions
 (eval-when-compile
@@ -316,24 +323,21 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; packages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-(eval-and-compile
-  (setq download-packages (if (boundp 'download-packages) download-packages nil)))
 
-(unless (boundp 'package-archives)
-  (setq package-archives '()))
-
-;; better package repo
-;; this seems to fix certificate issues
-(setq gnutls-algorithm-priority "normal:-vers-tls1.3")
-(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-                    (not (gnutls-available-p))))
-       (proto (if no-ssl "http" "https")))
-  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-  (when (< emacs-major-version 24)
-    ;; For important compatibility libraries like cl-lib
-    (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
-(when (and download-packages (require 'package nil t) (< emacs-major-version 27))
-  (package-initialize))
+;; TODO get this using submodule instead?
+(when download-packages
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+        (bootstrap-version 5))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage)))
 
 ;; make sure use-package is loaded
 (eval-when-compile
@@ -365,193 +369,178 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;
-;; ensured packages
+;; downloaded packages
 
-(when (window-system)
-  (use-package doom-themes
-	:if download-packages
-	:ensure t
-	:config
-	(load-theme 'doom-dark+ t)))
+(when download-packages
+  (when (window-system)
+    (use-package doom-themes
+	  :straight t
+	  :config
+	  (load-theme 'doom-dark+ t)))
 
-(use-package rainbow-delimiters
-  :if download-packages
-  :ensure t
-  :commands rainbow-delimiters-mode
-  :init
-  (dolist (hook '(emacs-lisp-mode-hook
-                  scheme-mode-hook)) (add-hook hook (lambda ()
-                  (rainbow-delimiters-mode t))))
-  :config
-  (use-package color)
-  (defun labhsl-to-rgb (h s l)
-    "
+  (use-package rainbow-delimiters
+    :straight t
+    :commands rainbow-delimiters-mode
+    :init
+    (dolist (hook '(emacs-lisp-mode-hook
+                    scheme-mode-hook)) (add-hook hook (lambda ()
+                    (rainbow-delimiters-mode t))))
+    :config
+    (use-package color)
+    (defun labhsl-to-rgb (h s l)
+      "
 hsl to rgb by way of lab
 l is lab l, so the range is 0 to 100
 "
-    (let ((a (* (cos h) s))
-          (b (* (sin h) s)))
-      (mapcar (lambda (x) (max (min x 1) 0)) (color-lab-to-srgb l a b))))
+      (let ((a (* (cos h) s))
+            (b (* (sin h) s)))
+        (mapcar (lambda (x) (max (min x 1) 0)) (color-lab-to-srgb l a b))))
 
-  ;; better colors for rainbow delimiters
-  (dotimes (n 9)
-    (let ((rainbowfaces '(rainbow-delimiters-depth-1-face
-                          rainbow-delimiters-depth-2-face
-                          rainbow-delimiters-depth-3-face
-                          rainbow-delimiters-depth-4-face
-                          rainbow-delimiters-depth-5-face
-                          rainbow-delimiters-depth-6-face
-                          rainbow-delimiters-depth-7-face
-                          rainbow-delimiters-depth-8-face
-                          rainbow-delimiters-depth-9-face))
-          (shuffledn (nth n '(3 7 1 4 6 0 5 8 2))))
-      (set-face-foreground (nth n rainbowfaces)
-                           (apply 'format "#%02x%02x%02x" (mapcar (lambda (x) (floor (* x 255))) (labhsl-to-rgb (* (/ shuffledn 9.0) pi 2) 100 60)))))))
+    ;; better colors for rainbow delimiters
+    (dotimes (n 9)
+      (let ((rainbowfaces '(rainbow-delimiters-depth-1-face
+                            rainbow-delimiters-depth-2-face
+                            rainbow-delimiters-depth-3-face
+                            rainbow-delimiters-depth-4-face
+                            rainbow-delimiters-depth-5-face
+                            rainbow-delimiters-depth-6-face
+                            rainbow-delimiters-depth-7-face
+                            rainbow-delimiters-depth-8-face
+                            rainbow-delimiters-depth-9-face))
+            (shuffledn (nth n '(3 7 1 4 6 0 5 8 2))))
+        (set-face-foreground (nth n rainbowfaces)
+                             (apply 'format "#%02x%02x%02x" (mapcar (lambda (x) (floor (* x 255))) (labhsl-to-rgb (* (/ shuffledn 9.0) pi 2) 100 60)))))))
 
-(use-package highlight-indentation
-  :ensure t
-  :if (and download-packages window-system)
-  :commands highlight-indentation-mode
-  :init
-  ;; enable indentation highlighting for modes that benefit from them (python)
-  (add-hook 'python-mode-hook #'highlight-indentation-mode))
+  (use-package highlight-indentation
+    :straight t
+    :if (and download-packages window-system)
+    :commands highlight-indentation-mode
+    :init
+    ;; enable indentation highlighting for modes that benefit from them (python)
+    (add-hook 'python-mode-hook #'highlight-indentation-mode))
 
-(use-package yascroll
-  :ensure t
-  :if (and download-packages window-system)
-  :config
-  (scroll-bar-mode -1)
-  (global-yascroll-bar-mode t)
+  (use-package yascroll
+    :straight t
+    :if (and download-packages window-system)
+    :config
+    (scroll-bar-mode -1)
+    (global-yascroll-bar-mode t)
                                         ;(set-face-background 'yascroll:thumb-text-area "Gray80")
                                         ;(set-face-background 'yascroll:thumb-fringe "Gray80")
                                         ;(set-face-foreground 'yascroll:thumb-fringe "Gray80")
-  )
+    )
 
-(use-package projectile
-  :ensure t
-  :if download-packages
-  :config
-  (setq projectile-enable-caching t)
-  ;; (when (string-equal system-type "windows-nt")
-  ;;   (when (ignore-errors (call-process "ls"))
-  ;;     (setq projectile-indexing-method 'alien)))
-  :init
-  (projectile-global-mode)
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
-
-(use-package js2-mode
-  :ensure t
-  :if download-packages
-  :mode "\\.js\\'"
-  :commands js2-mode
-  :config
-  (setq js2-strict-missing-semi-warning nil))
-
-(use-package magit
-  :ensure t
-  :if download-packages
-  :commands (magit-status magit-find-file-ido)
-  :config
-  (when (string-equal system-type "windows-nt")
-    (let ((gitpath (concat (or (find-windows-git-root) "") "/bin/git.exe")))
-      (if (file-exists-p gitpath)
-          (setq magit-git-executable gitpath))))
-  (setq magit-auto-revert-mode nil))
-
-(use-package exec-path-from-shell
-  :ensure t
-  :if (and download-packages (string-equal system-type "darwin"))
-  :config
-  (exec-path-from-shell-initialize))
-
-(use-package smex
-  :ensure t
-  :if download-packages
-  :bind (("M-x" . smex)))
-
-;; rustic is an extension to rust-mode
-;; (use-package rustic
-;;   :ensure t
-;;   :if download-packages)
-
-;; lsp seems broken on windows. some elpa certificate thing
-(when (not (string-equal system-type "windows-nt"))
-  ;; language server support
-  (use-package lsp-mode
-    :ensure t
-    :if download-packages
-    :commands lsp
-    :hook ((c-mode c++-mode rust-mode) . 'lsp)
+  (use-package projectile
+    :straight t
+    :config
+    (setq projectile-enable-caching t)
+    ;; (when (string-equal system-type "windows-nt")
+    ;;   (when (ignore-errors (call-process "ls"))
+    ;;     (setq projectile-indexing-method 'alien)))
     :init
-    (setq lsp-keymap-prefix "C-c l")
-    (setq lsp-enable-snippet nil)
-    (setq lsp-eldoc-enable-hover nil)
-    (setq lsp-eldoc-enable-signature-help nil)
-    (setq lsp-eldoc-prefer-signature-help nil)
-    (setq lsp-signature-render-all nil)
-    (setq lsp-enable-symbol-highlighting nil)
-    ;; don't show docs in minibuffer
-    (setq lsp-signature-auto-activate nil)
-    ;; no flycheck noise
-    ;; (setq lsp-diagnostics-provider :none)
+    (projectile-global-mode)
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
+
+  (use-package js2-mode
+    :straight t
+    :mode "\\.js\\'"
+    :commands js2-mode
+    :config
+    (setq js2-strict-missing-semi-warning nil))
+
+  (use-package magit
+    :straight t
+    :commands (magit-status magit-find-file-ido)
+    :config
     (when (string-equal system-type "windows-nt")
-	  (setq lsp-pyls-server-command "py -3 -m pyls"))))
+      (let ((gitpath (concat (or (find-windows-git-root) "") "/bin/git.exe")))
+        (if (file-exists-p gitpath)
+            (setq magit-git-executable gitpath))))
+    (setq magit-auto-revert-mode nil))
 
-;; dap-mode and lsp-pyright seems to have dependencies that fail to compile
-;; (use-package dap-mode
-;;   :ensure t
-;;   :if download-packages)
+  (use-package exec-path-from-shell
+    :straight t
+    :if (and download-packages (string-equal system-type "darwin"))
+    :config
+    (exec-path-from-shell-initialize))
 
-;; (use-package lsp-pyright
-;;   :ensure t
-;;   :if download-packages
-;;   :hook (python-mode . (lambda ()
-;;                           (require 'lsp-pyright)
-;;                           (lsp))))  ; or lsp-deferred
+  (use-package smex
+    :straight t
+    :bind (("M-x" . smex)))
+
+  ;; rustic is an extension to rust-mode
+  (use-package rustic
+    :straight t)
+
+  ;; lsp seems broken on windows. some elpa certificate thing
+  (when (not (string-equal system-type "windows-nt"))
+    ;; language server support
+    (use-package lsp-mode
+      :straight t
+      :commands lsp
+      :hook ((c-mode c++-mode rust-mode) . 'lsp)
+      :init
+      (setq lsp-keymap-prefix "C-c l")
+      (setq lsp-enable-snippet nil)
+      (setq lsp-eldoc-enable-hover nil)
+      (setq lsp-eldoc-enable-signature-help nil)
+      (setq lsp-eldoc-prefer-signature-help nil)
+      (setq lsp-signature-render-all nil)
+      (setq lsp-enable-symbol-highlighting nil)
+      ;; don't show docs in minibuffer
+      (setq lsp-signature-auto-activate nil)
+      ;; no flycheck noise
+      ;; (setq lsp-diagnostics-provider :none)
+      (when (string-equal system-type "windows-nt")
+	    (setq lsp-pyls-server-command "py -3 -m pyls"))))
+
+  ;; dap-mode and lsp-pyright seems to have dependencies that fail to compile
+  ;; (use-package dap-mode
+  ;;   :straight t)
+
+  ;; (use-package lsp-pyright
+  ;;   :straight t
+  ;;   :hook (python-mode . (lambda ()
+  ;;                           (require 'lsp-pyright)
+  ;;                           (lsp))))  ; or lsp-deferred
 
 ;;; this seems recommended by the emacs-lsp docs, but doesn't seem to work
-;; (use-package dap-cpptools
-;;   :ensure t
-;;   :if download-packages)
+  ;; (use-package dap-cpptools
+  ;;   :straight t)
 
 ;;; I guess I don't need ggtags with lsp-mode?
-;; (use-package ggtags
-;;   :ensure t
-;;   :if download-packages
-;;   :commands ggtags-mode
-;;   :diminish ggtags-mode
-;;   :init
-;;   (progn
-;; 	(let ((globalpath "c:/local/global-6.6.3/bin"))
-;; 	  (when (file-exists-p globalpath)
-;; 		(add-to-path globalpath)
-;; 		(add-to-list 'exec-path globalpath)))
-;; 	(add-hook 'c-mode-common-hook
-;;               #'(lambda ()
-;;                   (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
-;; 					(ggtags-mode 1))))))
+  ;; (use-package ggtags
+  ;;   :straight t
+  ;;   :commands ggtags-mode
+  ;;   :diminish ggtags-mode
+  ;;   :init
+  ;;   (progn
+  ;; 	(let ((globalpath "c:/local/global-6.6.3/bin"))
+  ;; 	  (when (file-exists-p globalpath)
+  ;; 		(add-to-path globalpath)
+  ;; 		(add-to-list 'exec-path globalpath)))
+  ;; 	(add-hook 'c-mode-common-hook
+  ;;               #'(lambda ()
+  ;;                   (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
+  ;; 					(ggtags-mode 1))))))
 
-(use-package editorconfig
-  :ensure t
-  :if download-packages
-  :config
-  (editorconfig-mode 1))
+  (use-package editorconfig
+    :straight t
+    :config
+    (editorconfig-mode 1))
 
-(use-package company
-  :ensure t
-  :if download-packages
-  :init
-  ;; i don't want no autocomplete
-  (setq company-auto-complete nil)
-  (setq company-auto-complete-chars nil)
-  (setq company-idle-delay 100000000)
-  :config
-  (global-set-key (kbd "C-c TAB") 'company-complete))
+  (use-package company
+    :straight t
+    :init
+    ;; i don't want no autocomplete
+    (setq company-auto-complete nil)
+    (setq company-auto-complete-chars nil)
+    (setq company-idle-delay 100000000)
+    :config
+    (global-set-key (kbd "C-c TAB") 'company-complete))
 
-(use-package flycheck
-  :ensure t
-  :if download-packages)
-
+  (use-package flycheck
+    :straight t))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; package-dependent config
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
