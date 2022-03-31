@@ -1,9 +1,9 @@
 [submodule "external/use-package"]
-	path = external/use-package
+	path = el/external/use-package
 	url = https://github.com/jwiegley/use-package.git
 [submodule "external/paredit"]
-	path = external/paredit
+	path = el/external/paredit
 	url = https://mumble.net/~campbell/git/paredit.git
 [submodule "external/undo-tree"]
-	path = external/undo-tree
+	path = el/external/undo-tree
 	url = https://gitlab.com/tsc25/undo-tree.git

@@ -1,19 +1,11 @@
 ;;; -*- lexical-binding: t -*-
 
-;; TODO use init.el early-init.el
-;; TODO garbage collection optimizations
 ;; TODO freeze straight.el versions
-;; TODO look at doom and bring in useful things 
-;; TODO put (setq package-enable-at-startup nil) in early-init.el
 
-;; put something like
-;; (setq download-packages t) ; or not if you don't want to download external things
-;; ;(setq deepness-company "propellerheads") ;; for company specific settings
-;; (setq home-el-path "~/.emacs.d/el")
-;; (load (concat home-el-path "/config.el"))
-;; in your .emacs
-
-;; on windows create a symlink from %userprofile%/.gitconfig to %appdata%/.gitconfig
+;; load early init in case it wasn't
+(unless (boundp 'deepness-early-inited)
+  (load (concat (file-name-directory load-file-name) ".." "early-init")
+        nil t))
 
 ;; some customize shit. doesn't seem to be possible to set default tab-width without it
 (custom-set-variables
@@ -55,9 +47,6 @@
 ;; util functions
 (eval-when-compile
   (require 'subr-x))
-
-;; faster startup
-                                        ;(modify-frame-parameters nil '((wait-for-wm . nil)))
 
 (setq inhibit-splash-screen t
       inhibit-default-init t
@@ -122,11 +111,7 @@
   (setq uniquify-buffer-name-style 'forward))
 
 ;; disable electric indent everywhere since it doesn't seem possible to disable it for python only
-                                        ;(electric-indent-mode -1)
-
-(set-language-environment "UTF-8")
-;; set-language-enviornment sets default-input-method, which is unwanted
-(setq default-input-method nil)
+;;(electric-indent-mode -1)
 
 ;; better eshell behaviour
 (setq eshell-cmpl-cycle-completions nil)
@@ -531,36 +516,6 @@ l is lab l, so the range is 0 to 100
     (when (string-equal system-type "windows-nt")
 	  (setq lsp-pyls-server-command "py -3 -m pyls")))
 
-  ;; dap-mode and lsp-pyright seems to have dependencies that fail to compile
-  ;; (use-package dap-mode
-  ;;   :straight t)
-
-  ;; (use-package lsp-pyright
-  ;;   :straight t
-  ;;   :hook (python-mode . (lambda ()
-  ;;                           (require 'lsp-pyright)
-  ;;                           (lsp))))  ; or lsp-deferred
-
-;;; this seems recommended by the emacs-lsp docs, but doesn't seem to work
-  ;; (use-package dap-cpptools
-  ;;   :straight t)
-
-;;; I guess I don't need ggtags with lsp-mode?
-  ;; (use-package ggtags
-  ;;   :straight t
-  ;;   :commands ggtags-mode
-  ;;   :diminish ggtags-mode
-  ;;   :init
-  ;;   (progn
-  ;; 	(let ((globalpath "c:/local/global-6.6.3/bin"))
-  ;; 	  (when (file-exists-p globalpath)
-  ;; 		(add-to-path globalpath)
-  ;; 		(add-to-list 'exec-path globalpath)))
-  ;; 	(add-hook 'c-mode-common-hook
-  ;;               #'(lambda ()
-  ;;                   (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
-  ;; 					(ggtags-mode 1))))))
-
   (use-package editorconfig
     :straight t
     :config
@@ -578,6 +533,7 @@ l is lab l, so the range is 0 to 100
 
   (use-package flycheck
     :straight t))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; package-dependent config
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
