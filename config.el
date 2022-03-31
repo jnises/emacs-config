@@ -1,8 +1,9 @@
 ;;; -*- lexical-binding: t -*-
 
-;; TODOs
-;; * use init.el early-init.el
-;; * garbage collection optimizations
+;; TODO use init.el early-init.el
+;; TODO garbage collection optimizations
+;; TODO freeze straight.el versions
+;; TODO look at doom and bring in useful things 
 
 ;; put something like
 ;; (setq download-packages t) ; or not if you don't want to download external things
@@ -472,27 +473,25 @@ l is lab l, so the range is 0 to 100
   (use-package rustic
     :straight t)
 
-  ;; lsp seems broken on windows. some elpa certificate thing
-  (when (not (string-equal system-type "windows-nt"))
-    ;; language server support
-    (use-package lsp-mode
-      :straight t
-      :commands lsp
-      :hook ((c-mode c++-mode rust-mode) . 'lsp)
-      :init
-      (setq lsp-keymap-prefix "C-c l")
-      (setq lsp-enable-snippet nil)
-      (setq lsp-eldoc-enable-hover nil)
-      (setq lsp-eldoc-enable-signature-help nil)
-      (setq lsp-eldoc-prefer-signature-help nil)
-      (setq lsp-signature-render-all nil)
-      (setq lsp-enable-symbol-highlighting nil)
-      ;; don't show docs in minibuffer
-      (setq lsp-signature-auto-activate nil)
-      ;; no flycheck noise
-      ;; (setq lsp-diagnostics-provider :none)
-      (when (string-equal system-type "windows-nt")
-	    (setq lsp-pyls-server-command "py -3 -m pyls"))))
+  ;; language server support
+  (use-package lsp-mode
+    :straight t
+    :commands lsp
+    :hook ((c-mode c++-mode rust-mode) . 'lsp)
+    :init
+    (setq lsp-keymap-prefix "C-c l")
+    (setq lsp-enable-snippet nil)
+    (setq lsp-eldoc-enable-hover nil)
+    (setq lsp-eldoc-enable-signature-help nil)
+    (setq lsp-eldoc-prefer-signature-help nil)
+    (setq lsp-signature-render-all nil)
+    (setq lsp-enable-symbol-highlighting nil)
+    ;; don't show docs in minibuffer
+    (setq lsp-signature-auto-activate nil)
+    ;; no flycheck noise
+    ;; (setq lsp-diagnostics-provider :none)
+    (when (string-equal system-type "windows-nt")
+	  (setq lsp-pyls-server-command "py -3 -m pyls")))
 
   ;; dap-mode and lsp-pyright seems to have dependencies that fail to compile
   ;; (use-package dap-mode
