@@ -1,27 +1,12 @@
 ;;; -*- lexical-binding: t -*-
 
 ;; TODO freeze straight.el versions
+;; TODO with frozen straight.el deps we don't need the download-packages option?
 
 ;; load early init in case it wasn't
 (unless (boundp 'deepness-early-inited)
   (load (concat (file-name-directory load-file-name) ".." "early-init")
         nil t))
-
-;; some customize shit. doesn't seem to be possible to set default tab-width without it
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- ;;'(safe-local-variable-values (quote ((c-indentation-style . stroustrup))))
- '(tab-width 4))
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(highlight ((t (:background "Gray12" :foreground nil)))))
 
 (unless (boundp 'el-path)
   (setq el-path (concat (getenv "HOME") "/.emacs.d/el")))
@@ -71,12 +56,11 @@
 (transient-mark-mode t)
 
 ;; no tabs!!!
-(setq-default indent-tabs-mode nil)
+(setq-default indent-tabs-mode nil
+              ;; but if there is, set the default tab width (determines how a tab is displayed)
+              tab-width 4)
 
-;; but if there is, set the default tab width (determines how a tab is displayed)
-(setq tab-width 4)
-
-;; change color theme
+;; change color theme (used if don't want to download the theme)
 (if (and (window-system) (not (and download-packages (require 'doom-themes nil 'noerror))))
     (load-theme 'tsdh-dark))
 
@@ -136,7 +120,8 @@
 (setq enable-local-variables :safe)
 
 ;; no backup files
-(setq make-backup-files nil)
+(setq create-lockfiles nil
+      make-backup-files nil)
 
 ;; no suspend when not in terminal
 (when (window-system)
@@ -315,12 +300,23 @@
   ;; macos ls doesn't support --dired
   (setq dired-use-ls-dired nil))
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; packages
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;; from doom
+
+;; Introduced in Emacs HEAD (b2f8c9f), this inhibits fontification while
+;; receiving input, which should help a little with scrolling performance.
+(setq redisplay-skip-fontification-on-input t)
+
+;; Performance on Windows is considerably worse than elsewhere. We'll need
+;; everything we can get.
+(when (boundp 'w32-get-true-file-attributes)
+  (setq w32-get-true-file-attributes nil   ; decrease file IO workload
+        w32-pipe-read-delay 0              ; faster IPC
+        w32-pipe-buffer-size (* 64 1024))  ; read more at a time (was 4K)
+
+  ;; The clipboard on Windows could be in another encoding (likely utf-16), so
+  ;; let Emacs/the OS decide what to use there.
+  (setq selection-coding-system 'utf-8))
+
 ;; Emacs is essentially one huge security vulnerability, what with all the
 ;; dependencies it pulls in from all corners of the globe. Let's try to be at
 ;; least a little more discerning.
@@ -347,6 +343,16 @@
 --strict-tofu --priority='SECURE192:+SECURE128:-VERS-ALL:+VERS-TLS1.2:+VERS-TLS1.3' %h"
                     ;; compatibility fallbacks
                     "gnutls-cli -p %p %h"))
+
+;; More performant rapid scrolling over unfontified regions. May cause brief
+;; spells of inaccurate syntax highlighting right after scrolling, which should
+;; quickly self-correct.
+(setq fast-but-imprecise-scrolling t)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; packages
+;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; TODO get this using submodule instead?
 (when download-packages
