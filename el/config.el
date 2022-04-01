@@ -61,8 +61,8 @@
               tab-width 4)
 
 ;; change color theme (used if don't want to download the theme)
-(if (and (window-system) (not (and download-packages (require 'doom-themes nil 'noerror))))
-    (load-theme 'tsdh-dark))
+;; (if (and (window-system) (not (and download-packages (require 'doom-themes nil 'noerror))))
+;;     (load-theme 'tsdh-dark))
 
 ;; highlight line
 (global-hl-line-mode 1)
@@ -79,12 +79,6 @@
 ;; disable directory caching on windows
 (when (equal system-type 'windows-nt)
   (setq ido-max-dir-file-cache 0)) 
-
-;; font stuff
-(when window-system
-  (let ((fontname "-unknown-DejaVu Sans Mono-normal-normal-normal-*-*-*-*-*-m-0-iso10646-1"))
-    (when (x-list-fonts fontname)
-      (set-face-font 'default fontname))))
 
 ;; enable improved window switching, disable if you don't want it to clobber
 ;; shift-<arrowkeys> for selection
