@@ -4,6 +4,3 @@
 [submodule "external/paredit"]
 	path = el/external/paredit
 	url = https://mumble.net/~campbell/git/paredit.git
-[submodule "external/undo-tree"]
-	path = el/external/undo-tree
-	url = https://gitlab.com/tsc25/undo-tree.git

@@ -386,11 +386,6 @@
                   scheme-mode-hook)) (add-hook hook (lambda ()
                   (paredit-mode t)))))
 
-(use-package undo-tree
-  :load-path (lambda () (concat external-el-path "/undo-tree"))
-  :config
-  (global-undo-tree-mode))
-
 
 ;;;;;;;;;;;;;;;;;;;;
 ;; downloaded packages
@@ -402,6 +397,11 @@
 	  :config
 	  (load-theme 'doom-dark+ t)))
 
+  (use-package undo-tree
+    :straight t
+    :config
+    (global-undo-tree-mode))
+  
   (use-package rainbow-delimiters
     :straight t
     :commands rainbow-delimiters-mode
