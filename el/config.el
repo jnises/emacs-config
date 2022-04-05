@@ -400,6 +400,8 @@
   (use-package undo-tree
     :straight t
     :config
+    ; don't make ~undo-tree~ droppings on disk
+    (setq undo-tree-auto-save-history nil)
     (global-undo-tree-mode))
   
   (use-package rainbow-delimiters
