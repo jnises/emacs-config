@@ -435,7 +435,7 @@ l is lab l, so the range is 0 to 100
                             rainbow-delimiters-depth-9-face))
             (shuffledn (nth n '(3 7 1 4 6 0 5 8 2))))
         (set-face-foreground (nth n rainbowfaces)
-                             (apply 'format "#%02x%02x%02x" (mapcar (lambda (x) (floor (* x 255))) (labhsl-to-rgb (* (/ shuffledn 9.0) pi 2) 100 60)))))))
+                             (apply 'format "#%02x%02x%02x" (mapcar (lambda (x) (floor (* x 255))) (labhsl-to-rgb (* (/ shuffledn 9.0) pi 2) 60 60)))))))
 
   (use-package highlight-indentation
     :straight t
