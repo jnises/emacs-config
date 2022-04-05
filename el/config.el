@@ -494,7 +494,14 @@ l is lab l, so the range is 0 to 100
 
   ;; rustic is an extension to rust-mode
   (use-package rustic
-    :straight t)
+    :straight t
+    :config
+    (defun set-rustic-build-directory (dir)
+      (interactive "D")
+      (setq rustic-compile-directory-method (lambda () dir)))
+    (defun reset-rustic-build-directory ()
+      (interactive)
+      (setq rustic-compile-directory-method rustic-buffer-crate)))
 
   ;; language server support
   (use-package lsp-mode
