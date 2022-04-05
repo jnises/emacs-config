@@ -1,7 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 
-;; TODO freeze straight.el versions
 ;; TODO with frozen straight.el deps we don't need the download-packages option?
+;; TODO use straight-vc-git-default-clone-depth ?
 
 ;; load early init in case it wasn't
 (unless (boundp 'deepness-early-inited)
