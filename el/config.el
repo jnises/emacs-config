@@ -542,7 +542,10 @@ l is lab l, so the range is 0 to 100
     (global-set-key (kbd "C-c TAB") 'company-complete))
 
   (use-package flycheck
-    :straight t))
+    :straight t)
+  (use-package rg
+    :straight t)
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; package-dependent config
