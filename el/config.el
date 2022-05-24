@@ -1,7 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 
-;; TODO freeze straight.el versions
 ;; TODO with frozen straight.el deps we don't need the download-packages option?
+;; TODO use straight-vc-git-default-clone-depth ?
 
 ;; load early init in case it wasn't
 (unless (boundp 'deepness-early-inited)
@@ -561,7 +561,10 @@ l is lab l, so the range is 0 to 100
     (global-set-key (kbd "C-c TAB") 'company-complete))
 
   (use-package flycheck
-    :straight t))
+    :straight t)
+  (use-package rg
+    :straight t)
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; package-dependent config
