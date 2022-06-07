@@ -3,10 +3,14 @@ Not likely to be useful for anyone else.
 
 ## windows
 * install git
-* install msys2
-* run `pacman -S mingw-w64-x86_64-emacs` in msys
 * create an environment variable called `HOME` pointing to `%userprofile%`
 * `choco install ripgrep fd`
+* run latest installer from https://ftp.gnu.org/gnu/emacs/windows/
+
+### msys2
+the msys2 version of emacs 28.1 seems to be broken. native compilation just produces errors. so probably good to not install emacs from here.
+if you really want to you can run `pacman -S mingw-w64-x86_64-emacs`  
+good to install msys2 for the unix utils though
 
 ## mac
 * `brew install --cask emacs`
