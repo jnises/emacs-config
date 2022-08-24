@@ -46,6 +46,10 @@
 (if (fboundp 'tool-bar-mode)
     (tool-bar-mode 0))
 
+;; no menu
+(if (fboundp 'menu-bar-mode)
+    (menu-bar-mode 0))
+
 ;; show matching parens
 (show-paren-mode t)
 
