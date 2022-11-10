@@ -348,6 +348,13 @@
 (setq fast-but-imprecise-scrolling t)
 
 
+(defun strip-ansi-color-in-buffer ()
+  "remove any ansi escape codes in buffer"
+  (interactive)
+  (save-excursion
+   (mark-whole-buffer)
+   (ansi-color-filter-region (region-beginning) (region-end))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; packages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
