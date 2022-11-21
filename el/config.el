@@ -348,6 +348,7 @@
 (setq fast-but-imprecise-scrolling t)
 
 
+;; TODO this should use the current region if present
 (defun strip-ansi-color-in-buffer ()
   "remove any ansi escape codes in buffer"
   (interactive)
