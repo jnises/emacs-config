@@ -538,24 +538,24 @@ l is lab l, so the range is 0 to 100
     (when (string-equal system-type "windows-nt")
 	  (setq lsp-pyls-server-command "py -3 -m pyls")))
 
-  (use-package dap-mode
-    :straight t
-    :config
-    (dap-ui-mode)
-    (dap-ui-controls-mode 1)
+  ;; (use-package dap-mode
+  ;;   :straight t
+  ;;   :config
+  ;;   (dap-ui-mode)
+  ;;   (dap-ui-controls-mode 1)
 
-    (require 'dap-lldb)
-    (require 'dap-gdb-lldb)
-    ;; installs .extension/vscode
-    (dap-gdb-lldb-setup)
-    (dap-register-debug-template
-     "Rust::LLDB Run Configuration"
-     (list :type "lldb"
-           :request "launch"
-           :name "LLDB::Run"
-	       :gdbpath "rust-lldb"
-           :target nil
-           :cwd nil)))
+  ;;   (require 'dap-lldb)
+  ;;   (require 'dap-gdb-lldb)
+  ;;   ;; installs .extension/vscode
+  ;;   (dap-gdb-lldb-setup)
+  ;;   (dap-register-debug-template
+  ;;    "Rust::LLDB Run Configuration"
+  ;;    (list :type "lldb"
+  ;;          :request "launch"
+  ;;          :name "LLDB::Run"
+  ;;          :gdbpath "rust-lldb"
+  ;;          :target nil
+  ;;          :cwd nil)))
   
   (use-package editorconfig
     :straight t
