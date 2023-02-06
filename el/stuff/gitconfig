@@ -17,3 +17,4 @@
 [alias]
 	branch-by-date = for-each-ref --sort=-committerdate refs/heads/
 	branch-by-rdate = for-each-ref --sort=committerdate refs/heads/
+    my-remote-branches = for-each-ref --sort=committerdate refs/remotes/origin/nises/
