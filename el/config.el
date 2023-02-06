@@ -348,6 +348,14 @@
 (setq fast-but-imprecise-scrolling t)
 
 
+;; TODO this should use the current region if present
+(defun strip-ansi-color-in-buffer ()
+  "remove any ansi escape codes in buffer"
+  (interactive)
+  (save-excursion
+   (mark-whole-buffer)
+   (ansi-color-filter-region (region-beginning) (region-end))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; packages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -357,7 +365,7 @@
   (defvar bootstrap-version)
   (let ((bootstrap-file
          (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-        (bootstrap-version 5))
+        (bootstrap-version 6))
     (unless (file-exists-p bootstrap-file)
       (with-current-buffer
           (url-retrieve-synchronously
@@ -530,24 +538,24 @@ l is lab l, so the range is 0 to 100
     (when (string-equal system-type "windows-nt")
 	  (setq lsp-pyls-server-command "py -3 -m pyls")))
 
-  (use-package dap-mode
-    :straight t
-    :config
-    (dap-ui-mode)
-    (dap-ui-controls-mode 1)
+  ;; (use-package dap-mode
+  ;;   :straight t
+  ;;   :config
+  ;;   (dap-ui-mode)
+  ;;   (dap-ui-controls-mode 1)
 
-    (require 'dap-lldb)
-    (require 'dap-gdb-lldb)
-    ;; installs .extension/vscode
-    (dap-gdb-lldb-setup)
-    (dap-register-debug-template
-     "Rust::LLDB Run Configuration"
-     (list :type "lldb"
-           :request "launch"
-           :name "LLDB::Run"
-	       :gdbpath "rust-lldb"
-           :target nil
-           :cwd nil)))
+  ;;   (require 'dap-lldb)
+  ;;   (require 'dap-gdb-lldb)
+  ;;   ;; installs .extension/vscode
+  ;;   (dap-gdb-lldb-setup)
+  ;;   (dap-register-debug-template
+  ;;    "Rust::LLDB Run Configuration"
+  ;;    (list :type "lldb"
+  ;;          :request "launch"
+  ;;          :name "LLDB::Run"
+  ;;          :gdbpath "rust-lldb"
+  ;;          :target nil
+  ;;          :cwd nil)))
   
   (use-package editorconfig
     :straight t
@@ -568,7 +576,10 @@ l is lab l, so the range is 0 to 100
     :straight t)
   (use-package rg
     :straight t)
+  (use-package yaml-mode
+    :straight t)
   )
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; package-dependent config

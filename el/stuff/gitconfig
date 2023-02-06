@@ -18,3 +18,8 @@
 	branch-by-date = for-each-ref --sort=-committerdate refs/heads/
 	branch-by-rdate = for-each-ref --sort=committerdate refs/heads/
     my-remote-branches = for-each-ref --sort=committerdate refs/remotes/origin/nises/
+
+;; Do something like this to have a separate config for a subdir. The "/i" is to make the comparison case insensitive.
+; [includeIf "gitdir/i:C:/dev/es/"]
+;     path = .gitconfig-es
+
