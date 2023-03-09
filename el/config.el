@@ -472,9 +472,8 @@ l is lab l, so the range is 0 to 100
     :straight t
     :config
     (setq projectile-enable-caching t)
-    ;; (when (string-equal system-type "windows-nt")
-    ;;   (when (ignore-errors (call-process "ls"))
-    ;;     (setq projectile-indexing-method 'alien)))
+    (when (and (string-equal system-type "windows-nt") (ignore-errors (call-process "fd")))
+      (setq projectile-indexing-method 'alien))
     :init
     (projectile-global-mode)
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
