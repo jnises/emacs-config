@@ -577,6 +577,8 @@ l is lab l, so the range is 0 to 100
     :straight t)
   (use-package yaml-mode
     :straight t)
+  (use-package p4
+    :straight t)
   )
 
 
