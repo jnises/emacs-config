@@ -378,11 +378,6 @@
         (eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage)))
 
-;; make sure use-package is loaded
-(eval-when-compile
-  (add-to-list 'load-path (concat external-el-path "/use-package"))
-  (require 'use-package))
-
 ;; a package with some random local utils
 (use-package deepness-utils
   :load-path el-path)
