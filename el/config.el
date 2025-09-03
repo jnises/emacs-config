@@ -243,7 +243,7 @@
 (add-hook 'irony-mode-hook 'my-irony-mode-hook)
 (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
-(defun hightlight-nonascii ()
+(defun highlight-nonascii ()
   (interactive)
   (highlight-regexp "[^[:ascii:]]"))
 
