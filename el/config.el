@@ -530,6 +530,8 @@ l is lab l, so the range is 0 to 100
     (setq lsp-headerline-breadcrumb-enable nil)
     ;; don't show docs in minibuffer
     (setq lsp-signature-auto-activate nil)
+    ;; almost unusable without this. reformants whenever I edit something with it enabled.
+    (setq lsp-format-on-save nil)
     ;; no flycheck noise
     ;; (setq lsp-diagnostics-provider :none)
     (when (string-equal system-type "windows-nt")
