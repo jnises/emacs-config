@@ -24,6 +24,9 @@
 ;; startup config
 ;;;;;;;;;;;;;;;;;;;;;;
 
+;; no beeps!
+(setq ring-bell-function 'ignore)
+
 (eval-and-compile
   (setq download-packages (if (boundp 'download-packages) download-packages nil)))
 
@@ -293,8 +296,6 @@
 			  (split-window-below)))))))))
 
 (when (string-equal system-type "darwin")
-  ;; no beeps!
-  (setq ring-bell-function 'ignore)
   ;; macos ls doesn't support --dired
   (setq dired-use-ls-dired nil))
 
