@@ -223,6 +223,8 @@
   (setq c-basic-offset 4)
   (c-set-offset 'substatement-open 0)
   (c-set-offset 'inline-open 0)
+  ;; Disable on-type reindent/formatting in C/C++ buffers.
+  (setq-local electric-indent-inhibit t)
   ;;(semantic-mode t)
   (setq show-trailing-whitespace t))
 (add-hook 'c-mode-common-hook 'c-style-hook-function)
@@ -552,7 +554,8 @@ l is lab l, so the range is 0 to 100
 
   (setq eglot-ignored-server-capabilities
         '(:documentFormattingProvider
-          :documentRangeFormattingProvider))
+          :documentRangeFormattingProvider
+          :documentOnTypeFormattingProvider))
 
   
   ;; (use-package dap-mode
@@ -579,8 +582,8 @@ l is lab l, so the range is 0 to 100
     :config
     (editorconfig-mode 1)
     :custom
-    ;; don't want any automatic formatting
-    (editorconfig-indent-mode nil)
+    ;; Use .editorconfig for tabs/indent; avoid destructive cleanup.
+    (editorconfig-indent-mode t)
     (editorconfig-trim-whitespace-mode nil))
 
   ;; no editorconfig for c++, it seems to autoformat
