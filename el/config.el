@@ -379,6 +379,9 @@
         (eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage)))
 
+;; to make sure straight doesn't try to use anything other than the built in project.el
+(setq straight-built-in-pseudo-packages '(project flymake))
+
 ;; a package with some random local utils
 (use-package deepness-utils
   :load-path el-path)
@@ -515,29 +518,43 @@ l is lab l, so the range is 0 to 100
       (interactive)
       (setq rustic-compile-directory-method rustic-buffer-crate)))
 
-  ;; language server support
-  (use-package lsp-mode
-    :straight t
-    :commands lsp
-    :hook ((c-mode c++-mode rust-mode) . 'lsp)
-    :init
-    (setq lsp-keymap-prefix "C-c l")
-    (setq lsp-enable-snippet nil)
-    (setq lsp-eldoc-enable-hover nil)
-    (setq lsp-eldoc-enable-signature-help nil)
-    (setq lsp-eldoc-prefer-signature-help nil)
-    (setq lsp-signature-render-all nil)
-    (setq lsp-enable-symbol-highlighting nil)
-    (setq lsp-headerline-breadcrumb-enable nil)
-    ;; don't show docs in minibuffer
-    (setq lsp-signature-auto-activate nil)
-    ;; almost unusable without this. reformants whenever I edit something with it enabled.
-    (setq lsp-format-on-save nil)
-    ;; no flycheck noise
-    ;; (setq lsp-diagnostics-provider :none)
-    (when (string-equal system-type "windows-nt")
-	  (setq lsp-pyls-server-command "py -3 -m pyls")))
+  ;; ;; language server support
+  ;; (use-package lsp-mode
+  ;;   :straight t
+  ;;   :commands lsp
+  ;;   :hook ((c-mode c++-mode rust-mode) . lsp-deferred)
+  ;;   :custom
+  ;;   (lsp-keymap-prefix "C-c l")
+  ;;   (lsp-enable-snippet nil)
+  ;;   (lsp-eldoc-enable-hover nil)
+  ;;   (lsp-eldoc-enable-signature-help nil)
+  ;;   (lsp-eldoc-prefer-signature-help nil)
+  ;;   (lsp-signature-render-all nil)
+  ;;   (lsp-enable-symbol-highlighting nil)
+  ;;   (lsp-headerline-breadcrumb-enable nil)
+  ;;   ;; don't show docs in minibuffer
+  ;;   (lsp-signature-auto-activate nil)
+  ;;   ;; almost unusable without this. reformants whenever I edit something with it enabled.
+  ;;   ;; TODO: perhaps we want some of this for rust?
+  ;;   (lsp-format-on-save nil)
+  ;;   (lsp-enable-on-type-formatting nil)
+  ;;   (clang-format-on-save nil)
+  ;;   (lsp-enable-formatting nil)
+  ;;   (lsp-enable-indentation nil)
+  ;;   ;; no flycheck noise
+  ;;   ;; (setq lsp-diagnostics-provider :none)
+  ;;   )
 
+  ;; use eglot rather than lsp-mode
+  (use-package eglot
+    :straight t
+    :hook ((c-mode c++-mode rust-mode) . eglot-ensure))
+
+  (setq eglot-ignored-server-capabilities
+        '(:documentFormattingProvider
+          :documentRangeFormattingProvider))
+
+  
   ;; (use-package dap-mode
   ;;   :straight t
   ;;   :config
@@ -560,7 +577,16 @@ l is lab l, so the range is 0 to 100
   (use-package editorconfig
     :straight t
     :config
-    (editorconfig-mode 1))
+    (editorconfig-mode 1)
+    :custom
+    ;; don't want any automatic formatting
+    (editorconfig-indent-mode nil)
+    (editorconfig-trim-whitespace-mode nil))
+
+  ;; no editorconfig for c++, it seems to autoformat
+  ;; (add-hook 'c-mode-common-hook
+  ;;           (lambda ()
+  ;;             (editorconfig-mode -1)))
 
   (use-package company
     :straight t
